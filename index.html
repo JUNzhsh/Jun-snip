@@ -798,6 +798,14 @@
         background: rgba(255, 110, 199, 0.06);
     }
 
+    .footer-label {
+        font-family: 'Fredoka', sans-serif;
+        font-size: 11px;
+        color: #c080b0;
+        padding: 4px 4px 4px 8px;
+        align-self: center;
+    }
+
     .loading {
         display: none;
         font-family: 'Fredoka', sans-serif;
@@ -1153,6 +1161,7 @@
 
         <!-- Footer links -->
         <div class="footer-links">
+            <div class="footer-label">about me</div>
             <button class="footer-link" onclick="openSocial('threads')">⬡ Threads</button>
             <button class="footer-link" onclick="openSocial('xhs')">📕 小红书</button>
             <button class="footer-link" onclick="openDonate('alipay')">💙 请喝奶茶</button>
@@ -1181,6 +1190,7 @@
             <img id="saveImg" src="" alt="" style="width:100%;border-radius:12px;margin-bottom:10px;-webkit-touch-callout:default;">
             <div style="font-family:'Fredoka',sans-serif;font-size:10px;color:#a060a0;margin-bottom:12px;text-align:center">长按无反应？试试下方按钮 ↓</div>
             <a id="saveImgLink" href="#" target="_blank" style="display:block;width:100%;padding:11px;border-radius:12px;border:2px solid var(--mint);background:rgba(93,255,216,0.1);font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;color:#2a9080;text-align:center;text-decoration:none;margin-bottom:10px">在新标签页打开图片</a>
+            <button id="openBrowserBtn" onclick="openInBrowser()" style="display:none;width:100%;padding:11px;border-radius:12px;border:2px solid var(--sky);background:rgba(125,214,255,0.1);font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;color:#2a6cb0;text-align:center;cursor:pointer;margin-bottom:10px">🌐 在浏览器打开保存</button>
             <button class="qr-close" onclick="closeSaveOverlay()">关闭</button>
         </div>
     </div>
@@ -1207,11 +1217,11 @@
                     🪄 新功能 
                     <span class="cl-tag">NEW</span>
                 </div>
-                <div class="cl-item">新增 9:16 竖版尺寸</div>
                 <div class="cl-item">新增五瓣花朵、八角星芒、蝴蝶结、菱形星光、蝴蝶 5 种形状</div>
-                <div class="cl-item">形状随机可选2种 · 手动选1种混合</div>
+                <div class="cl-item">形状可以手动添加啦，随机可同时选两个形状</div>
+                <div class="cl-item">新增橡皮擦功能</div>
                 <div class="cl-item">新增勾线模式（只描边不填色）</div>
-                <div class="cl-item">新增叠加图案（波点/条纹/网格）</div>
+                <div class="cl-item">新增色块的叠加图案（波点/条纹/网格）</div>
                 <div class="cl-item">可调节色块比例</div>
                 <div class="cl-item">所有调节实时预览</div>
             </div>
@@ -1221,19 +1231,8 @@
                     ✨ 优化 
                     <span class="cl-tag">IMPROVED</span>
                 </div>
-                <div class="cl-item">形状不再互相重叠</div>
                 <div class="cl-item">响应式布局，PC 和手机都好用</div>
                 <div class="cl-item">画布固定在顶部，调参数时始终可见</div>
-            </div>
-            <hr class="cl-divider">
-            <div class="cl-section bugfix">
-                <div class="cl-section-title">
-                    🐛 修复 
-                    <span class="cl-tag">FIXED</span>
-                </div>
-                <div class="cl-item">修复 iOS Safari 生成白屏问题</div>
-                <div class="cl-item">修复触控灵敏度过高误触问题</div>
-                <div class="cl-item">修复小米 HyperOS 下载失败问题</div>
             </div>
             <hr class="cl-divider">
             <button class="qr-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">关闭</button>
@@ -1256,6 +1255,17 @@
     let _erasedRandomShapes = []; // shapes erased in random mode (stored by canvas coords)
     let isSwapped = false;
     let _lastPlaceTime = 0; // Guard: prevent touchend+click dual trigger on OPPO/Vivo
+
+    // Detect if running in a WebView (WeChat, Xiaohongshu, etc.)
+    function isInWebView() {
+        // WebView indicators
+        const ua = navigator.userAgent.toLowerCase();
+        const isAndroidWebView = /webview|(android.*applewebkit\/[0-9]+(?!.*safari))/i.test(ua);
+        const isIOSWebView = /iphone|ipod|ipad/i.test(navigator.userAgent) && !window.navigatorstandalone && 'standalone' in window && !window.navigator.standalone && /safari/i.test(ua) && !window.matchMedia('(display-mode: standalone)').matches;
+        // More reliable: check if we can open windows
+        const cantOpenWindow = typeof window.open === 'function' && window.open.toString().includes('[native code]') === false;
+        return isAndroidWebView || isIOSWebView || (ua.includes('micromessenger') || ua.includes('xhs'));
+    }
 
     // Image transform
     let imgOffsetX = 0;
@@ -1485,58 +1495,73 @@
     }
 
     // ---- Canvas generation ----
-    // Extract 5 dominant colors from image using k-means-like sampling
+    // Extract 8 diverse colors from image using spatial grid + color clustering
     function extractColors(img) {
         const c = document.createElement('canvas');
-        const size = 64; // downsample for speed
+        const size = 64;
         c.width = size;
         c.height = size;
         const ctx = c.getContext('2d');
         ctx.drawImage(img, 0, 0, size, size);
         const data = ctx.getImageData(0, 0, size, size).data;
-        // Collect all pixels
-        const pixels = [];
+
+        // Quantize pixels to reduce noise (divide by 32 to get 8 levels per channel)
+        const buckets = {};
         for (let i = 0; i < data.length; i += 4) {
-            pixels.push([data[i], data[i + 1], data[i + 2]]);
+            const r = Math.floor(data[i] / 32) * 32;
+            const g = Math.floor(data[i + 1] / 32) * 32;
+            const b = Math.floor(data[i + 2] / 32) * 32;
+            const key = `${r},${g},${b}`;
+            buckets[key] = (buckets[key] || 0) + 1;
         }
-        // Simple k-means with 5 random seeds
-        let centers = [];
-        for (let i = 0; i < 5; i++) {
-            centers.push(pixels[Math.floor(Math.random() * pixels.length)].slice());
+
+        // Sort buckets by frequency
+        const sorted = Object.entries(buckets).sort((a, b) => b[1] - a[1]);
+
+        // Greedy selection: pick most common, then pick most different
+        const selected = [];
+        const minDistSq = 50 * 50; // minimum color distance squared
+
+        for (const [key] of sorted) {
+            if (selected.length >= 8)
+                break;
+            const [r, g, b] = key.split(',').map(Number);
+
+            // Check if this color is different enough from already selected
+            let tooClose = false;
+            for (const [sr, sg, sb] of selected) {
+                const d = (r - sr) ** 2 + (g - sg) ** 2 + (b - sb) ** 2;
+                if (d < minDistSq) {
+                    tooClose = true;
+                    break;
+                }
+            }
+
+            if (!tooClose) {
+                selected.push([r + 16, g + 16, b + 16]); // un-quantize to center of bucket
+            }
         }
-        for (let iter = 0; iter < 8; iter++) {
-            const clusters = centers.map(() => []);
-            pixels.forEach(p => {
-                let minD = Infinity,
-                    minI = 0;
-                centers.forEach((c, i) => {
-                    const d = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 + (p[2] - c[2]) ** 2;
-                    if (d < minD) {
-                        minD = d;
-                        minI = i;
-                    }
-                });
-                clusters[minI].push(p);
-            });
-            centers = clusters.map((cl, i) => {
-                if (cl.length === 0)
-                    return centers[i];
-                const avg = [0, 0, 0];
-                cl.forEach(p => {
-                    avg[0] += p[0];
-                    avg[1] += p[1];
-                    avg[2] += p[2];
-                });
-                return avg.map(v => Math.round(v / cl.length));
-            });
+
+        // If we don't have 8 colors yet, relax the constraint
+        if (selected.length < 8) {
+            for (const [key] of sorted) {
+                if (selected.length >= 8)
+                    break;
+                const [r, g, b] = key.split(',').map(Number);
+                const exists = selected.some(([sr, sg, sb]) => sr === r + 16 && sg === g + 16 && sb === b + 16);
+                if (!exists)
+                    selected.push([r + 16, g + 16, b + 16]);
+            }
         }
-        // Sort by brightness
-        centers.sort((a, b) => (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]));
+
+        // Sort by brightness for visual appeal
+        selected.sort((a, b) => (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]));
+
         // Build swatches
         const row = document.getElementById('extractedColors');
         row.innerHTML = '';
-        centers.forEach(c => {
-            const hex = '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
+        selected.forEach(color => {
+            const hex = '#' + color.map(v => Math.min(255, Math.max(0, v)).toString(16).padStart(2, '0')).join('');
             const div = document.createElement('div');
             div.className = 'color-swatch';
             div.style.background = hex;
@@ -2042,27 +2067,27 @@
     }
 
     let _fixedAngle = null; // set before drawShape to override random rotation
-    function drawShape(ctx, x, y, r, shape, fixedAngle) {
+    function drawShape(ctx, x, y, r, shape) {
         ctx.save();
-        const useAngle = fixedAngle !== undefined;
-        const angle = useAngle ? fixedAngle : undefined;
+        // Use _fixedAngle if set, otherwise use random rotation
+        const angle = _fixedAngle !== null ? _fixedAngle : undefined;
         ctx.beginPath();
         if (shape === 'circle') {
             ctx.arc(x, y, r, 0, Math.PI * 2);
         } else if (shape === 'star') {
-            starPath(ctx, x, y, r, 5, angle);
+            starPath(ctx, x, y, r, 5);
         } else if (shape === 'heart') {
             heartPath(ctx, x, y, r);
         } else if (shape === 'flower') {
-            flowerPath(ctx, x, y, r, angle);
+            flowerPath(ctx, x, y, r);
         } else if (shape === 'spark8') {
-            spark8Path(ctx, x, y, r, angle);
+            spark8Path(ctx, x, y, r);
         } else if (shape === 'ribbon') {
-            ribbonPath(ctx, x, y, r, angle);
+            ribbonPath(ctx, x, y, r);
         } else if (shape === 'diamond4') {
             diamond4Path(ctx, x, y, r);
         } else if (shape === 'butterfly') {
-            butterflyPath(ctx, x, y, r, angle);
+            butterflyPath(ctx, x, y, r);
         }
         if (outlineMode) {
             ctx.lineWidth = Math.max(1, r * 0.03);
@@ -2074,9 +2099,9 @@
         ctx.restore();
     }
 
-    function starPath(ctx, cx, cy, r, points, fixedAngle) {
+    function starPath(ctx, cx, cy, r, points) {
         const inner = r * 0.42;
-        const randAngle = fixedAngle !== undefined ? fixedAngle : sRand() * Math.PI * 2;
+        const randAngle = _fixedAngle !== null ? _fixedAngle : sRand() * Math.PI * 2;
         ctx.beginPath();
         for (let i = 0; i < points * 2; i++) {
             const angle = (i * Math.PI / points) - Math.PI / 2 + randAngle;
@@ -2480,7 +2505,7 @@
                 saveImg.src = _saveBlobUrl;
             }, 'image/jpeg', 0.95);
         } else {
-            // Desktop + Android browsers: try blob download first, fall back to toDataURL for WebViews
+            // Desktop + Android browsers: try blob download first, fall back to overlay for WebViews
             function doDownload(url, revokeFn) {
                 const link = document.createElement('a');
                 link.download = 'snipsnip-' + Date.now() + '.jpg';
@@ -2492,6 +2517,33 @@
                     if (revokeFn)
                         revokeFn();
                 }, 1000);
+            }
+
+            // If in WebView, show overlay with "open in browser" button
+            if (isInWebView()) {
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        alert('保存失败，请尝试截图保存');
+                        return;
+                    }
+                    if (_saveBlobUrl)
+                        URL.revokeObjectURL(_saveBlobUrl);
+                    _saveBlobUrl = URL.createObjectURL(blob);
+
+                    const saveImg = document.getElementById('saveImg');
+                    saveImg.onload = function() {
+                        document.getElementById('saveImgLink').href = _saveBlobUrl;
+                        document.getElementById('saveOverlay').classList.add('open');
+                        document.getElementById('saveHint').textContent = '长按图片保存';
+                        document.getElementById('saveHintSub').textContent = '若长按无反应，点击下方按钮在浏览器中打开';
+                        // Show the "open in browser" button for WebView users
+                        const openBrowserBtn = document.getElementById('openBrowserBtn');
+                        if (openBrowserBtn)
+                            openBrowserBtn.style.display = 'block';
+                    };
+                    saveImg.src = _saveBlobUrl;
+                }, 'image/jpeg', 0.95);
+                return;
             }
 
             try {
@@ -2636,7 +2688,7 @@
                     r: size,
                     shape: currentShapes[0],
                     angle: Math.random() * Math.PI * 2
-                });
+                }); // random angle stored
                 document.getElementById('clearManualBtn').style.display = '';
                 render();
             }
@@ -2796,7 +2848,7 @@
                         r: size,
                         shape: currentShapes[0],
                         angle: Math.random() * Math.PI * 2
-                    });
+                    }); // random angle stored
                     document.getElementById('clearManualBtn').style.display = '';
                     render();
                     _lastPlaceTime = Date.now(); // Mark: prevent click from firing next
@@ -2841,6 +2893,23 @@
     function closeSocialOverlay(e) {
         if (!e || e.target === document.getElementById('socialOverlay'))
             document.getElementById('socialOverlay').classList.remove('open');
+    }
+    // Open current page in system browser (for WebView users)
+    function openInBrowser() {
+        // Get the blob URL from the save image
+        const blobUrl = document.getElementById('saveImg').src;
+        if (blobUrl && blobUrl.startsWith('blob:')) {
+            // Open blob URL in new window/tab
+            const newWindow = window.open(blobUrl, '_blank');
+            if (!newWindow) {
+                // Fallback: force download via link
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'snipsnip-' + Date.now() + '.jpg';
+                link.click();
+            }
+        }
+        closeSaveOverlay();
     }
     function closeSaveOverlay(e) {
         if (!e || e.target === document.getElementById('saveOverlay')) {
