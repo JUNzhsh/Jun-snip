@@ -2963,102 +2963,238 @@
     </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="color-scheme" content="light only">
 <title>snip snip ✂️ by junjun</title>
+<!-- Async load Google Fonts as enhancement (non-blocking, GFW-safe with @font-face local fallbacks) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap"></noscript>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap');
+  /* Non-blocking font loading with local fallbacks (GFW-safe) */
+  @font-face {
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Fredoka'), local('Arial Rounded MT Bold'), local('Comic Sans MS'), local('sans-serif');
+  }
+  @font-face {
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: local('Fredoka'), local('Arial Rounded MT Bold'), local('Comic Sans MS'), local('sans-serif');
+  }
+  @font-face {
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Fredoka'), local('Arial Rounded MT Bold'), local('Comic Sans MS'), local('sans-serif');
+  }
+  @font-face {
+    font-family: 'Space Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Space Mono'), local('Courier New'), local('monospace');
+  }
+  @font-face {
+    font-family: 'Space Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Space Mono'), local('Courier New'), local('monospace');
+  }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
+:root {
     --pink:   #FF6EC7;
     --yellow: #FFE94A;
     --mint:   #5EFFD8;
     --lavender: #C9A8FF;
     --sky:    #7DD6FF;
-    --bg:     #FFF0FA;
+    --bg:     #f9e1f3;
     --panel:  #fff;
     --border: #FFBDE8;
     --text:   #3a1a4a;
     --radius: 20px;
   }
 
-  @keyframes floatY {
+@keyframes floatY {
     0%,100% { transform: translateY(0px) rotate(-2deg); }
     50%      { transform: translateY(-8px) rotate(2deg); }
   }
-  @keyframes spin {
+
+@keyframes spin {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
   }
-  @keyframes shimmer {
+
+@keyframes shimmer {
     0%,100% { opacity: 1; }
     50%      { opacity: 0.5; }
   }
-  @keyframes fadeUp {
+
+@keyframes fadeUp {
     from { opacity:0; transform: translateY(16px); }
     to   { opacity:1; transform: translateY(0); }
   }
 
+@keyframes milktea {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    20% { transform: translateY(-6px) rotate(-8deg); }
+    40% { transform: translateY(0) rotate(0deg); }
+    60% { transform: translateY(-4px) rotate(6deg); }
+    80% { transform: translateY(0) rotate(0deg); }
+  }
+
+  /* === NEW LAYOUT: fixed canvas top + scrollable panel bottom === */
   body {
     background: var(--bg);
-    background-image:
-      radial-gradient(circle at 15% 20%, rgba(255,110,199,0.18) 0%, transparent 40%),
-      radial-gradient(circle at 85% 70%, rgba(93,255,216,0.18) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(201,168,255,0.12) 0%, transparent 60%);
     font-family: 'Space Mono', monospace;
-    min-height: 100dvh;
+    margin: 0;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* Top: fixed canvas area */
+  .canvas-area {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: var(--text);
-    padding-bottom: 60px;
-  }
-
-  /* floating bg deco stars */
-  body::before {
-    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧';
+    padding: 8px 16px 6px;
+    background: var(--bg);
+    z-index: 5;
     position: relative;
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-size: 11px;
-    color: var(--pink);
-    letter-spacing: 12px;
-    padding: 6px 0;
-    background: linear-gradient(90deg, var(--yellow), var(--pink), var(--mint), var(--lavender), var(--yellow));
-    background-size: 300% 100%;
-    animation: shimmer 3s ease infinite;
-    z-index: 10;
   }
-
-  header {
-    width: 100%;
-    padding: 36px 20px 4px;
-    text-align: center;
-    animation: fadeUp 0.6s ease both;
+  .canvas-area.fullscreen {
+    flex: 1;
+    justify-content: center;
   }
-
-  header h1 {
+  .canvas-area .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 6px;
+  }
+  .canvas-area .title-row h1 {
     font-family: 'Fredoka', sans-serif;
     font-weight: 700;
-    font-size: 42px;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 50%, var(--sky) 100%);
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--pink), var(--lavender), var(--sky));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 2px 8px rgba(255,110,199,0.3));
-    display: inline-block;
-    animation: floatY 4s ease-in-out infinite;
   }
-
-  header p {
-    font-size: 11px;
-    letter-spacing: 1px;
-    color: var(--pink);
-    margin-top: 6px;
+  .canvas-area .title-row .ver {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--lavender);
+    opacity: 0.7;
+  }
+  /* Upload prompt inside canvas area */
+  .upload-prompt {
+    width: 90vw;
+    max-width: 480px;
+    height: 55vh;
+    border: 2.5px dashed var(--border);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 8px;
+    background: rgba(255,189,232,0.08);
+    transition: all 0.2s;
+  }
+  .upload-prompt:hover { border-color: var(--pink); background: rgba(255,110,199,0.07); }
+  .upload-prompt span {
     font-family: 'Fredoka', sans-serif;
-    font-weight: 400;
+    font-size: 13px;
+    color: #c080b0;
+  }
+  .upload-prompt.hidden { display: none; }
+
+  #result-canvas {
+    width: 90vw;
+    max-width: 480px;
+    max-height: 55vh;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(255,110,199,0.15);
+    border: 2px solid rgba(255,189,232,0.5);
+    cursor: grab;
+    touch-action: none;
+    display: none;
+  }
+  #result-canvas.visible { display: block; }
+  #result-canvas:active { cursor: grabbing; }
+
+  .action-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    max-width: 480px;
+    margin-top: 6px;
+    align-items: center;
+  }
+  .action-row .act-main {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .action-row .btn-save {
+    background: linear-gradient(135deg, var(--mint), var(--sky));
+    color: var(--text);
+    box-shadow: 0 3px 12px rgba(93,255,216,0.3);
+  }
+  .action-row .btn-change {
+    background: rgba(255,189,232,0.15);
+    color: var(--pink);
+    border: 1.5px solid var(--border);
+    flex: 0;
+    white-space: nowrap;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .action-row .act-link {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    color: #c080b0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 4px 8px;
+    white-space: nowrap;
+  }
+  .action-row .act-link:active { color: var(--pink); }
+
+  /* Bottom: scrollable control panel */
+  .panel {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none; /* Prevent pull-to-refresh on Android Chrome */
+    padding: 6px 16px 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color-scheme: light;
+    background: var(--bg);
   }
 
   .card {
@@ -3066,90 +3202,36 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 2px solid var(--border);
-    border-radius: var(--radius);
-    margin: 8px 16px;
-    padding: 18px;
-    width: calc(100% - 32px);
+    border-radius: 16px;
+    margin: 4px 0;
+    padding: 14px 16px;
+    width: 100%;
     max-width: 440px;
-    box-shadow: 0 4px 24px rgba(255,110,199,0.10), 0 1px 4px rgba(201,168,255,0.15);
-    animation: fadeUp 0.5s ease both;
+    box-shadow: 0 2px 12px rgba(255,110,199,0.08);
   }
-  .card:nth-child(2) { animation-delay: 0.05s; }
-  .card:nth-child(3) { animation-delay: 0.10s; }
-  .card:nth-child(4) { animation-delay: 0.15s; }
-  .card:nth-child(5) { animation-delay: 0.20s; }
-  .card:nth-child(6) { animation-delay: 0.25s; }
-  .card:nth-child(7) { animation-delay: 0.30s; }
-
   .card-title {
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.5px;
+    font-size: 12px;
+    letter-spacing: 0.3px;
     color: var(--pink);
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
   }
-  .card-title::before {
-    content: '✦';
-    font-size: 10px;
-    color: var(--lavender);
-  }
+  .card-title::before { content: '✦'; font-size: 9px; color: var(--lavender); }
 
-  /* Upload zone */
-  .upload-zone {
-    border: 2.5px dashed var(--border);
-    border-radius: 14px;
-    height: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s, transform 0.2s;
-    gap: 8px;
-    background: rgba(255,189,232,0.08);
-  }
-  .upload-zone:hover, .upload-zone.dragover {
-    border-color: var(--pink);
-    background: rgba(255,110,199,0.07);
-    transform: scale(1.01);
-  }
-  .upload-zone svg { opacity: 0.5; }
-  .upload-zone span {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 13px;
-    color: #c080b0;
-    letter-spacing: 0.5px;
-  }
-  .upload-zone.has-image {
-    border-style: solid;
-    border-color: var(--lavender);
-    padding: 0;
-  }
-  .upload-zone.has-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 11px;
-    display: block;
-  }
-
-  /* Layout toggle */
-  .toggle-row {
-    display: flex;
-    gap: 10px;
-  }
+  /* Toggle buttons */
+  .toggle-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .toggle-btn {
     flex: 1;
-    padding: 12px 8px;
-    border: 2.5px solid var(--border);
-    border-radius: 14px;
+    padding: 8px 6px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
     background: rgba(255,255,255,0.6);
     font-family: 'Fredoka', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -3157,920 +3239,364 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    letter-spacing: 0.3px;
+    gap: 3px;
   }
   .toggle-btn.active {
     border-color: var(--pink);
     color: var(--pink);
     background: rgba(255,110,199,0.10);
-    box-shadow: 0 2px 12px rgba(255,110,199,0.20);
   }
-  .toggle-btn .icon {
-    font-size: 22px;
-    line-height: 1;
-  }
+  .toggle-btn .icon { font-size: 16px; line-height: 1; }
 
-  /* Shape selector */
-  .shape-row {
-    display: flex;
-    gap: 10px;
-  }
+  /* Shape buttons */
+  .shape-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .shape-btn {
-    flex: 1;
-    padding: 16px 8px;
-    border: 2.5px solid var(--border);
-    border-radius: 14px;
+    flex: 0 0 calc(25% - 5px);
+    padding: 8px 4px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
     background: rgba(255,255,255,0.6);
     font-family: 'Space Mono', monospace;
-    font-size: 22px;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.22s;
+    transition: all 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 2px;
   }
-  .shape-btn span {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 10px;
-    color: #c080b0;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-  }
+  .shape-btn span { font-family: 'Fredoka', sans-serif; font-size: 8px; color: #c080b0; font-weight: 600; }
   .shape-btn.active {
     border-color: var(--lavender);
     background: rgba(201,168,255,0.15);
-    box-shadow: 0 2px 14px rgba(201,168,255,0.30);
-    transform: scale(1.04);
+    transform: scale(1.03);
   }
 
-  /* Color picker row */
-  .color-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  /* Color */
+  .color-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .color-swatch {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: transform 0.15s, box-shadow 0.15s;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+    border: 2.5px solid transparent; transition: transform 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
-  .color-swatch:hover { transform: scale(1.15); }
-  .color-swatch.active {
-    border-color: var(--text);
-    transform: scale(1.18);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-  }
+  .color-swatch:hover { transform: scale(1.12); }
+  .color-swatch.active { border-color: var(--text); transform: scale(1.15); }
   .color-custom {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2.5px dashed var(--border);
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-    flex-shrink: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 2px dashed var(--border); cursor: pointer;
+    overflow: hidden; position: relative;
   }
   .color-custom input[type="color"] {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    border: none;
-    cursor: pointer;
-    opacity: 0;
+    position: absolute; width: 200%; height: 200%; top: -50%; left: -50%;
+    border: none; cursor: pointer; opacity: 0;
   }
-  .color-custom-dot {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    pointer-events: none;
+  .color-custom-dot { width: 100%; height: 100%; border-radius: 50%; pointer-events: none; }
+
+  /* Pattern */
+  .pattern-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pattern-swatch {
+    width: 28px; height: 28px; border-radius: 7px; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.15s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden;
   }
+  .pattern-swatch.active { border-color: var(--pink); transform: scale(1.12); }
 
   /* Sliders */
-  .slider-row {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
+  .slider-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
   .slider-item label {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.3px;
-    color: #c080b0;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
+    font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 10px;
+    color: #c080b0; display: flex; justify-content: space-between; margin-bottom: 4px;
   }
-  .slider-item label span {
-    color: var(--pink);
-    font-weight: 700;
-  }
+  .slider-item label span { color: var(--pink); font-weight: 700; }
   input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, rgba(255,110,199,0.25), rgba(201,168,255,0.25));
-    border-radius: 3px;
-    outline: none;
+    -webkit-appearance: none; width: 100%; height: 5px;
+    background: linear-gradient(90deg, rgba(255,110,199,0.2), rgba(201,168,255,0.2));
+    border-radius: 3px; outline: none;
   }
   input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
     background: linear-gradient(135deg, var(--pink), var(--lavender));
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(255,110,199,0.45);
-    border: 2px solid #fff;
+    cursor: pointer; box-shadow: 0 2px 6px rgba(255,110,199,0.4); border: 2px solid #fff;
   }
-
-  #layoutCard {
-    transition: opacity 0.25s, transform 0.25s;
+  .dual-label {
+    font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 10px;
+    color: var(--lavender); margin-bottom: 6px;
   }
-  #layoutCard[style*="display: none"] {
-    display: none !important;
-  }
-  /* Generate button */
-  .gen-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 100%);
-    color: #fff;
-    border: none;
-    border-radius: 16px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.2s;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 20px rgba(255,110,199,0.40);
-  }
-  .gen-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255,110,199,0.50);
-  }
-  .gen-btn:active { transform: scale(0.98); }
-
-  /* Preview */
-  #preview-wrap {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    max-width: 440px;
-    padding: 0 40px;
-  }
-  #preview-wrap.visible { display: flex; animation: fadeUp 0.4s ease both; }
-
-  #result-canvas {
-    width: 100%;
-    border-radius: 20px;
-    box-shadow: 0 8px 40px rgba(255,110,199,0.22), 0 2px 8px rgba(201,168,255,0.18);
-    border: 6px solid rgba(255,189,232,0.85);
-    cursor: grab;
-    touch-action: none;
-  }
-  #result-canvas:active { cursor: grabbing; }
-
-  .post-gen-row {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-  }
-  .swap-btn {
-    flex: 1;
-    padding: 11px 8px;
-    background: rgba(201,168,255,0.15);
-    border: 2px solid var(--lavender);
-    border-radius: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #9060c0;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .swap-btn:hover { background: rgba(201,168,255,0.28); transform: translateY(-1px); }
-  .swap-btn.active {
-    background: rgba(201,168,255,0.35);
-    border-color: #9060c0;
-    color: #6030a0;
-    box-shadow: 0 2px 12px rgba(201,168,255,0.35);
-  }
-  .reset-btn {
-    flex: 1;
-    padding: 11px 8px;
-    border-radius: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    border: 2px solid var(--border);
-    background: rgba(255,255,255,0.7);
-    color: #c080b0;
-    transition: all 0.2s;
-  }
-  .reset-btn:hover { border-color: var(--pink); color: var(--pink); }
-
-  #preview-hint {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 10px;
-    color: #c080b0;
-    text-align: center;
-    letter-spacing: 0.3px;
-    opacity: 0.7;
-  }
-
-  .save-btn {
-    width: 100%;
-    max-width: 440px;
-    margin: 14px 16px 0;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--mint) 0%, var(--sky) 100%);
-    color: var(--text);
-    border: none;
-    border-radius: 16px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    display: none;
-    transition: transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 20px rgba(93,255,216,0.35);
-  }
-  .save-btn.visible { display: block; }
-  .save-btn:active { transform: scale(0.98); }
-  .save-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(93,255,216,0.45);
-  }
-
-  /* Loading */
-  .loading {
-    display: none;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 15px;
-    letter-spacing: 1px;
-    color: var(--pink);
-    text-align: center;
-    padding: 24px;
-    animation: shimmer 1s ease infinite;
-  }
-  .loading.visible { display: block; }
 
   /* Save overlay */
-  .save-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(60,0,40,0.6);
-    backdrop-filter: blur(8px);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .save-overlay.open { display: flex; }
-  .save-modal {
-    background: #fff;
-    border-radius: 24px;
-    padding: 20px 18px 18px;
-    max-width: 340px;
-    width: 100%;
-    box-shadow: 0 16px 60px rgba(255,110,199,0.25);
-    animation: fadeUp 0.25s ease both;
-  }
-  .save-modal-title {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--text);
-    text-align: center;
-    margin-bottom: 14px;
-  }
-
-  .version {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: var(--lavender);
-    letter-spacing: 2px;
-    margin-top: 2px;
-    opacity: 0.8;
-  }
-
-  /* About / Social section */
-  .about-card {
-    background: linear-gradient(135deg, rgba(255,110,199,0.08), rgba(201,168,255,0.12));
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    margin: 8px 16px 0;
-    padding: 20px;
-    width: calc(100% - 32px);
-    max-width: 440px;
-    text-align: center;
-  }
-  .about-card .about-name {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--pink);
-    margin-bottom: 10px;
-  }
-  .about-card .about-bio {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 13px;
-    color: #a060a0;
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-  .about-card .about-bio a {
-    color: var(--pink);
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .social-btns {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-  .social-btn {
-    flex: 1;
-    padding: 10px 8px;
-    border-radius: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    border: 2px solid var(--border);
-    background: rgba(255,255,255,0.7);
-    color: #9060c0;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .social-btn:hover {
-    border-color: var(--pink);
-    color: var(--pink);
-    background: rgba(255,110,199,0.07);
-    transform: translateY(-1px);
-  }
-
-  /* QR modal */
   .qr-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(60,0,40,0.55);
-    backdrop-filter: blur(6px);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(60,0,40,0.55); backdrop-filter: blur(6px);
+    z-index: 100; align-items: center; justify-content: center; padding: 20px;
   }
   .qr-overlay.open { display: flex; }
   .qr-modal {
-    background: #fff;
-    border-radius: 24px;
-    padding: 28px 24px 20px;
-    max-width: 300px;
-    width: 88%;
-    text-align: center;
-    box-shadow: 0 16px 60px rgba(255,110,199,0.25);
-    position: relative;
-    animation: fadeUp 0.25s ease both;
+    background: #fff; border-radius: 20px; padding: 22px 18px 16px;
+    max-width: 300px; width: 88%; text-align: center;
+    box-shadow: 0 12px 40px rgba(255,110,199,0.2);
   }
-  .qr-modal img {
-    width: 100%;
-    border-radius: 12px;
-    margin-bottom: 12px;
-  }
-  .qr-modal .qr-title {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .qr-modal .qr-sub {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 13px;
-    color: #a060a0;
-    margin-bottom: 16px;
-  }
-  .qr-modal .qr-sub a {
-    color: var(--pink);
-    text-decoration: none;
-    font-weight: 600;
-  }
+  .qr-modal img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+  .qr-modal .qr-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 4px; }
+  .qr-modal .qr-sub { font-family: 'Fredoka', sans-serif; font-size: 12px; color: #a060a0; margin-bottom: 12px; }
   .qr-close {
-    width: 100%;
-    padding: 11px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    background: none;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #c080b0;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .qr-close:hover { border-color: var(--pink); color: var(--pink); }
-
-  /* Changelog */
-  .changelog-card {
-    background: linear-gradient(135deg, rgba(255,110,199,0.05), rgba(201,168,255,0.08));
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    margin: 8px 16px 0;
-    padding: 16px 20px;
-    width: calc(100% - 32px);
-    max-width: 440px;
-  }
-  .changelog-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-  .changelog-header .changelog-label {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--pink);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .changelog-header .changelog-arrow {
-    font-size: 11px;
-    color: #c080b0;
-    font-family: 'Fredoka', sans-serif;
-  }
-  .changelog-summary {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 11px;
-    color: #a070a0;
-    line-height: 1.6;
-    margin-top: 8px;
-  }
-
-  /* Changelog modal */
-  .changelog-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(60,0,40,0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .changelog-overlay.open { display: flex; }
-  .changelog-modal {
-    background: #fff;
-    border-radius: 24px;
-    padding: 24px 22px 18px;
-    max-width: 380px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 16px 60px rgba(255,110,199,0.25);
-    animation: fadeUp 0.25s ease both;
-  }
-  .changelog-modal-title {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--text);
-    text-align: center;
-    margin-bottom: 6px;
-  }
-  .changelog-modal-version {
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  .changelog-modal-version span {
-    display: inline-block;
-    padding: 2px 12px;
-    background: linear-gradient(135deg, var(--pink), var(--lavender));
-    color: #fff;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 10px;
-    border-radius: 20px;
-    letter-spacing: 1px;
-  }
-  .cl-section { margin-bottom: 14px; }
-  .cl-section-title {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .cl-section-title .cl-tag {
-    font-size: 9px;
-    font-weight: 600;
-    padding: 1px 8px;
-    border-radius: 8px;
-    letter-spacing: 0.5px;
-  }
-  .cl-section.feature .cl-section-title { color: #9060c0; }
-  .cl-section.feature .cl-tag { background: rgba(201,168,255,0.2); color: #9060c0; }
-  .cl-section.improve .cl-section-title { color: #3ab0a0; }
-  .cl-section.improve .cl-tag { background: rgba(93,255,216,0.2); color: #2a9080; }
-  .cl-section.bugfix .cl-section-title { color: #e06080; }
-  .cl-section.bugfix .cl-tag { background: rgba(255,110,199,0.15); color: #d05070; }
-  .cl-section.compat .cl-section-title { color: #5a8ad0; }
-  .cl-section.compat .cl-tag { background: rgba(90,138,208,0.15); color: #5a8ad0; }
-  .cl-item {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    color: #5a3a6a;
-    line-height: 1.6;
-    padding-left: 16px;
-    position: relative;
-    margin-bottom: 4px;
-  }
-  .cl-item::before {
-    content: '✦';
-    position: absolute;
-    left: 0;
-    font-size: 8px;
-  }
-  .cl-section.feature .cl-item::before { color: var(--lavender); }
-  .cl-section.improve .cl-item::before { color: var(--mint); }
-  .cl-section.bugfix .cl-item::before { color: var(--pink); }
-  .cl-section.compat .cl-item::before { color: var(--sky); }
-  .cl-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 12px 0;
-    border: none;
+    width: 100%; padding: 10px; border-radius: 10px; border: 2px solid var(--border);
+    background: none; font-family: 'Fredoka', sans-serif; font-weight: 600;
+    font-size: 13px; color: #c080b0; cursor: pointer;
   }
 
   /* Donate */
-  .donate-card {
-    background: linear-gradient(135deg, rgba(255,233,74,0.10), rgba(255,110,199,0.08));
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    margin: 8px 16px 0;
-    padding: 18px 20px;
-    width: calc(100% - 32px);
-    max-width: 440px;
-    text-align: center;
+  .donate-overlay { display: none; position: fixed; inset: 0; background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .donate-overlay.open { display: flex; }
+  .donate-modal { background: #fff; border-radius: 20px; padding: 22px 18px 16px; max-width: 300px; width: 88%; text-align: center; box-shadow: 0 12px 40px rgba(255,110,199,0.2); }
+  .donate-modal img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+  .donate-modal-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 4px; }
+  .donate-modal-sub { font-family: 'Fredoka', sans-serif; font-size: 11px; color: #a060a0; margin-bottom: 10px; }
+
+  .changelog-overlay { display: none; position: fixed; inset: 0; background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .changelog-overlay.open { display: flex; }
+  .changelog-modal { background: #fff; border-radius: 20px; padding: 20px 18px 16px; max-width: 360px; width: 95%; max-height: 80vh; overflow-y: auto; box-shadow: 0 12px 40px rgba(255,110,199,0.2); }
+  .changelog-modal-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); text-align: center; margin-bottom: 4px; }
+  .changelog-modal-version { text-align: center; margin-bottom: 12px; }
+  .changelog-modal-version span { display: inline-block; padding: 2px 10px; background: linear-gradient(135deg, var(--pink), var(--lavender)); color: #fff; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 9px; border-radius: 16px; }
+  .cl-section { margin-bottom: 10px; }
+  .cl-section-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 12px; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+  .cl-section-title .cl-tag { font-size: 8px; font-weight: 600; padding: 1px 6px; border-radius: 6px; }
+  .cl-section.feature .cl-section-title { color: #9060c0; } .cl-section.feature .cl-tag { background: rgba(201,168,255,0.2); color: #9060c0; }
+  .cl-section.improve .cl-section-title { color: #3ab0a0; } .cl-section.improve .cl-tag { background: rgba(93,255,216,0.2); color: #2a9080; }
+  .cl-section.bugfix .cl-section-title { color: #e06080; } .cl-section.bugfix .cl-tag { background: rgba(255,110,199,0.15); color: #d05070; }
+  .cl-section.compat .cl-section-title { color: #5a8ad0; } .cl-section.compat .cl-tag { background: rgba(90,138,208,0.15); color: #5a8ad0; }
+  .cl-item { font-family: 'Fredoka', sans-serif; font-size: 11px; color: #5a3a6a; line-height: 1.5; padding-left: 14px; position: relative; margin-bottom: 3px; }
+  .cl-item::before { content: '✦'; position: absolute; left: 0; font-size: 7px; }
+  .cl-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 8px 0; border: none; }
+
+  /* Footer links */
+  .footer-links {
+    display: flex; gap: 12px; justify-content: center; padding: 16px 0 8px;
+    width: 100%; max-width: 440px;
   }
-  .donate-text {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 13px;
-    color: #a060a0;
-    line-height: 1.7;
-    margin-bottom: 14px;
+  .footer-link {
+    font-family: 'Fredoka', sans-serif; font-size: 11px; color: #c080b0;
+    cursor: pointer; border: none; background: none; padding: 4px 8px;
+    border-radius: 8px; transition: all 0.2s;
   }
-  @keyframes milktea {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    20% { transform: translateY(-6px) rotate(-8deg); }
-    40% { transform: translateY(0) rotate(0deg); }
-    60% { transform: translateY(-4px) rotate(6deg); }
-    80% { transform: translateY(0) rotate(0deg); }
+  .footer-link:hover { color: var(--pink); background: rgba(255,110,199,0.06); }
+
+  .loading { display: none; font-family: 'Fredoka', sans-serif; font-size: 13px; color: var(--pink); text-align: center; padding: 12px; }
+  .loading.visible { display: block; }
+
+  /* === PC / wide screen: side by side === */
+  @media (min-width: 768px) {
+    body {
+      flex-direction: row;
+      height: 100dvh;
+    }
+    .canvas-area {
+      width: 50%;
+      height: 100dvh;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 30px;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+    .canvas-area .title-row, #result-canvas, .upload-prompt, .action-row {
+      max-width: 500px;
+      width: 100%;
+    }
+    #result-canvas {
+      max-height: 70vh;
+    }
+    .upload-prompt {
+      height: 340px;
+    }
+    .panel {
+      width: 50%;
+      height: 100dvh;
+      padding: 16px 20px 40px;
+      align-items: stretch;
+    }
+    .card, .footer-links {
+      max-width: 100%;
+    }
   }
-  .donate-text .donate-emoji {
-    font-size: 28px;
-    display: inline-block;
-    margin-bottom: 6px;
-    animation: milktea 2.5s ease-in-out infinite;
-  }
-  .donate-btns {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-  .donate-btn {
-    flex: 1;
-    padding: 10px 8px;
-    border-radius: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    border: 2px solid;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .donate-btn.alipay {
-    border-color: #1677FF;
-    background: rgba(22,119,255,0.06);
-    color: #1677FF;
-  }
-  .donate-btn.alipay:hover {
-    background: rgba(22,119,255,0.14);
-    transform: translateY(-1px);
-  }
-  .donate-btn.wechat {
-    border-color: #07C160;
-    background: rgba(7,193,96,0.06);
-    color: #07C160;
-  }
-  .donate-btn.wechat:hover {
-    background: rgba(7,193,96,0.14);
-    transform: translateY(-1px);
+  @media (min-width: 1100px) {
+    .canvas-area {
+      padding: 24px 48px;
+    }
+    .panel {
+      padding: 24px 32px 40px;
+    }
+    .card {
+      padding: 18px 20px;
+    }
   }
 
-  /* Donate QR modal */
-  .donate-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(60,0,40,0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .donate-overlay.open { display: flex; }
-  .donate-modal {
-    background: #fff;
-    border-radius: 24px;
-    padding: 24px 20px 18px;
-    max-width: 300px;
-    width: 88%;
-    text-align: center;
-    box-shadow: 0 16px 60px rgba(255,110,199,0.25);
-    animation: fadeUp 0.25s ease both;
-  }
-  .donate-modal-title {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .donate-modal-sub {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 12px;
-    color: #a060a0;
-    margin-bottom: 14px;
-  }
-  .donate-modal img {
-    width: 100%;
-    border-radius: 12px;
-    margin-bottom: 14px;
+  /* Force panel to always use light/pink theme regardless of system dark mode */
+  @media (prefers-color-scheme: dark) {
+    .panel {
+      background: var(--bg) !important;
+      color: var(--text) !important;
+    }
+    .card {
+      background: rgba(255,255,255,0.82) !important;
+      color: var(--text) !important;
+    }
+    .card-title { color: var(--pink) !important; }
+    .toggle-btn { background: rgba(255,255,255,0.6) !important; color: #c080b0 !important; }
+    .toggle-btn.active { background: rgba(255,110,199,0.10) !important; color: var(--pink) !important; }
+    .footer-link { color: #c080b0 !important; }
+    input[type="range"] { background: linear-gradient(90deg, rgba(255,110,199,0.2), rgba(201,168,255,0.2)) !important; }
   }
 
 </style>
 </head>
 <body>
 
-<header>
-  <h1>snip snip ✂️</h1>
-  <p>由我junjun制作！✨</p>
-  <p class="version">v 2.1</p>
-</header>
-
-<!-- Upload -->
-<div class="card">
-  <div class="card-title">上传照片 📷</div>
-  <div class="upload-zone" id="uploadZone">
+<!-- ===== CANVAS AREA (fixed top) ===== -->
+<div class="canvas-area fullscreen" id="canvasArea">
+  <div class="title-row">
+    <h1>snip snip ✂️</h1>
+    <span class="ver">v 2.2 by junjun</span>
+  </div>
+  <div class="upload-prompt" id="uploadPrompt" onclick="document.getElementById('fileInput').click()">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6EC7" stroke-width="1.5">
-      <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/>
-      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="8.5" cy="8.5" r="1.5"/>
     </svg>
     <span>点击上传照片 ✨</span>
   </div>
-  <input type="file" id="fileInput" accept="image/*" style="display:none">
-</div>
-
-<!-- Size + Layout -->
-<div class="card">
-  <div class="card-title">尺寸选择 📐</div>
-  <div class="toggle-row" id="sizeRow">
-    <button class="toggle-btn active" data-ratio="1:1" onclick="setRatio(this)">
-      <span class="icon">⬜</span>
-      <span>1 : 1</span>
-    </button>
-    <button class="toggle-btn" data-ratio="3:4" onclick="setRatio(this)">
-      <span class="icon">▯</span>
-      <span>3 : 4</span>
-    </button>
-    <button class="toggle-btn" data-ratio="4:3" onclick="setRatio(this)">
-      <span class="icon">▭</span>
-      <span>4 : 3</span>
-    </button>
-    <button class="toggle-btn" data-ratio="9:16" onclick="setRatio(this)">
-      <span class="icon">▯</span>
-      <span>9 : 16</span>
-    </button>
-  </div>
-</div>
-
-<!-- Layout -->
-<div class="card" id="layoutCard">
-  <div class="card-title">构图方式 ◧</div>
-  <div class="toggle-row" id="layoutRow">
-    <button class="toggle-btn active" data-layout="left-right" onclick="setLayout(this)">
-      <span class="icon">◧</span>
-      <span>左右构图</span>
-    </button>
-    <button class="toggle-btn" data-layout="top-bottom" onclick="setLayout(this)">
-      <span class="icon">⬒</span>
-      <span>上下构图</span>
-    </button>
-  </div>
-</div>
-
-<!-- Shape -->
-<div class="card">
-  <div class="card-title">形状选择 ✦</div>
-  <div class="shape-row">
-    <button class="shape-btn active" data-shape="circle" onclick="setShape(this)">
-      ●<span>bubble</span>
-    </button>
-    <button class="shape-btn" data-shape="star" onclick="setShape(this)">
-      ★<span>star</span>
-    </button>
-    <button class="shape-btn" data-shape="heart" onclick="setShape(this)">
-      ♥<span>heart</span>
-    </button>
-    <button class="shape-btn" data-shape="flower" onclick="setShape(this)">
-      ✿<span>flower</span>
-    </button>
-  </div>
-</div>
-
-<!-- Color -->
-<div class="card">
-  <div class="card-title">填充颜色 🎨</div>
-  <div class="color-row" id="colorRow">
-    <div class="color-swatch active" style="background:#4A9EFF" data-color="#4A9EFF" onclick="setColor(this)"></div>
-    <div class="color-swatch" style="background:#FF7BAC" data-color="#FF7BAC" onclick="setColor(this)"></div>
-    <div class="color-swatch" style="background:#C9A8FF" data-color="#C9A8FF" onclick="setColor(this)"></div>
-    <div class="color-swatch" style="background:#FFD166" data-color="#FFD166" onclick="setColor(this)"></div>
-    <div class="color-swatch" style="background:#6ECFB2" data-color="#6ECFB2" onclick="setColor(this)"></div>
-    <div class="color-swatch" style="background:#FF9E6C" data-color="#FF9E6C" onclick="setColor(this)"></div>
-    <div class="color-swatch" style="background:#F5F0E8" data-color="#F5F0E8" onclick="setColor(this)"></div>
-    <div class="color-custom" id="customColorWrap" title="custom color">
-      <input type="color" id="customColor" value="#4A9EFF" oninput="setCustomColor(this.value)">
-      <div class="color-custom-dot" id="customDot" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Sliders -->
-<div class="card">
-  <div class="card-title">细节调整 ✧</div>
-  <div class="slider-row">
-    <div class="slider-item">
-      <label>形状大小 <span id="sizeVal">67</span></label>
-      <input type="range" id="sizeSlider" min="10" max="60" value="40"
-        oninput="document.getElementById('sizeVal').textContent=Math.round((this.value-10)/50*100); ">
-    </div>
-    <div class="slider-item">
-      <label>形状数量 <span id="countVal">67</span></label>
-      <input type="range" id="countSlider" min="4" max="25" value="18"
-        oninput="document.getElementById('countVal').textContent=Math.round((this.value-4)/21*100);">
-    </div>
-    <div class="slider-item">
-      <label>透明度 <span id="opacVal">90</span>%</label>
-      <input type="range" id="opacSlider" min="30" max="100" value="90" oninput="document.getElementById('opacVal').textContent=this.value">
-    </div>
-  </div>
-</div>
-
-<!-- Generate -->
-<div class="card">
-  <button class="gen-btn" onclick="generate()">🪄 开始生成！</button>
-</div>
-
-<div class="loading" id="loading">✨ 生成中，稍等一下～ ✨</div>
-
-<div id="preview-wrap">
   <canvas id="result-canvas"></canvas>
-  <div id="preview-hint">拖动调整位置 · 双指缩放大小</div>
-  <div class="post-gen-row">
-    <button class="swap-btn" id="swapBtn" onclick="toggleSwap()">⇄ 互换位置</button>
-    <button class="reset-btn" onclick="resetTransform()">↺ 重置图片</button>
-  </div>
-</div>
-<button class="save-btn" id="saveBtn" onclick="saveImage()">✦ 保存到相册</button>
-
-
-
-<!-- About / Social -->
-<div class="about-card">
-  <div class="about-name">✦ junjun ✦</div>
-  <div class="about-bio">
-    嗨！我是 JunJun，一名平面设计师 🎨<br>
-    我会在社交平台持续分享创意内容与新工具，<br>
-    欢迎来找我玩！
-  </div>
-  <div class="social-btns">
-    <button class="social-btn" onclick="openSocial('threads')">
-      <span>⬡</span> Threads
-    </button>
-    <button class="social-btn" onclick="openSocial('xhs')">
-      <span>📕</span> 小红书
-    </button>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
+  <div class="action-row" id="actionRow" style="display:none">
+    <button class="act-main btn-save" onclick="saveImage()">✦ 保存图片</button>
+    <button class="act-main btn-change" onclick="document.getElementById('fileInput').click()">📷 换图</button>
+    <button class="act-link" onclick="toggleSwap()" id="swapBtn">⇄ 互换</button>
+    <button class="act-link" onclick="resetTransform()">↺ 重置</button>
   </div>
 </div>
 
-<!-- Donate -->
-<div class="donate-card">
-  <div class="donate-text">
-    <span class="donate-emoji">🧋</span>
-    如果觉得好用，请我喝杯奶茶吧～<br>
-    你的支持是我继续做新工具的动力！
-  </div>
-  <div class="donate-btns">
-    <button class="donate-btn alipay" onclick="openDonate('alipay')">
-      💙 支付宝
-    </button>
-    <button class="donate-btn wechat" onclick="openDonate('wechat')">
-      💚 微信
-    </button>
-  </div>
-</div>
+<!-- ===== CONTROL PANEL (scrollable bottom) ===== -->
+<div class="panel" id="controlPanel" style="display:none">
 
-<!-- Donate QR Modal -->
-<div class="donate-overlay" id="donateOverlay" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="donate-modal">
-    <div class="donate-modal-title" id="donateTitle"></div>
-    <div class="donate-modal-sub">截图扫码 或 长按识别二维码 🧋</div>
-    <img id="donateQR" src="" alt="收款二维码">
-    <button class="qr-close" onclick="document.getElementById('donateOverlay').classList.remove('open')">关闭</button>
-  </div>
-</div>
-
-<!-- Changelog -->
-<div class="changelog-card">
-  <div class="changelog-header" onclick="document.getElementById('changelogOverlay').classList.add('open')">
-    <div class="changelog-label">📋 更新日志</div>
-    <div class="changelog-arrow">查看详情 →</div>
-  </div>
-  <div class="changelog-summary">
-    v2.1 · 新增 9:16 尺寸 & 花朵形状 · 修复 iOS/小米兼容问题
-  </div>
-</div>
-
-<!-- Changelog Modal -->
-<div class="changelog-overlay" id="changelogOverlay" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="changelog-modal">
-    <div class="changelog-modal-title">snip snip ✂️ 更新日志</div>
-    <div class="changelog-modal-version"><span>v 2.1</span></div>
-
-    <div class="cl-section feature">
-      <div class="cl-section-title">🪄 新功能 <span class="cl-tag">NEW</span></div>
-      <div class="cl-item">新增 9:16 竖版尺寸，适合手机壁纸、Instagram story、视频封面</div>
-      <div class="cl-item">新增五瓣小花朵形状 ✿ 随机旋转角度</div>
-      <div class="cl-item">五角星加了随机旋转，更灵动</div>
+  <!-- 画布设置 -->
+  <div class="card">
+    <div class="card-title">画布设置</div>
+    <div class="toggle-row" id="sizeRow">
+      <button class="toggle-btn active" data-ratio="1:1" onclick="setRatio(this)"><span class="icon">⬜</span><span>1:1</span></button>
+      <button class="toggle-btn" data-ratio="3:4" onclick="setRatio(this)"><span class="icon">▯</span><span>3:4</span></button>
+      <button class="toggle-btn" data-ratio="4:3" onclick="setRatio(this)"><span class="icon">▭</span><span>4:3</span></button>
+      <button class="toggle-btn" data-ratio="9:16" onclick="setRatio(this)"><span class="icon">▯</span><span>9:16</span></button>
     </div>
-    <hr class="cl-divider">
-    <div class="cl-section improve">
-      <div class="cl-section-title">✨ 体验优化 <span class="cl-tag">IMPROVED</span></div>
-      <div class="cl-item">色块底图与照片半边同步：大小一致，拖动缩放联动</div>
-      <div class="cl-item">底图上的形状图案改为 100% 不透明，视觉更干净</div>
-      <div class="cl-item">画布与页面边缘间距加宽，滑页不容易误触</div>
+    <div class="toggle-row" id="layoutRow" style="margin-top:8px">
+      <button class="toggle-btn active" data-layout="left-right" onclick="setLayout(this)"><span class="icon">◧</span><span>左右</span></button>
+      <button class="toggle-btn" data-layout="top-bottom" onclick="setLayout(this)"><span class="icon">⬒</span><span>上下</span></button>
     </div>
-    <hr class="cl-divider">
-    <div class="cl-section bugfix">
-      <div class="cl-section-title">🐛 Bug 修复 <span class="cl-tag">FIXED</span></div>
-      <div class="cl-item">修复 iOS Safari 生成图片只显示白色、色块消失的问题</div>
-      <div class="cl-item">修复 macOS Safari 右键保存图片为空白的问题</div>
+    <div class="slider-item" style="margin-top:8px">
+      <label><span id="splitLabel">色块 50%</span></label>
+      <input type="range" id="splitSlider" min="0" max="80" value="50" oninput="document.getElementById('splitLabel').textContent='色块 '+this.value+'%'; autoRender();">
     </div>
-    <hr class="cl-divider">
-    <div class="cl-section compat">
-      <div class="cl-section-title">📱 兼容性提升 <span class="cl-tag">COMPAT</span></div>
-      <div class="cl-item">修复小米 HyperOS 自带浏览器下载图片 0b 失败的问题</div>
-    </div>
+  </div>
 
-    <hr class="cl-divider">
-    <button class="qr-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">关闭</button>
+  <!-- 形状 & 细节 -->
+  <div class="card">
+    <div class="card-title">模式</div>
+    <div class="toggle-row" style="margin-bottom:10px">
+      <button class="toggle-btn active" id="modeRandom" onclick="setMode('random')" style="padding:10px 8px;font-size:12px;flex-direction:row;gap:5px"><span style="font-size:14px">🎲</span>随机散布</button>
+      <button class="toggle-btn" id="modeManual" onclick="setMode('manual')" style="padding:10px 8px;font-size:12px;flex-direction:row;gap:5px"><span style="font-size:14px">✋</span>手动放置</button>
+    </div>
+    <div class="card-title" style="margin-top:4px">形状 <span style="font-weight:400;font-size:9px;color:#c080b0;margin-left:4px" id="shapeHint">可选 1～2 种</span></div>
+    <div class="shape-row">
+      <button class="shape-btn" data-shape="circle" onclick="setShape(this)">●<span>bubble</span></button>
+      <button class="shape-btn active" data-shape="star" onclick="setShape(this)">★<span>star</span></button>
+      <button class="shape-btn active" data-shape="heart" onclick="setShape(this)">♥<span>heart</span></button>
+      <button class="shape-btn" data-shape="flower" onclick="setShape(this)">✿<span>flower</span></button>
+      <button class="shape-btn" data-shape="spark8" onclick="setShape(this)"><svg width="16" height="16" viewBox="0 0 408 426" fill="currentColor"><path d="M227,287l-11,72-5,33-7,43c-1,5,0,10-5,14l-3-16-16-109c-2-9-3-16-5-25-5,3-8,5-11,8l-68,51-25,19c-5,4-9,10-17,11L145,239c-10-5-20-4-30-6l-26-5-22-3c-6-1-11-2-16-3l-38-7c-5-1-10,1-13-5l37-6 69-12c13-2,25-2,39-6L80,93 66,73c-3-4-6-7-7-13 4,3,7,5,10,7l17,13 43,32 21,17 25,18c1,1,3,2,3,2s2-3,2-3l5-32 2-16 5-28 3-19 4-23 4-28c6,6,4,12,5,19l4,22 2,13 6,41 5,34 3,19c0,2,5,1,7-1l100-76c5-4,8-8,14-9-2,4-3,8-6,11l-10,15-28,39-41,60c10,3,19,4,28,5l27,5 22,4 20,3 17,3 26,3c1,0,5,2,4,3s-3,3-4,3l-21,3-15,3-24,4-31,5-29,5-20,3c3,5,4,7,6,11l20,29 39,56 16,22 4,3c1,1,0,4-2,6l-26-20-8-6-31-23-35-27-18-14c-1,6-2,8-2,13Z"/></svg><span>spark</span></button>
+      <button class="shape-btn" data-shape="ribbon" onclick="setShape(this)">🎀<span>ribbon</span></button>
+      <button class="shape-btn" data-shape="diamond4" onclick="setShape(this)">◆<span>diamond</span></button>
+      <button class="shape-btn" data-shape="butterfly" onclick="setShape(this)">🦋<span>butterfly</span></button>
+    </div>
+    <!-- Style toggles (apply to both modes) -->
+    <div class="toggle-row" style="margin-top:8px">
+      <button class="toggle-btn" id="outlineToggle" onclick="toggleOutline(this)" style="flex-direction:row;gap:4px;font-size:10px;padding:6px"><span style="font-size:14px">✏️</span>勾线</button>
+      <button class="toggle-btn" id="eraserToggle" onclick="toggleEraser(this)" style="flex-direction:row;gap:4px;font-size:10px;padding:6px"><span style="font-size:14px">🧹</span>橡皮擦</button>
+    </div>
+    <!-- Random mode controls -->
+    <div style="margin-top:10px" id="randomControls">
+      <div id="singleShapeControls" style="display:none">
+        <div class="slider-row">
+          <div class="slider-item"><label>大小 <span id="sizeVal">67</span></label><input type="range" id="sizeSlider" min="10" max="60" value="40" oninput="document.getElementById('sizeVal').textContent=Math.round((this.value-10)/50*100); autoRender();"></div>
+          <div class="slider-item"><label>数量 <span id="countVal">67</span></label><input type="range" id="countSlider" min="4" max="25" value="18" oninput="document.getElementById('countVal').textContent=Math.round((this.value-4)/21*100); autoRender();"></div>
+          <div class="slider-item" style="grid-column:span 2"><label>大小差异 <span id="varVal">50</span>%</label><input type="range" id="varSlider" min="0" max="100" value="50" oninput="document.getElementById('varVal').textContent=this.value; autoRender();"></div>
+        </div>
+      </div>
+      <div id="dualShapeControls">
+        <div class="dual-label" id="shapeALabel">✦ star</div>
+        <div class="slider-row">
+          <div class="slider-item"><label>大小 <span id="sizeValA">0</span></label><input type="range" id="sizeSliderA" min="10" max="60" value="10" oninput="document.getElementById('sizeValA').textContent=Math.round((this.value-10)/50*100); autoRender();"></div>
+          <div class="slider-item"><label>数量 <span id="countValA">100</span></label><input type="range" id="countSliderA" min="4" max="25" value="25" oninput="document.getElementById('countValA').textContent=Math.round((this.value-4)/21*100); autoRender();"></div>
+        </div>
+        <div class="dual-label" id="shapeBLabel" style="margin-top:6px">✦ heart</div>
+        <div class="slider-row">
+          <div class="slider-item"><label>大小 <span id="sizeValB">30</span></label><input type="range" id="sizeSliderB" min="10" max="60" value="25" oninput="document.getElementById('sizeValB').textContent=Math.round((this.value-10)/50*100); autoRender();"></div>
+          <div class="slider-item"><label>数量 <span id="countValB">10</span></label><input type="range" id="countSliderB" min="4" max="25" value="6" oninput="document.getElementById('countValB').textContent=Math.round((this.value-4)/21*100); autoRender();"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Manual mode controls -->
+    <div id="manualControls" style="display:none;margin-top:10px">
+      <div class="slider-row" style="grid-template-columns:1fr auto auto">
+        <div class="slider-item"><label>大小 <span id="manualSizeVal">40</span></label><input type="range" id="manualSizeSlider" min="10" max="80" value="30"></div>
+        <button class="act-link" onclick="undoManualShape()" style="font-size:10px;padding:4px 8px;color:#c080b0">↩ 撤销</button>
+        <button class="act-link" id="clearManualBtn" onclick="clearManualShapes()" style="font-size:10px;padding:4px 8px;color:#e06080;display:none">✕ 清除</button>
+      </div>
+      <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;margin-top:4px;opacity:0.7">选一个形状 → 点画布放置</div>
+    </div>
+  </div>
+
+  <!-- 填色设置 -->
+  <div class="card">
+    <div class="card-title">填色</div>
+    <div id="smartColorRow" style="display:none;margin-bottom:8px">
+      <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;font-weight:600;margin-bottom:5px">🎯 从照片提取</div>
+      <div class="color-row" id="extractedColors"></div>
+    </div>
+    <div class="color-row" id="colorRow">
+      <div class="color-swatch active" style="background:#fbffcc" data-color="#fbffcc" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#4A9EFF" data-color="#4A9EFF" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#FF7BAC" data-color="#FF7BAC" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#C9A8FF" data-color="#C9A8FF" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#FFD166" data-color="#FFD166" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#6ECFB2" data-color="#6ECFB2" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#FF9E6C" data-color="#FF9E6C" onclick="setColor(this)"></div>
+      <div class="color-swatch" style="background:#F5F0E8" data-color="#F5F0E8" onclick="setColor(this)"></div>
+      <div class="color-custom" id="customColorWrap" title="custom color">
+        <input type="color" id="customColor" value="#4A9EFF" oninput="setCustomColor(this.value)">
+        <div class="color-custom-dot" id="customDot" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;margin-bottom:6px">叠加图案</div>
+    <div class="pattern-row" id="patternRow">
+      <div class="pattern-swatch" data-pattern="none" onclick="setPattern(this)" style="background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#ccc;">✕</div>
+      <div class="pattern-swatch" data-pattern="dots-black" onclick="setPattern(this)" style="background:radial-gradient(circle,#000 .5px,transparent .5px) 0 0,radial-gradient(circle,#000 .5px,transparent .5px) 3px 3px;background-size:6px 6px;background-color:#fff"></div>
+      <div class="pattern-swatch" data-pattern="dots-white" onclick="setPattern(this)" style="background:radial-gradient(circle,#fff .5px,transparent .5px) 0 0,radial-gradient(circle,#fff .5px,transparent .5px) 3px 3px;background-size:6px 6px;background-color:#333"></div>
+      <div class="pattern-swatch" data-pattern="stripes-v-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#000 0 .8px,transparent .8px 4px);background-color:#fff"></div>
+      <div class="pattern-swatch" data-pattern="stripes-v-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#fff 0 .8px,transparent .8px 4px);background-color:#333"></div>
+      <div class="pattern-swatch" data-pattern="stripes-h-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(0deg,#000 0 .8px,transparent .8px 4px);background-color:#fff"></div>
+      <div class="pattern-swatch" data-pattern="stripes-h-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(0deg,#fff 0 .8px,transparent .8px 4px);background-color:#333"></div>
+      <div class="pattern-swatch active" data-pattern="grid-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#000 0 .5px,transparent .5px 5px),repeating-linear-gradient(0deg,#000 0 .5px,transparent .5px 5px);background-color:#fff"></div>
+      <div class="pattern-swatch" data-pattern="grid-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#fff 0 .5px,transparent .5px 5px),repeating-linear-gradient(0deg,#fff 0 .5px,transparent .5px 5px);background-color:#333"></div>
+    </div>
+  </div>
+
+  <!-- Footer links -->
+  <div class="footer-links">
+    <button class="footer-link" onclick="openSocial('threads')">⬡ Threads</button>
+    <button class="footer-link" onclick="openSocial('xhs')">📕 小红书</button>
+    <button class="footer-link" onclick="openDonate('alipay')">💙 请喝奶茶</button>
+    <button class="footer-link" onclick="document.getElementById('changelogOverlay').classList.add('open')">📋 更新日志</button>
   </div>
 </div>
+
+<div class="loading" id="loading">✨ 生成中 ✨</div>
 
 <!-- Social Info Modal -->
 <div class="qr-overlay" id="socialOverlay" onclick="closeSocialOverlay(event)">
@@ -4089,18 +3615,73 @@
   <div class="qr-modal">
     <div class="qr-title" id="saveHint">长按图片保存</div>
     <div class="qr-sub" id="saveHintSub" style="margin-bottom:12px;"></div>
-    <img id="saveImg" src="" alt="" style="width:100%;border-radius:12px;margin-bottom:14px;">
+    <img id="saveImg" src="" alt="" style="width:100%;border-radius:12px;margin-bottom:10px;-webkit-touch-callout:default;">
+    <div style="font-family:'Fredoka',sans-serif;font-size:10px;color:#a060a0;margin-bottom:12px;text-align:center">长按无反应？试试下方按钮 ↓</div>
+    <a id="saveImgLink" href="#" target="_blank" style="display:block;width:100%;padding:11px;border-radius:12px;border:2px solid var(--mint);background:rgba(93,255,216,0.1);font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;color:#2a9080;text-align:center;text-decoration:none;margin-bottom:10px">在新标签页打开图片</a>
     <button class="qr-close" onclick="closeSaveOverlay()">关闭</button>
+  </div>
+</div>
+
+<!-- Donate overlay -->
+<div class="donate-overlay" id="donateOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="donate-modal">
+    <div class="donate-modal-title" id="donateTitle"></div>
+    <div class="donate-modal-sub">截图扫码 或 长按识别二维码 🧋</div>
+    <img id="donateQR" src="" alt="收款二维码">
+    <button class="qr-close" onclick="document.getElementById('donateOverlay').classList.remove('open')">关闭</button>
+  </div>
+</div>
+
+<!-- Changelog overlay -->
+<div class="changelog-overlay" id="changelogOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="changelog-modal">
+    <div class="changelog-modal-title">snip snip ✂️ 更新日志</div>
+    <div class="changelog-modal-version"><span>v 2.2</span></div>
+    <div class="cl-section feature">
+      <div class="cl-section-title">🪄 新功能 <span class="cl-tag">NEW</span></div>
+      <div class="cl-item">新增 9:16 竖版尺寸</div>
+      <div class="cl-item">新增五瓣花朵、八角星芒、蝴蝶结、菱形星光、蝴蝶 5 种形状</div>
+      <div class="cl-item">形状随机可选2种 · 手动选1种混合</div>
+      <div class="cl-item">新增勾线模式（只描边不填色）</div>
+      <div class="cl-item">新增叠加图案（波点/条纹/网格）</div>
+      <div class="cl-item">可调节色块比例</div>
+      <div class="cl-item">所有调节实时预览</div>
+    </div>
+    <hr class="cl-divider">
+    <div class="cl-section improve">
+      <div class="cl-section-title">✨ 优化 <span class="cl-tag">IMPROVED</span></div>
+      <div class="cl-item">形状不再互相重叠</div>
+      <div class="cl-item">响应式布局，PC 和手机都好用</div>
+      <div class="cl-item">画布固定在顶部，调参数时始终可见</div>
+    </div>
+    <hr class="cl-divider">
+    <div class="cl-section bugfix">
+      <div class="cl-section-title">🐛 修复 <span class="cl-tag">FIXED</span></div>
+      <div class="cl-item">修复 iOS Safari 生成白屏问题</div>
+      <div class="cl-item">修复触控灵敏度过高误触问题</div>
+      <div class="cl-item">修复小米 HyperOS 下载失败问题</div>
+    </div>
+    <hr class="cl-divider">
+    <button class="qr-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">关闭</button>
   </div>
 </div>
 
 <script>
 let userImage = null;
+let _ignoreNextClick = false; // guard: ignore first canvas click after image upload
 let currentLayout = 'left-right';
-let currentShape = 'circle';
-let currentColor = '#4A9EFF';
+let currentShapes = ['star', 'heart'];
+let currentColor = '#fbffcc';
 let currentRatio = '1:1';
+let currentPattern = 'grid-black';
+let outlineMode = false;
+let currentMode = 'random'; // 'random' | 'manual'
+let eraserOn = false;
+let manualShapes = []; // {x, y, r, shape} in canvas coords
+let _lastRandomShapes = []; // cache of last rendered random shapes (canvas coords) for eraser
+let _erasedRandomShapes = []; // shapes erased in random mode (stored by canvas coords)
 let isSwapped = false;
+let _lastPlaceTime = 0; // Guard: prevent touchend+click dual trigger on OPPO/Vivo
 
 // Image transform
 let imgOffsetX = 0;
@@ -4108,18 +3689,7 @@ let imgOffsetY = 0;
 let imgScale = 1.0;
 
 // Upload
-const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
-
-uploadZone.addEventListener('click', () => fileInput.click());
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
-uploadZone.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadZone.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) loadImage(file);
-});
 fileInput.addEventListener('change', e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
 
 function loadImage(file) {
@@ -4129,8 +3699,16 @@ function loadImage(file) {
     img.onload = () => {
       userImage = img;
       imgOffsetX = 0; imgOffsetY = 0; imgScale = 1.0;
-      uploadZone.classList.add('has-image');
-      uploadZone.innerHTML = `<img src="${ev.target.result}" alt="preview">`;
+      _ignoreNextClick = true; // ignore the click that triggered the file dialog
+      // Show canvas, hide upload prompt, show controls
+      document.getElementById('uploadPrompt').classList.add('hidden');
+      document.getElementById('canvasArea').classList.remove('fullscreen');
+      document.getElementById('result-canvas').classList.add('visible');
+      document.getElementById('actionRow').style.display = '';
+      document.getElementById('controlPanel').style.display = '';
+      extractColors(img);
+      manualShapes = [];
+      renderPlain(); // Just show the image, no shapes yet
     };
     img.src = ev.target.result;
   };
@@ -4142,77 +3720,291 @@ function setRatio(btn) {
   btn.classList.add('active');
   currentRatio = btn.dataset.ratio;
 
-  const layoutCard = document.getElementById('layoutCard');
+  const layoutRow = document.getElementById('layoutRow');
   const layoutBtns = document.querySelectorAll('#layoutRow .toggle-btn');
 
   if (currentRatio === '3:4') {
-    // 只允许上下构图
-    layoutCard.style.display = 'none';
+    layoutRow.style.display = 'none';
     currentLayout = 'top-bottom';
   } else if (currentRatio === '4:3') {
-    // 只允许左右构图
-    layoutCard.style.display = 'none';
+    layoutRow.style.display = 'none';
     currentLayout = 'left-right';
   } else if (currentRatio === '9:16') {
-    // 只允许上下构图
-    layoutCard.style.display = 'none';
+    layoutRow.style.display = 'none';
     currentLayout = 'top-bottom';
   } else {
-    // 1:1 两种都可以，恢复当前选中状态
-    layoutCard.style.display = '';
-    // 确保UI与currentLayout同步
+    layoutRow.style.display = '';
     layoutBtns.forEach(b => {
       b.classList.toggle('active', b.dataset.layout === currentLayout);
     });
   }
+  autoRender();
 }
 
 function setLayout(btn) {
   document.querySelectorAll('#layoutRow .toggle-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentLayout = btn.dataset.layout;
+  autoRender();
 }
 
 function setShape(btn) {
-  document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentShape = btn.dataset.shape;
+  const shape = btn.dataset.shape;
+  // Auto-disable eraser when selecting a shape
+  if (eraserOn) {
+    eraserOn = false;
+    const eraserBtn = document.getElementById('eraserToggle');
+    if (eraserBtn) eraserBtn.classList.remove('active');
+    const canvas = document.getElementById('result-canvas');
+    canvas.style.cursor = currentMode === 'manual' ? 'crosshair' : 'grab';
+  }
+  const idx = currentShapes.indexOf(shape);
+  if (idx >= 0) {
+    if (currentShapes.length > 1) {
+      currentShapes.splice(idx, 1);
+      btn.classList.remove('active');
+    }
+  } else {
+    if (currentShapes.length >= 2) {
+      const oldShape = currentShapes.shift();
+      document.querySelector(`.shape-btn[data-shape="${oldShape}"]`).classList.remove('active');
+    }
+    currentShapes.push(shape);
+    btn.classList.add('active');
+  }
+  // Toggle single/dual controls
+  const isDual = currentShapes.length === 2;
+  document.getElementById('singleShapeControls').style.display = isDual ? 'none' : '';
+  document.getElementById('dualShapeControls').style.display = isDual ? '' : 'none';
+  if (isDual) {
+    const nameMap = {circle:'bubble',star:'star',heart:'heart',flower:'flower',spark8:'spark',ribbon:'ribbon',diamond4:'diamond',butterfly:'butterfly'};
+    document.getElementById('shapeALabel').textContent = '✦ ' + (nameMap[currentShapes[0]] || currentShapes[0]);
+    document.getElementById('shapeBLabel').textContent = '✦ ' + (nameMap[currentShapes[1]] || currentShapes[1]);
+  }
+  // In manual mode, enforce single shape selection
+  if (currentMode === 'manual' && currentShapes.length > 1) {
+    const keep = currentShapes[currentShapes.length - 1];
+    currentShapes.forEach(s => {
+      if (s !== keep) document.querySelector('.shape-btn[data-shape="' + s + '"]').classList.remove('active');
+    });
+    currentShapes.splice(0, currentShapes.length - 1);
+    // Switch to single controls
+    document.getElementById('singleShapeControls').style.display = 'none';
+    document.getElementById('dualShapeControls').style.display = 'none';
+  }
+  autoRender();
 }
 
 function setColor(el) {
   document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
   el.classList.add('active');
   currentColor = el.dataset.color;
+  autoRender();
 }
 
 function setCustomColor(val) {
   currentColor = val;
   document.getElementById('customDot').style.background = val;
   document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  autoRender();
+}
+
+function setPattern(el) {
+  document.querySelectorAll('.pattern-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  currentPattern = el.dataset.pattern;
+  autoRender();
+}
+
+function toggleOutline(btn) {
+  outlineMode = !outlineMode;
+  btn.classList.toggle('active', outlineMode);
+  autoRender();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeRandom').classList.toggle('active', mode === 'random');
+  document.getElementById('modeManual').classList.toggle('active', mode === 'manual');
+  const canvas = document.getElementById('result-canvas');
+  // Disable eraser in random mode
+  const eraserBtn = document.getElementById('eraserToggle');
+  if (mode === 'random') {
+    eraserOn = false;
+    eraserBtn.classList.remove('active');
+    eraserBtn.disabled = true;
+    eraserBtn.style.opacity = '0.35';
+    eraserBtn.style.pointerEvents = 'none';
+    _erasedRandomShapes = [];
+  } else {
+    eraserBtn.disabled = false;
+    eraserBtn.style.opacity = '';
+    eraserBtn.style.pointerEvents = '';
+  }
+  canvas.style.cursor = eraserOn ? 'pointer' : (mode === 'manual' ? 'crosshair' : 'grab');
+  document.getElementById('manualControls').style.display = mode === 'manual' ? '' : 'none';
+  document.getElementById('randomControls').style.display = mode === 'random' ? '' : 'none';
+  document.getElementById('clearManualBtn').style.display = manualShapes.length > 0 ? '' : 'none';
+  var hint = document.getElementById('shapeHint');
+  if (hint) hint.textContent = mode === 'random' ? '可选 1～2 种' : '选 1 种';
+  if (mode === 'manual' && currentShapes.length > 1) {
+    var keep = currentShapes[currentShapes.length - 1];
+    currentShapes.forEach(function(s) {
+      if (s !== keep) document.querySelector('.shape-btn[data-shape="' + s + '"]').classList.remove('active');
+    });
+    currentShapes.splice(0, currentShapes.length - 1);
+    document.getElementById('singleShapeControls').style.display = 'none';
+    document.getElementById('dualShapeControls').style.display = 'none';
+  }
+  autoRender();
+}
+
+function toggleEraser(btn) {
+  if (currentMode === 'random') return; // eraser disabled in random mode
+  eraserOn = !eraserOn;
+  btn.classList.toggle('active', eraserOn);
+  var canvas = document.getElementById('result-canvas');
+  canvas.style.cursor = eraserOn ? 'pointer' : (currentMode === 'manual' ? 'crosshair' : 'grab');
+}
+
+function undoManualShape() {
+  if (manualShapes.length > 0) {
+    manualShapes.pop();
+    if (manualShapes.length === 0) document.getElementById('clearManualBtn').style.display = 'none';
+    render();
+  }
+}
+
+function clearManualShapes() {
+  manualShapes = [];
+  document.getElementById('clearManualBtn').style.display = 'none';
+  autoRender();
 }
 
 function toggleSwap() {
   isSwapped = !isSwapped;
   const btn = document.getElementById('swapBtn');
-  btn.classList.toggle('active', isSwapped);
-  btn.textContent = isSwapped ? '⇄ 已互换（还原）' : '⇄ 互换位置';
+  btn.textContent = isSwapped ? '⇄ 已互换' : '⇄ 互换位置';
+  btn.style.color = isSwapped ? 'var(--pink)' : '#c080b0';
   if (userImage) render();
 }
 
 // ---- Canvas generation ----
-function generate() {
-  if (!userImage) { alert('Please upload a photo first!'); return; }
+// Extract 5 dominant colors from image using k-means-like sampling
+function extractColors(img) {
+  const c = document.createElement('canvas');
+  const size = 64; // downsample for speed
+  c.width = size; c.height = size;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0, size, size);
+  const data = ctx.getImageData(0, 0, size, size).data;
+  // Collect all pixels
+  const pixels = [];
+  for (let i = 0; i < data.length; i += 4) {
+    pixels.push([data[i], data[i+1], data[i+2]]);
+  }
+  // Simple k-means with 5 random seeds
+  let centers = [];
+  for (let i = 0; i < 5; i++) {
+    centers.push(pixels[Math.floor(Math.random() * pixels.length)].slice());
+  }
+  for (let iter = 0; iter < 8; iter++) {
+    const clusters = centers.map(() => []);
+    pixels.forEach(p => {
+      let minD = Infinity, minI = 0;
+      centers.forEach((c, i) => {
+        const d = (p[0]-c[0])**2 + (p[1]-c[1])**2 + (p[2]-c[2])**2;
+        if (d < minD) { minD = d; minI = i; }
+      });
+      clusters[minI].push(p);
+    });
+    centers = clusters.map((cl, i) => {
+      if (cl.length === 0) return centers[i];
+      const avg = [0,0,0];
+      cl.forEach(p => { avg[0]+=p[0]; avg[1]+=p[1]; avg[2]+=p[2]; });
+      return avg.map(v => Math.round(v / cl.length));
+    });
+  }
+  // Sort by brightness
+  centers.sort((a,b) => (a[0]+a[1]+a[2]) - (b[0]+b[1]+b[2]));
+  // Build swatches
+  const row = document.getElementById('extractedColors');
+  row.innerHTML = '';
+  centers.forEach(c => {
+    const hex = '#' + c.map(v => v.toString(16).padStart(2,'0')).join('');
+    const div = document.createElement('div');
+    div.className = 'color-swatch';
+    div.style.background = hex;
+    div.dataset.color = hex;
+    div.onclick = function() { setColor(this); };
+    row.appendChild(div);
+  });
+  document.getElementById('smartColorRow').style.display = '';
+}
 
-  document.getElementById('loading').classList.add('visible');
-  document.getElementById('preview-wrap').classList.remove('visible');
-  document.getElementById('saveBtn').classList.remove('visible');
+// Fit canvas CSS size to match its internal aspect ratio within container constraints.
+// This replaces object-fit:contain so getBoundingClientRect() matches actual content area,
+// ensuring click coordinates map accurately to canvas coordinates.
+function fitCanvasCSS(canvas) {
+  const parent = canvas.parentElement;
+  const parentW = parent.clientWidth;
+  const style = getComputedStyle(canvas);
+  // getComputedStyle resolves vh/% to px, so parseFloat works
+  const maxW = Math.min(parseFloat(style.maxWidth) || parentW, parentW);
+  const maxH = parseFloat(style.maxHeight) || window.innerHeight;
+  const ar = canvas.width / canvas.height;
+  let w, h;
+  if (maxW / maxH > ar) {
+    h = maxH; w = h * ar;
+  } else {
+    w = maxW; h = w / ar;
+  }
+  if (w > maxW) { w = maxW; h = w / ar; }
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+}
 
-  setTimeout(() => {
+// Re-fit canvas on viewport resize / orientation change
+let _resizeTimer = null;
+window.addEventListener('resize', () => {
+  if (_resizeTimer) clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    const canvas = document.getElementById('result-canvas');
+    if (canvas.classList.contains('visible')) fitCanvasCSS(canvas);
+  }, 100);
+});
+
+// Auto-render on any parameter change
+// Render plain image only (no shapes)
+function renderPlain() {
+  const canvas = document.getElementById('result-canvas');
+  const ctx = canvas.getContext('2d');
+  const BASE = 1080;
+  let canvasW, canvasH;
+  if (currentRatio === '3:4') { canvasW = BASE*3/4; canvasH = BASE; }
+  else if (currentRatio === '4:3') { canvasW = BASE; canvasH = BASE*3/4; }
+  else if (currentRatio === '9:16') { canvasW = BASE*9/16; canvasH = BASE; }
+  else { canvasW = BASE; canvasH = BASE; }
+  canvas.width = canvasW; canvas.height = canvasH;
+  const img = userImage;
+  if (!img) return;
+  const imgAr = img.width / img.height;
+  const canvasAr = canvasW / canvasH;
+  let dw, dh, dx, dy;
+  if (imgAr > canvasAr) { dh = canvasH; dw = dh * imgAr; }
+  else { dw = canvasW; dh = dw / imgAr; }
+  dx = (canvasW - dw) / 2; dy = (canvasH - dh) / 2;
+  ctx.drawImage(img, dx, dy, dw, dh);
+  fitCanvasCSS(canvas);
+}
+
+let _autoTimer = null;
+function autoRender() {
+  if (!userImage) return;
+  if (_autoTimer) clearTimeout(_autoTimer);
+  _autoTimer = setTimeout(() => {
     try { render(); } catch(e) { console.error(e); }
-    document.getElementById('loading').classList.remove('visible');
-    document.getElementById('preview-wrap').classList.add('visible');
-    document.getElementById('saveBtn').classList.add('visible');
-  }, 80);
+  }, 50);
 }
 
 // Reusable offscreen canvases (avoid iOS Safari memory limit from repeated createElement)
@@ -4222,13 +4014,32 @@ const _ocCanvas = document.createElement('canvas');
 const _ocCtx = _ocCanvas.getContext('2d', { willReadFrequently: false });
 const _compCanvas = document.createElement('canvas');
 const _compCtx = _compCanvas.getContext('2d', { willReadFrequently: false });
+const _phCanvas = document.createElement('canvas'); // photo shapes canvas (reused, not recreated)
+const _phCtx = _phCanvas.getContext('2d');
+const _mPhCanvas = document.createElement('canvas'); // manual shapes canvas (reused, not recreated)
+const _mPhCtx = _mPhCanvas.getContext('2d');
 
 function render() {
+  _seed = _baseSeed; // Reset seed for stable random positions
   const canvas = document.getElementById('result-canvas');
   const ctx = canvas.getContext('2d');
-  const shapeSize = parseInt(document.getElementById('sizeSlider').value);
-  const count = parseInt(document.getElementById('countSlider').value);
-  const opacity = parseInt(document.getElementById('opacSlider').value) / 100;
+  const isDual = currentShapes.length === 2;
+  const opacity = 1;
+
+  // Read params per mode
+  let shapeSizeA, shapeSizeB, countA, countB, varianceA, varianceB;
+  if (isDual) {
+    shapeSizeA = parseInt(document.getElementById('sizeSliderA').value);
+    shapeSizeB = parseInt(document.getElementById('sizeSliderB').value);
+    countA = parseInt(document.getElementById('countSliderA').value);
+    countB = parseInt(document.getElementById('countSliderB').value);
+    varianceA = 0.5;
+    varianceB = 0.5;
+  } else {
+    shapeSizeA = parseInt(document.getElementById('sizeSlider').value);
+    countA = parseInt(document.getElementById('countSlider').value);
+    varianceA = parseInt(document.getElementById('varSlider').value) / 100;
+  }
 
   // Canvas size based on ratio
   const BASE = 1080;
@@ -4248,29 +4059,32 @@ function render() {
 
   const img = userImage;
   const isLR = currentLayout === 'left-right';
+  const splitPct = parseInt(document.getElementById('splitSlider').value) / 100;
 
   let photoX, photoY, photoW, photoH;
   let solidX, solidY, solidW, solidH;
 
   if (isLR) {
-    photoW = OUT_W / 2; photoH = OUT_H;
-    solidW = OUT_W / 2; solidH = OUT_H;
+    solidW = Math.round(OUT_W * splitPct);
+    photoW = OUT_W - solidW;
+    photoH = OUT_H; solidH = OUT_H;
     if (!isSwapped) {
       photoX = 0; photoY = 0;
-      solidX = OUT_W / 2; solidY = 0;
+      solidX = photoW; solidY = 0;
     } else {
-      photoX = OUT_W / 2; photoY = 0;
       solidX = 0; solidY = 0;
+      photoX = solidW; photoY = 0;
     }
   } else {
-    photoW = OUT_W; photoH = OUT_H / 2;
-    solidW = OUT_W; solidH = OUT_H / 2;
+    solidH = Math.round(OUT_H * splitPct);
+    photoH = OUT_H - solidH;
+    photoW = OUT_W; solidW = OUT_W;
     if (!isSwapped) {
       photoX = 0; photoY = 0;
-      solidX = 0; solidY = OUT_H / 2;
+      solidX = 0; solidY = photoH;
     } else {
-      photoX = 0; photoY = OUT_H / 2;
       solidX = 0; solidY = 0;
+      photoX = 0; photoY = solidH;
     }
   }
 
@@ -4298,6 +4112,10 @@ function render() {
   ctx.drawImage(img, photoX + relDx, photoY + relDy, dw, dh);
   ctx.restore();
 
+  // Track all random shapes for eraser cache
+  let _solidShapesCanvas = [];
+
+  if (splitPct > 0) {
   // --- Build solid half using regular canvas compositing ---
   // 1. Photo layer for solid region (same cover fit, centered in solid half)
   _pcCanvas.width = solidW; _pcCanvas.height = solidH;
@@ -4312,11 +4130,50 @@ function render() {
   _ocCtx.fillStyle = currentColor;
   _ocCtx.fillRect(0, 0, solidW, solidH);
 
-  const solidShapes = generateShapePositions(solidW, solidH, count, shapeSize, true);
+  // Draw pattern overlay on solid color
+  if (currentPattern !== 'none') {
+    // Offset by -solidX,-solidY so pattern tiles align with main canvas globally
+    _ocCtx.save();
+    _ocCtx.translate(-solidX, -solidY);
+    drawPattern(_ocCtx, solidX, solidY, solidW, solidH, currentPattern);
+    _ocCtx.restore();
+  }
+
+  let solidShapes = [];
+  if (currentMode === 'random') {
+    // Distribute shapes proportional to each region's area fraction
+    const totalArea = OUT_W * OUT_H;
+    const solidArea = solidW * solidH;
+    const solidFrac = totalArea > 0 ? solidArea / totalArea : 0;
+    if (isDual) {
+      const sCountA = Math.round(countA * solidFrac);
+      const sCountB = Math.round(countB * solidFrac);
+      const shapesA = generateShapePositions(solidW, solidH, sCountA, shapeSizeA, varianceA, 0).map(s => ({...s, shape: currentShapes[0]}));
+      const shapesB = generateShapePositions(solidW, solidH, sCountB, shapeSizeB, varianceB, 0).map(s => ({...s, shape: currentShapes[1]}));
+      solidShapes = shapesA.concat(shapesB);
+    } else {
+      const sCount = Math.round(countA * solidFrac);
+      solidShapes = generateShapePositions(solidW, solidH, sCount, shapeSizeA, varianceA, 0).map(s => ({...s, shape: currentShapes[0]}));
+    }
+  }
+  // Cache solid shapes in canvas coords for eraser hit-testing
+  _solidShapesCanvas = solidShapes.map(s => ({...s, x: s.x + solidX, y: s.y + solidY}));
   _ocCtx.globalCompositeOperation = 'destination-out';
-  solidShapes.forEach(s => {
+  // Filter out erased shapes before drawing
+  const _activeSolidShapes = solidShapes.filter(s => {
+    const cx = s.x + solidX, cy = s.y + solidY;
+    return !_erasedRandomShapes.some(e => Math.hypot(cx - e.x, cy - e.y) < s.r * 0.5);
+  });
+  _activeSolidShapes.forEach(s => {
     _ocCtx.globalAlpha = opacity;
-    drawShape(_ocCtx, s.x, s.y, s.r, currentShape);
+    drawShape(_ocCtx, s.x, s.y, s.r, s.shape);
+  });
+  // Also knockout manual shapes that fall in solid region
+  manualShapes.forEach(s => {
+    _ocCtx.globalAlpha = 1;
+    _fixedAngle = s.angle || 0;
+    drawShape(_ocCtx, s.x - solidX, s.y - solidY, s.r, s.shape);
+    _fixedAngle = null;
   });
   _ocCtx.globalCompositeOperation = 'source-over';
   _ocCtx.globalAlpha = 1;
@@ -4328,55 +4185,177 @@ function render() {
   _compCtx.drawImage(_ocCanvas, 0, 0);
 
   ctx.drawImage(_compCanvas, solidX, solidY);
+  } // end if (splitPct > 0)
 
-  // --- Scatter overlay shapes on photo half ---
+  // --- Scatter overlay shapes on photo half (or full canvas when splitPct=0) ---
+  // Build a temp canvas with color+pattern shapes, then composite onto main
+  // (Reuse module-level _phCanvas to avoid Safari memory limit from repeated createElement)
+  _phCanvas.width = photoW; _phCanvas.height = photoH;
+  _phCtx.clearRect(0, 0, photoW, photoH);
+
+  let photoShapes = [];
+  if (currentMode === 'random') {
+    // When no solid region, photo fraction = 1 (all shapes on photo)
+    const totalArea = OUT_W * OUT_H;
+    const photoArea = photoW * photoH;
+    const photoFrac = totalArea > 0 ? photoArea / totalArea : 1;
+    if (isDual) {
+      const pCountA = Math.max(1, Math.round(countA * photoFrac));
+      const pCountB = Math.max(1, Math.round(countB * photoFrac));
+      const pA = generateShapePositions(photoW, photoH, pCountA, shapeSizeA, varianceA, 0).map(s => ({...s, shape: currentShapes[0]}));
+      const pB = generateShapePositions(photoW, photoH, pCountB, shapeSizeB, varianceB, 0).map(s => ({...s, shape: currentShapes[1]}));
+      photoShapes = pA.concat(pB);
+    } else {
+      const pCount = Math.max(1, Math.round(countA * photoFrac));
+      photoShapes = generateShapePositions(photoW, photoH, pCount, shapeSizeA, varianceA, 0).map(s => ({...s, shape: currentShapes[0]}));
+    }
+  }
+  // Cache photo shapes in canvas coords and merge with solid shapes for eraser
+  const _photoShapesCanvas = photoShapes.map(s => ({...s, x: s.x + photoX, y: s.y + photoY}));
+  _lastRandomShapes = _solidShapesCanvas.concat(_photoShapesCanvas);
+
+  // 1. Draw solid color shapes (filter erased ones)
+  _phCtx.fillStyle = currentColor;
+  const _activePhotoShapes = photoShapes.filter(s => {
+    const cx = s.x + photoX, cy = s.y + photoY;
+    return !_erasedRandomShapes.some(e => Math.hypot(cx - e.x, cy - e.y) < s.r * 0.5);
+  });
+  _activePhotoShapes.forEach(s => {
+    _phCtx.globalAlpha = 1;
+    drawShape(_phCtx, s.x, s.y, s.r, s.shape);
+  });
+
+  // 2. Draw pattern on top (only where color was drawn) using source-atop
+  if (currentPattern !== 'none') {
+    _phCtx.globalCompositeOperation = 'source-atop';
+    _phCtx.save();
+    _phCtx.translate(-photoX, -photoY);
+    drawPattern(_phCtx, photoX, photoY, photoW, photoH, currentPattern);
+    _phCtx.restore();
+    _phCtx.globalCompositeOperation = 'source-over';
+  }
+
+  // 3. Draw onto main canvas clipped to photo half
   ctx.save();
   ctx.beginPath();
   ctx.rect(photoX, photoY, photoW, photoH);
   ctx.clip();
-
-  const photoShapes = generateShapePositions(photoW, photoH, Math.floor(count * 0.8), shapeSize * 0.85, false);
-  photoShapes.forEach(s => {
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = currentColor;
-    drawShape(ctx, photoX + s.x, photoY + s.y, s.r, currentShape);
-  });
-  ctx.globalAlpha = 1;
+  ctx.drawImage(_phCanvas, photoX, photoY);
   ctx.restore();
+
+  // --- Draw manual shapes (on full canvas, not clipped to photo region) ---
+  if (manualShapes.length > 0) {
+    // (Reuse module-level _mPhCanvas to avoid Safari memory limit from repeated createElement)
+    _mPhCanvas.width = OUT_W; _mPhCanvas.height = OUT_H;
+    _mPhCtx.clearRect(0, 0, OUT_W, OUT_H);
+    _mPhCtx.fillStyle = currentColor;
+    manualShapes.forEach(s => {
+      _mPhCtx.globalAlpha = 1;
+      _fixedAngle = s.angle || 0;
+      drawShape(_mPhCtx, s.x, s.y, s.r, s.shape);
+      _fixedAngle = null;
+    });
+    if (currentPattern !== 'none') {
+      _mPhCtx.globalCompositeOperation = 'source-atop';
+      drawPattern(_mPhCtx, 0, 0, OUT_W, OUT_H, currentPattern);
+      _mPhCtx.globalCompositeOperation = 'source-over';
+    }
+    if (splitPct > 0) {
+      // When solid region exists, clip to photo region only (solid region uses knockout)
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(photoX, photoY, photoW, photoH);
+      ctx.clip();
+      ctx.drawImage(_mPhCanvas, 0, 0);
+      ctx.restore();
+    } else {
+      // No solid region — draw manual shapes across the full canvas
+      ctx.drawImage(_mPhCanvas, 0, 0);
+    }
+  }
+  fitCanvasCSS(canvas);
 }
 
-function generateShapePositions(w, h, count, baseSize, vary) {
+// Seeded random for stable shape positions between renders
+let _seed = 42;
+let _baseSeed = 42;
+function sRand() {
+  _seed = (_seed * 16807) % 2147483647;
+  return (_seed - 1) / 2147483646;
+}
+
+function generateShapePositions(w, h, count, baseSize, variance) {
+  if (w <= 0 || h <= 0 || count <= 0) return []; // no space to place shapes
   const shapes = [];
-  for (let i = 0; i < count; i++) {
-    const r = baseSize * (vary ? (0.4 + Math.random() * 1.1) : (0.5 + Math.random() * 0.9));
-    shapes.push({
-      x: r * 0.3 + Math.random() * (w - r * 0.6),
-      y: r * 0.3 + Math.random() * (h - r * 0.6),
-      r
-    });
+  const minMult = 1.0 - variance * 0.6;
+  const maxMult = 1.0 + variance * 0.8;
+
+  // Grid-jittered placement: divide area into cells, place one shape per cell with jitter
+  // This ensures uniform spatial coverage and prevents clustering
+  const area = w * h;
+  const cellArea = area / count;
+  const cellSize = Math.sqrt(cellArea);
+  const cols = Math.max(1, Math.round(w / cellSize));
+  const rows = Math.max(1, Math.ceil(count / cols));
+  const cellW = w / cols;
+  const cellH = h / rows;
+
+  let placed = 0;
+  for (let row = 0; row < rows && placed < count; row++) {
+    for (let col = 0; col < cols && placed < count; col++) {
+      const r = baseSize * (minMult + sRand() * (maxMult - minMult));
+      // Jitter within cell (60% jitter range keeps shapes from aligning rigidly)
+      const jitterX = (sRand() - 0.5) * cellW * 0.6;
+      const jitterY = (sRand() - 0.5) * cellH * 0.6;
+      const cx = cellW * (col + 0.5) + jitterX;
+      const cy = cellH * (row + 0.5) + jitterY;
+      // Clamp to keep shapes within bounds
+      const x = Math.max(r, Math.min(w - r, cx));
+      const y = Math.max(r, Math.min(h - r, cy));
+      shapes.push({ x, y, r });
+      placed++;
+    }
   }
+
   return shapes;
 }
 
-function drawShape(ctx, x, y, r, shape) {
+let _fixedAngle = null; // set before drawShape to override random rotation
+function drawShape(ctx, x, y, r, shape, fixedAngle) {
   ctx.save();
+  const useAngle = fixedAngle !== undefined;
+  const angle = useAngle ? fixedAngle : undefined;
   ctx.beginPath();
   if (shape === 'circle') {
     ctx.arc(x, y, r, 0, Math.PI * 2);
   } else if (shape === 'star') {
-    starPath(ctx, x, y, r, 5);
+    starPath(ctx, x, y, r, 5, angle);
   } else if (shape === 'heart') {
     heartPath(ctx, x, y, r);
   } else if (shape === 'flower') {
-    flowerPath(ctx, x, y, r);
+    flowerPath(ctx, x, y, r, angle);
+  } else if (shape === 'spark8') {
+    spark8Path(ctx, x, y, r, angle);
+  } else if (shape === 'ribbon') {
+    ribbonPath(ctx, x, y, r, angle);
+  } else if (shape === 'diamond4') {
+    diamond4Path(ctx, x, y, r);
+  } else if (shape === 'butterfly') {
+    butterflyPath(ctx, x, y, r, angle);
   }
-  ctx.fill();
+  if (outlineMode) {
+    ctx.lineWidth = Math.max(1, r * 0.03);
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.stroke();
+  } else {
+    ctx.fill();
+  }
   ctx.restore();
 }
 
-function starPath(ctx, cx, cy, r, points) {
+function starPath(ctx, cx, cy, r, points, fixedAngle) {
   const inner = r * 0.42;
-  const randAngle = Math.random() * Math.PI * 2;
+  const randAngle = fixedAngle !== undefined ? fixedAngle : sRand() * Math.PI * 2;
   ctx.beginPath();
   for (let i = 0; i < points * 2; i++) {
     const angle = (i * Math.PI / points) - Math.PI / 2 + randAngle;
@@ -4387,16 +4366,15 @@ function starPath(ctx, cx, cy, r, points) {
   ctx.closePath();
 }
 
+// Heart - exact SVG path
 function heartPath(ctx, cx, cy, r) {
   ctx.save();
   ctx.translate(cx, cy);
-  const s = r * 1.0;
+  const s = r / 99;
+  ctx.scale(s, s);
+  ctx.translate(-99, -99);
   ctx.beginPath();
-  ctx.moveTo(0, s * 0.6);
-  ctx.bezierCurveTo(-s*0.05, s*0.35, -s*1.1, s*0.1,  -s*1.0, -s*0.25);
-  ctx.bezierCurveTo(-s*1.1, -s*0.65, -s*0.5, -s*0.85,  0, -s*0.45);
-  ctx.bezierCurveTo( s*0.5, -s*0.85,  s*1.1, -s*0.65,  s*1.0, -s*0.25);
-  ctx.bezierCurveTo( s*1.1, s*0.1,    s*0.05, s*0.35,  0, s*0.6);
+  ctx.moveTo(125.59,163.09);ctx.bezierCurveTo(115.32,173.66,106.75,185.03,98.88,197.73);ctx.bezierCurveTo(87.58,180.37,74.63,165.84,59.9,151.66);ctx.lineTo(51.4,143.52);ctx.lineTo(43.68,136.19);ctx.bezierCurveTo(21.52,115.15,2.23,94.74,0.21,62.46);ctx.bezierCurveTo(-0.03,58.58,-0.1,55.22,0.21,51.35);ctx.bezierCurveTo(1.26,38.15,6.42,25.86,15.43,16.24);ctx.bezierCurveTo(34.34,-3.98,64.32,-5.59,85.04,12.97);ctx.bezierCurveTo(91,18.31,95.34,24.68,98.9,32.27);ctx.bezierCurveTo(107.64,12.63,125.91,-0.62,147.47,0.02);ctx.bezierCurveTo(175.76,1.25,196.1,25.12,197.64,52.66);ctx.bezierCurveTo(198.62,70.23,193.47,87.14,183.66,101.71);ctx.bezierCurveTo(177.77,110.46,171.01,118.12,163.49,125.5);ctx.lineTo(148.89,139.82);ctx.lineTo(134.54,153.88);ctx.lineTo(125.59,163.09);
   ctx.closePath();
   ctx.restore();
 }
@@ -4404,7 +4382,7 @@ function heartPath(ctx, cx, cy, r) {
 function flowerPath(ctx, cx, cy, r) {
   ctx.save();
   ctx.translate(cx, cy);
-  ctx.rotate(Math.random() * Math.PI * 2);
+  ctx.rotate(_fixedAngle !== null ? _fixedAngle : sRand() * Math.PI * 2);
   const petals = 5;
   ctx.beginPath();
   for (let i = 0; i < petals; i++) {
@@ -4436,6 +4414,122 @@ function flowerPath(ctx, cx, cy, r) {
   ctx.restore();
 }
 
+// 8-pointed starburst (八角星芒)
+// 8-pointed starburst - exact SVG path
+function spark8Path(ctx, cx, cy, r) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(_fixedAngle !== null ? _fixedAngle : sRand() * Math.PI * 2);
+  const s = r / 213;
+  ctx.scale(s, s);
+  ctx.translate(-204, -213);
+  ctx.beginPath();
+  ctx.moveTo(227.1,287.09);ctx.lineTo(223.73,308.68);ctx.lineTo(220.96,326.85);ctx.lineTo(216.36,359.45);ctx.bezierCurveTo(215.92,362.54,215.61,365.19,215.13,368.14);ctx.lineTo(208.07,411.11);ctx.bezierCurveTo(207.19,416.45,207.69,420.81,203.33,425.63);ctx.lineTo(200.55,409.61);ctx.lineTo(183.99,300.46);ctx.bezierCurveTo(182.63,291.48,181.17,284.51,179.13,275.87);ctx.bezierCurveTo(174.28,278.8,171.7,280.62,168.01,283.41);ctx.lineTo(100.16,334.62);ctx.lineTo(74.98,353.21);ctx.bezierCurveTo(69.66,357.14,66.2,363.03,58.24,364.12);ctx.lineTo(144.45,239.45);ctx.bezierCurveTo(134.94,234.57,124.98,235.04,115.05,233.17);ctx.lineTo(89.11,228.3);ctx.lineTo(66.65,225.21);ctx.bezierCurveTo(61.22,224.46,56.31,223.5,51.14,222.56);ctx.lineTo(12.94,215.64);ctx.bezierCurveTo(8.22,214.78,2.65,216.8,0.01,210.88);ctx.lineTo(36.59,205.05);ctx.lineTo(105.35,193.02);ctx.bezierCurveTo(118.24,190.76,130.53,190.67,144.9,186.81);ctx.lineTo(80.25,92.71);ctx.lineTo(66.47,73.24);ctx.bezierCurveTo(63.46,68.99,60.34,66.58,59.64,60.2);ctx.bezierCurveTo(63.84,62.86,66.2,64.59,69.52,67.12);ctx.lineTo(86.68,80.16);ctx.lineTo(129.42,112.34);ctx.lineTo(150.82,128.76);ctx.lineTo(175.66,147.2);ctx.bezierCurveTo(176.44,147.78,178.24,148.7,178.85,148.99);ctx.bezierCurveTo(179.46,149.28,180.47,146.52,180.59,145.73);ctx.lineTo(185.71,113.53);ctx.lineTo(187.99,97.78);ctx.lineTo(192.38,69.45);ctx.lineTo(195.12,50.63);ctx.lineTo(198.86,27.87);ctx.lineTo(203.05,0);ctx.bezierCurveTo(209.27,5.6,207.06,12.18,208.22,18.71);ctx.lineTo(212.1,40.56);ctx.lineTo(214.24,53.22);ctx.lineTo(220.51,94.08);ctx.lineTo(225.34,127.96);ctx.lineTo(228.44,146.77);ctx.bezierCurveTo(228.7,148.52,233.12,147.61,235.07,146.13);ctx.lineTo(334.76,70.24);ctx.bezierCurveTo(339.67,66.5,342.37,62.02,348.95,61.32);ctx.bezierCurveTo(347.39,65.53,345.64,68.85,343.13,72.4);ctx.lineTo(332.98,86.76);ctx.lineTo(305.2,126.25);ctx.lineTo(263.85,185.99);ctx.bezierCurveTo(273.96,188.8,282.48,189.91,291.8,191.36);ctx.lineTo(318.91,195.59);ctx.lineTo(340.69,199.93);ctx.lineTo(360.33,203.05);ctx.lineTo(377.33,205.79);ctx.lineTo(403.7,209.11);ctx.bezierCurveTo(404.86,209.26,408.27,211.19,407.64,211.91);ctx.bezierCurveTo(407.01,212.63,404.83,214.55,403.72,214.73);ctx.lineTo(382.71,218.15);ctx.lineTo(367.24,220.74);ctx.lineTo(343.91,224.65);ctx.lineTo(313.08,229.75);ctx.lineTo(284.29,234.29);ctx.lineTo(264.1,237.53);ctx.bezierCurveTo(266.56,242.86,267.88,244.65,270.38,248.22);ctx.lineTo(290.75,277.26);ctx.lineTo(329.6,333.34);ctx.lineTo(345.23,355.12);ctx.lineTo(349.07,358.57);ctx.bezierCurveTo(350.03,359.44,348.78,362.11,347.42,364.33);ctx.lineTo(321.55,344.39);ctx.lineTo(313.9,338.53);ctx.lineTo(282.87,315.16);ctx.lineTo(247.33,287.99);ctx.lineTo(229.46,274.48);ctx.bezierCurveTo(228.21,280.08,227.84,282.33,227.1,287.08);
+  ctx.closePath();
+  ctx.restore();
+}
+
+// Ribbon bow - exact SVG path
+function ribbonPath(ctx, cx, cy, r) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(_fixedAngle !== null ? _fixedAngle * 0.1 : sRand() * 0.4 - 0.2);
+  const s = r / 140; // SVG viewBox is ~281x278, center ~140
+  ctx.scale(s, s);
+  ctx.translate(-140, -139);
+  ctx.beginPath();
+  ctx.moveTo(135.8,62.86);ctx.bezierCurveTo(125.52,71.37,122.36,82.86,122.3,93.97);ctx.lineTo(121.97,159.07);ctx.bezierCurveTo(121.89,175.14,110.25,189.89,107.15,205.03);ctx.bezierCurveTo(101.8,231.12,104.67,275.73,85.05,278.19);ctx.bezierCurveTo(79.11,278.93,67.91,268.29,68.34,263.55);ctx.bezierCurveTo(86.13,240.14,82.13,216.66,92.75,188.51);ctx.bezierCurveTo(117.49,122.88,94.07,139.17,110.16,78.63);ctx.lineTo(58.09,95.2);ctx.bezierCurveTo(38.93,101.3,8.45,95.3,1.42,74.61);ctx.bezierCurveTo(-5.51,53.92,14.11,36.16,32.3,30.2);ctx.bezierCurveTo(101.68,7.48,118.06,67.13,170.35,32.66);ctx.bezierCurveTo(201.1,12.39,254.26,-19.79,280.7,16.33);ctx.bezierCurveTo(281.84,17.89,281.41,26.7,280,25.99);ctx.lineTo(271.62,21.81);ctx.bezierCurveTo(247.39,9.71,222.24,22.12,200.65,34.41);ctx.bezierCurveTo(192.59,39,184.91,41.07,181.68,50.62);ctx.bezierCurveTo(214.39,56.07,245.38,53.9,277.01,43.09);ctx.bezierCurveTo(278.34,80.3,185.04,66.6,156.47,62.66);ctx.bezierCurveTo(159.7,120.85,206.04,118.36,185.66,186.84);ctx.bezierCurveTo(182.53,197.36,182.46,217.46,185.49,229.01);ctx.bezierCurveTo(188.86,241.85,196.74,254.02,201.78,265.84);ctx.bezierCurveTo(186.71,272.93,179.76,261.28,174.01,251.45);ctx.bezierCurveTo(140.99,195,197.59,175.78,163.99,128.63);ctx.bezierCurveTo(137.69,91.72,155.57,83.88,135.83,62.86);
+  ctx.moveTo(120.86,61.01);ctx.bezierCurveTo(72.13,36.75,61.02,34.06,15.22,61.7);ctx.bezierCurveTo(32.97,100.21,92.09,82.42,120.86,61.01);
+  ctx.closePath();
+  ctx.restore();
+}
+
+// Butterfly - exact SVG path
+function butterflyPath(ctx, cx, cy, r) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(_fixedAngle !== null ? _fixedAngle : sRand() * Math.PI * 2);
+  const s = r / 186; // SVG viewBox is ~373x290, center ~186x145
+  ctx.scale(s, s);
+  ctx.translate(-186, -145);
+  ctx.beginPath();
+  ctx.moveTo(62.61,267.74);ctx.bezierCurveTo(46.64,259.48,63.22,251.17,51.35,233.07);ctx.bezierCurveTo(48.18,228.23,53.92,221.4,49.91,214.25);ctx.bezierCurveTo(45.59,206.53,44.02,205.95,46.31,196.28);ctx.bezierCurveTo(47.97,189.24,43.51,186.41,43.57,180.32);ctx.bezierCurveTo(43.74,163.62,67.45,156.62,80.49,153.5);ctx.bezierCurveTo(71.71,153.1,63.03,152.42,54.57,149.59);ctx.bezierCurveTo(44.4,146.19,36.82,138.32,33.6,127.82);ctx.bezierCurveTo(30.67,118.26,28.44,108.73,27.6,98.69);ctx.lineTo(27.07,92.39);ctx.lineTo(26.61,86.59);ctx.lineTo(26.1,80.4);ctx.lineTo(25.1,69.97);ctx.bezierCurveTo(24.46,63.27,23.04,57.18,19.72,51.29);ctx.bezierCurveTo(15.96,44.61,11.7,38.55,7.43,31.18);ctx.bezierCurveTo(3.16,23.81,-1.27,20.07,0.32,12.8);ctx.bezierCurveTo(0.92,10.05,3.43,7.86,5.66,6.37);ctx.bezierCurveTo(13.55,1.13,25.8,0.3,35.13,0.99);ctx.bezierCurveTo(90.38,5.06,131.45,45.08,160.24,90.78);ctx.bezierCurveTo(167.48,102.28,173.58,113.79,179.53,126.26);ctx.bezierCurveTo(179.07,123.33,179.07,120.6,182.26,118.83);ctx.bezierCurveTo(181.51,115.88,180.25,113.4,178.81,110.77);ctx.bezierCurveTo(174.58,103.05,170.78,95.28,168.39,86.76);ctx.bezierCurveTo(167.49,83.55,166.39,80.52,167.51,77.19);ctx.bezierCurveTo(167.73,76.53,169.24,77.76,169.45,78.36);ctx.lineTo(173.79,90.77);ctx.bezierCurveTo(177.46,101.25,181.5,104.69,184.35,115.63);ctx.bezierCurveTo(184.56,116.44,184.66,117.83,185.24,117.97);ctx.bezierCurveTo(185.82,118.11,187.34,117.94,188.03,117.71);ctx.bezierCurveTo(188.94,112.57,190.75,107.72,193.21,103.03);ctx.bezierCurveTo(197.24,95.35,200.23,87.59,202.9,79.29);ctx.bezierCurveTo(203.33,77.96,203.89,76.4,205.56,76.34);ctx.bezierCurveTo(206.1,78.8,205.74,81.42,205.09,83.95);ctx.bezierCurveTo(202.57,93.68,198.43,102.44,193.54,111.08);ctx.bezierCurveTo(192.22,113.41,191.14,116.06,190.7,118.64);ctx.bezierCurveTo(192.48,120.1,193.72,122.16,193.82,124.84);ctx.bezierCurveTo(204.73,101.15,219.2,77.82,235.98,58.05);ctx.bezierCurveTo(240.39,52.85,248.71,44.11,253.62,39.55);ctx.bezierCurveTo(277.07,17.7,303.77,3.32,335.6,0.36);ctx.bezierCurveTo(344.09,-0.43,354.1,-0.08,362.12,2.91);ctx.bezierCurveTo(368.28,5.21,375.61,10.68,372.69,18.45);ctx.bezierCurveTo(370.61,24,367.38,28.69,364.06,33.59);ctx.bezierCurveTo(359.61,40.16,355.21,46.47,351.71,53.58);ctx.bezierCurveTo(349.89,57.28,348.88,61.13,348.41,65.17);ctx.lineTo(347.29,74.61);ctx.lineTo(346.8,80.33);ctx.lineTo(346.35,86.12);ctx.lineTo(345.85,92.47);ctx.bezierCurveTo(344.84,105.43,342.72,118.22,338.1,130.27);ctx.bezierCurveTo(334.8,138.87,328.38,144.85,320.21,148.09);ctx.bezierCurveTo(310.89,151.79,302.81,151.61,292.96,153.09);ctx.bezierCurveTo(300.81,154.21,307.95,157.07,315.15,160.77);ctx.bezierCurveTo(320.16,163.34,324.66,166.66,327.4,171.73);ctx.bezierCurveTo(332.67,181.51,325.59,188.15,326.28,192.36);ctx.lineTo(327.82,201.66);ctx.bezierCurveTo(328.9,208.15,319.37,212.57,322.02,223.31);ctx.bezierCurveTo(322.71,226.1,322.91,229.93,321.46,232.49);ctx.bezierCurveTo(318.75,237.29,316.34,242.16,316.97,247.94);ctx.lineTo(317.44,252.26);ctx.bezierCurveTo(317.79,255.55,318.34,259.12,316.39,262);ctx.bezierCurveTo(311.58,269.07,301.86,267.9,300.12,276.52);ctx.bezierCurveTo(298.48,284.67,290.98,281.49,280.15,287.69);ctx.bezierCurveTo(276.48,289.79,272.44,289.86,268.35,288.98);ctx.bezierCurveTo(250.78,285.21,233.36,270.79,221.38,257.42);ctx.bezierCurveTo(210.4,245.16,201.83,228.24,191.47,214.02);ctx.bezierCurveTo(190.2,212.27,189.18,210.07,188.36,208.45);ctx.bezierCurveTo(187.32,209.18,185.99,209.34,184.91,208.98);ctx.bezierCurveTo(182.94,212.7,180.4,216.07,178.07,219.69);ctx.lineTo(167.62,235.9);ctx.bezierCurveTo(159.9,247.89,154.5,256.33,143.99,266.09);ctx.bezierCurveTo(132.47,276.79,116.28,289.21,100.4,290.3);ctx.bezierCurveTo(95.61,290.63,91.93,288.05,87.8,286.16);ctx.bezierCurveTo(84.98,284.87,81.69,284.3,78.67,283.52);ctx.bezierCurveTo(71.09,281.55,74.45,274.46,68.43,270.94);ctx.bezierCurveTo(66.45,269.78,64.64,268.78,62.59,267.73);
+  ctx.closePath();
+  ctx.restore();
+}
+
+// 4-point diamond sparkle - exact SVG path (no rotation)
+function diamond4Path(ctx, cx, cy, r) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  const s = r / 161;
+  ctx.scale(s, s);
+  ctx.translate(-99, -161);
+  ctx.beginPath();
+  ctx.moveTo(101.6,322.8);ctx.bezierCurveTo(95.52,235.37,65.97,169.83,0,160.01);ctx.bezierCurveTo(56.85,144.67,93.68,95.58,102.35,0);ctx.bezierCurveTo(111.59,86.25,138.31,140.89,198.09,159.42);ctx.bezierCurveTo(141.68,171.45,111.27,225.78,101.6,322.8);
+  ctx.closePath();
+  ctx.restore();
+}
+
+function drawPattern(ctx, ox, oy, w, h, pattern) {
+  ctx.save();
+
+  // Per-pattern opacity
+  if (pattern === 'dots-white' || pattern === 'stripes-v-white' || pattern === 'stripes-h-white' || pattern === 'grid-white') {
+    ctx.globalAlpha = 0.5;
+  } else {
+    ctx.globalAlpha = 0.15;
+  }
+
+  const dotR = 1.5;       // dots: 2/3 of previous 2.2
+  const dotGap = 24;      // dots: 4/3 of previous 18
+  const lineW = 1.5;
+  const lineGap = 16;
+
+  const startX = Math.floor(ox / dotGap) * dotGap;
+  const startY = Math.floor(oy / dotGap) * dotGap;
+  const endX = ox + w + dotGap;
+  const endY = oy + h + dotGap;
+
+  if (pattern === 'dots-black' || pattern === 'dots-white') {
+    ctx.fillStyle = pattern === 'dots-black' ? '#000' : '#fff';
+    let row = Math.floor(oy / dotGap);
+    for (let y = startY; y < endY; y += dotGap, row++) {
+      const offset = (row % 2 === 0) ? 0 : dotGap / 2;
+      for (let x = startX + offset; x < endX; x += dotGap) {
+        ctx.beginPath();
+        ctx.arc(x, y, dotR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (pattern === 'stripes-v-black' || pattern === 'stripes-v-white') {
+    ctx.fillStyle = pattern === 'stripes-v-black' ? '#000' : '#fff';
+    const sx = Math.floor(ox / lineGap) * lineGap;
+    for (let x = sx; x < endX; x += lineGap) {
+      ctx.fillRect(x, oy, lineW, h);
+    }
+  } else if (pattern === 'stripes-h-black' || pattern === 'stripes-h-white') {
+    ctx.fillStyle = pattern === 'stripes-h-black' ? '#000' : '#fff';
+    const sy = Math.floor(oy / lineGap) * lineGap;
+    for (let y = sy; y < endY; y += lineGap) {
+      ctx.fillRect(ox, y, w, lineW);
+    }
+  } else if (pattern === 'grid-black' || pattern === 'grid-white') {
+    ctx.fillStyle = pattern === 'grid-black' ? '#000' : '#fff';
+    const gridGap = 24;
+    const gridW = 1.2;
+    const gsx = Math.floor(ox / gridGap) * gridGap;
+    const gsy = Math.floor(oy / gridGap) * gridGap;
+    for (let x = gsx; x < endX; x += gridGap) {
+      ctx.fillRect(x, oy, gridW, h);
+    }
+    for (let y = gsy; y < endY; y += gridGap) {
+      ctx.fillRect(ox, y, w, gridW);
+    }
+  }
+  ctx.restore();
+}
+
 // Track blob URL for cleanup
 let _saveBlobUrl = null;
 
@@ -4446,12 +4540,13 @@ function saveImage() {
   if (isIOS) {
     // iOS Safari: <a download> doesn't work, must use blob URL + long-press
     canvas.toBlob(function(blob) {
-      if (!blob) return;
+      if (!blob) { alert('保存失败，请尝试截图保存'); return; }
       if (_saveBlobUrl) URL.revokeObjectURL(_saveBlobUrl);
       _saveBlobUrl = URL.createObjectURL(blob);
 
       const saveImg = document.getElementById('saveImg');
       saveImg.onload = function() {
+        document.getElementById('saveImgLink').href = _saveBlobUrl;
         document.getElementById('saveOverlay').classList.add('open');
         document.getElementById('saveHint').textContent = '长按图片 → 存储到"照片"';
         document.getElementById('saveHintSub').textContent = '长按图片，选择「存储到照片图库」';
@@ -4459,18 +4554,40 @@ function saveImage() {
       saveImg.src = _saveBlobUrl;
     }, 'image/jpeg', 0.95);
   } else {
-    // All desktop browsers + Android: direct download via blob
-    canvas.toBlob(function(blob) {
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
+    // Desktop + Android browsers: try blob download first, fall back to toDataURL for WebViews
+    function doDownload(url, revokeFn) {
       const link = document.createElement('a');
       link.download = 'snipsnip-' + Date.now() + '.jpg';
       link.href = url;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-    }, 'image/jpeg', 0.95);
+      setTimeout(function() { if (revokeFn) revokeFn(); }, 1000);
+    }
+
+    try {
+      canvas.toBlob(function(blob) {
+        if (!blob) {
+          // Fix #3 + #7: fallback to toDataURL for WebViews where toBlob may fail
+          try {
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            doDownload(dataUrl, null);
+          } catch (e2) {
+            alert('保存失败，请尝试截图保存');
+          }
+          return;
+        }
+        doDownload(URL.createObjectURL(blob), function() { URL.revokeObjectURL; });
+      }, 'image/jpeg', 0.95);
+    } catch (e) {
+      // Fix #7: WebView toBlob may throw (e.g. cross-origin security), fall back
+      try {
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        doDownload(dataUrl, null);
+      } catch (e2) {
+        alert('保存失败，请尝试截图保存');
+      }
+    }
   }
 }
 
@@ -4479,12 +4596,21 @@ function resetTransform() {
   if (userImage) render();
 }
 
+function shuffleShapes() {
+  _baseSeed = Math.floor(Math.random() * 100000) + 1;
+  _erasedRandomShapes = [];
+  if (userImage) render();
+}
+
 // ---- Interactive preview: drag to pan, pinch to zoom ----
 (function() {
   let isDragging = false;
+  let dragStarted = false; // actual drag confirmed after threshold
+  let startX = 0, startY = 0;
   let lastX = 0, lastY = 0;
   let lastDist = 0;
   let renderTimer = null;
+  const DRAG_THRESHOLD = 8; // px minimum before drag activates
 
   function scheduleRender() {
     if (renderTimer) clearTimeout(renderTimer);
@@ -4493,25 +4619,80 @@ function resetTransform() {
 
   function getCanvasScale() {
     const canvas = document.getElementById('result-canvas');
-    // canvas.width is 1080, displayed width is smaller
     return canvas.width / canvas.getBoundingClientRect().width;
   }
 
   // Mouse
   document.getElementById('result-canvas').addEventListener('mousedown', e => {
+    if (currentMode === 'manual' || eraserOn) { e.preventDefault(); return; }
     isDragging = true;
+    dragStarted = false;
+    startX = e.clientX; startY = e.clientY;
     lastX = e.clientX; lastY = e.clientY;
     e.preventDefault();
   });
+  document.getElementById('result-canvas').addEventListener('click', e => {
+    if (!userImage) return;
+    if (_ignoreNextClick) { _ignoreNextClick = false; return; }
+    // Fix #6: Skip if a shape was just placed by touchend (OPPO/Vivo touchend+click dual trigger guard)
+    if (Date.now() - _lastPlaceTime < 300) { _lastPlaceTime = 0; return; }
+    const canvas = document.getElementById('result-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const sx = canvas.width / rect.width;
+    const sy = canvas.height / rect.height;
+    const cx = (e.clientX - rect.left) * sx;
+    const cy = (e.clientY - rect.top) * sy;
+    if (eraserOn) {
+      if (currentMode === 'manual') {
+        let closest = -1, closestDist = Infinity;
+        manualShapes.forEach((sh, i) => {
+          const d = Math.hypot(cx - sh.x, cy - sh.y);
+          if (d < sh.r * 1.2 && d < closestDist) { closest = i; closestDist = d; }
+        });
+        if (closest >= 0) {
+          manualShapes.splice(closest, 1);
+          if (manualShapes.length === 0) document.getElementById('clearManualBtn').style.display = 'none';
+          render();
+        }
+      } else {
+        // Random mode: find closest shape from last render cache and mark as erased
+        let closest = null, closestDist = Infinity;
+        _lastRandomShapes.forEach(sh => {
+          const d = Math.hypot(cx - sh.x, cy - sh.y);
+          if (d < sh.r * 1.2 && d < closestDist) { closest = sh; closestDist = d; }
+        });
+        if (closest) {
+          _erasedRandomShapes.push(closest);
+          render();
+        }
+      }
+    } else if (currentMode === 'manual') {
+      const size = parseInt(document.getElementById('manualSizeSlider').value);
+      manualShapes.push({ x: cx, y: cy, r: size, shape: currentShapes[0], angle: Math.random()*Math.PI*2 });
+      document.getElementById('clearManualBtn').style.display = '';
+      render();
+    }
+  });
   window.addEventListener('mousemove', e => {
     if (!isDragging) return;
-    const s = getCanvasScale();
-    imgOffsetX += (e.clientX - lastX) * s;
-    imgOffsetY += (e.clientY - lastY) * s;
+    if (!dragStarted) {
+      if (Math.abs(e.clientX - startX) + Math.abs(e.clientY - startY) < DRAG_THRESHOLD) return;
+      dragStarted = true;
+    }
+    const canvas = document.getElementById('result-canvas');
+    const rect = canvas.getBoundingClientRect();
+    imgOffsetX += (e.clientX - lastX) * (canvas.width / rect.width);
+    imgOffsetY += (e.clientY - lastY) * (canvas.height / rect.height);
     lastX = e.clientX; lastY = e.clientY;
     scheduleRender();
   });
-  window.addEventListener('mouseup', () => { isDragging = false; });
+  window.addEventListener('mouseup', () => { isDragging = false; dragStarted = false; });
+
+  // Refit canvas CSS on window resize
+  window.addEventListener('resize', () => {
+    const canvas = document.getElementById('result-canvas');
+    if (canvas.width > 0 && canvas.height > 0) fitCanvasCSS(canvas);
+  });
 
   // Wheel zoom
   document.getElementById('result-canvas').addEventListener('wheel', e => {
@@ -4521,14 +4702,26 @@ function resetTransform() {
     scheduleRender();
   }, { passive: false });
 
-  // Touch — only respond when canvas is being directly touched (not scroll passthrough)
+  // Touch
   document.getElementById('result-canvas').addEventListener('touchstart', e => {
+    if ((currentMode === 'manual' || eraserOn) && e.touches.length === 1) {
+      // Will handle on touchend if no drag
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      dragStarted = false;
+      e.preventDefault();
+      return;
+    }
     if (e.touches.length === 1) {
       isDragging = true;
+      dragStarted = false;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
       lastX = e.touches[0].clientX;
       lastY = e.touches[0].clientY;
     } else if (e.touches.length === 2) {
       isDragging = false;
+      dragStarted = false;
       lastDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
@@ -4539,9 +4732,14 @@ function resetTransform() {
 
   document.getElementById('result-canvas').addEventListener('touchmove', e => {
     if (e.touches.length === 1 && isDragging) {
-      const s = getCanvasScale();
-      imgOffsetX += (e.touches[0].clientX - lastX) * s;
-      imgOffsetY += (e.touches[0].clientY - lastY) * s;
+      if (!dragStarted) {
+        if (Math.abs(e.touches[0].clientX - startX) + Math.abs(e.touches[0].clientY - startY) < DRAG_THRESHOLD) return;
+        dragStarted = true;
+      }
+      const canvas = document.getElementById('result-canvas');
+      const rect = canvas.getBoundingClientRect();
+      imgOffsetX += (e.touches[0].clientX - lastX) * (canvas.width / rect.width);
+      imgOffsetY += (e.touches[0].clientY - lastY) * (canvas.height / rect.height);
       lastX = e.touches[0].clientX;
       lastY = e.touches[0].clientY;
       scheduleRender();
@@ -4561,7 +4759,47 @@ function resetTransform() {
   }, { passive: false });
 
   document.getElementById('result-canvas').addEventListener('touchend', e => {
-    if (e.touches.length === 0) isDragging = false;
+    if ((currentMode === 'manual' || eraserOn) && e.touches.length === 0 && !dragStarted && userImage) {
+      if (_ignoreNextClick) { _ignoreNextClick = false; isDragging = false; dragStarted = false; lastDist = 0; return; }
+      const canvas = document.getElementById('result-canvas');
+      const rect = canvas.getBoundingClientRect();
+      const sx = canvas.width / rect.width;
+      const sy = canvas.height / rect.height;
+      const cx = (startX - rect.left) * sx;
+      const cy = (startY - rect.top) * sy;
+      if (eraserOn) {
+        if (currentMode === 'manual') {
+          let closest = -1, closestDist = Infinity;
+          manualShapes.forEach((sh, i) => {
+            const d = Math.hypot(cx - sh.x, cy - sh.y);
+            if (d < sh.r * 1.2 && d < closestDist) { closest = i; closestDist = d; }
+          });
+          if (closest >= 0) {
+            manualShapes.splice(closest, 1);
+            if (manualShapes.length === 0) document.getElementById('clearManualBtn').style.display = 'none';
+            render();
+          }
+        } else {
+          // Random mode: find closest shape from last render cache and mark as erased
+          let closest = null, closestDist = Infinity;
+          _lastRandomShapes.forEach(sh => {
+            const d = Math.hypot(cx - sh.x, cy - sh.y);
+            if (d < sh.r * 1.2 && d < closestDist) { closest = sh; closestDist = d; }
+          });
+          if (closest) {
+            _erasedRandomShapes.push(closest);
+            render();
+          }
+        }
+      } else if (currentMode === 'manual') {
+        const size = parseInt(document.getElementById('manualSizeSlider').value);
+        manualShapes.push({ x: cx, y: cy, r: size, shape: currentShapes[0], angle: Math.random()*Math.PI*2 });
+        document.getElementById('clearManualBtn').style.display = '';
+        render();
+        _lastPlaceTime = Date.now(); // Mark: prevent click from firing next
+      }
+    }
+    if (e.touches.length === 0) { isDragging = false; dragStarted = false; }
     lastDist = 0;
   });
 })();
