@@ -511,6 +511,8 @@
         background: linear-gradient(90deg, rgba(255, 110, 199, 0.2), rgba(201, 168, 255, 0.2));
         border-radius: 3px;
         outline: none;
+        touch-action: pan-x;
+        /* Improve touch performance on mobile */
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -931,7 +933,6 @@
         <div class="action-row" id="actionRow" style="display:none">
             <button class="act-main btn-save" onclick="saveImage()">✦ 保存图片</button>
             <button class="act-main btn-change" onclick="document.getElementById('fileInput').click()">📷 换图</button>
-            <button class="act-link" onclick="toggleSwap()" id="swapBtn">⇄ 互换</button>
             <button class="act-link" onclick="resetTransform()">↺ 重置</button>
         </div>
     </div>
@@ -970,11 +971,51 @@
                     <span>上下</span>
                 </button>
             </div>
-            <div class="slider-item" style="margin-top:8px">
-                <label>
-                    <span id="splitLabel">色块 50%</span>
-                </label>
-                <input type="range" id="splitSlider" min="0" max="80" value="50" oninput="document.getElementById('splitLabel').textContent='色块 '+this.value+'%'; autoRender();">
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                <div class="slider-item" style="flex:1;min-width:0">
+                    <label>
+                        <span id="splitLabel">色块比例 50%</span>
+                    </label>
+                    <input type="range" id="splitSlider" min="0" max="80" value="50" oninput="document.getElementById('splitLabel').textContent='色块比例 '+this.value+'%'; sliderRender();">
+                </div>
+                <button class="toggle-btn" id="swapToggle" onclick="toggleSwap()" style="flex:0 0 auto;flex-direction:row;gap:4px;font-size:10px;padding:6px;white-space:nowrap">
+                    <span style="font-size:14px">⇄</span>
+                    互换位置
+                </button>
+            </div>
+        </div>
+
+        <!-- 填色设置 -->
+        <div class="card">
+            <div class="card-title">填色</div>
+            <div id="smartColorRow" style="display:none;margin-bottom:8px">
+                <div class="color-row" id="extractedColors"></div>
+            </div>
+            <div class="color-row" id="colorRow">
+                <div class="color-swatch active" style="background:#fbffcc" data-color="#fbffcc" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#4A9EFF" data-color="#4A9EFF" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#FF7BAC" data-color="#FF7BAC" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#C9A8FF" data-color="#C9A8FF" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#FFD166" data-color="#FFD166" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#6ECFB2" data-color="#6ECFB2" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#FF9E6C" data-color="#FF9E6C" onclick="setColor(this)"></div>
+                <div class="color-swatch" style="background:#F5F0E8" data-color="#F5F0E8" onclick="setColor(this)"></div>
+                <div class="color-custom" id="customColorWrap" title="custom color">
+                    <input type="color" id="customColor" value="#4A9EFF" oninput="setCustomColor(this.value)">
+                    <div class="color-custom-dot" id="customDot" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
+                </div>
+            </div>
+            <div style="margin-top:10px;font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;margin-bottom:6px">叠加图案</div>
+            <div class="pattern-row" id="patternRow">
+                <div class="pattern-swatch" data-pattern="none" onclick="setPattern(this)" style="background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#ccc;">✕</div>
+                <div class="pattern-swatch" data-pattern="dots-black" onclick="setPattern(this)" style="background:radial-gradient(circle,#000 .5px,transparent .5px) 0 0,radial-gradient(circle,#000 .5px,transparent .5px) 3px 3px;background-size:6px 6px;background-color:#fff"></div>
+                <div class="pattern-swatch" data-pattern="dots-white" onclick="setPattern(this)" style="background:radial-gradient(circle,#fff .5px,transparent .5px) 0 0,radial-gradient(circle,#fff .5px,transparent .5px) 3px 3px;background-size:6px 6px;background-color:#333"></div>
+                <div class="pattern-swatch" data-pattern="stripes-v-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#000 0 .8px,transparent .8px 4px);background-color:#fff"></div>
+                <div class="pattern-swatch" data-pattern="stripes-v-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#fff 0 .8px,transparent .8px 4px);background-color:#333"></div>
+                <div class="pattern-swatch" data-pattern="stripes-h-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(0deg,#000 0 .8px,transparent .8px 4px);background-color:#fff"></div>
+                <div class="pattern-swatch" data-pattern="stripes-h-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(0deg,#fff 0 .8px,transparent .8px 4px);background-color:#333"></div>
+                <div class="pattern-swatch active" data-pattern="grid-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#000 0 .5px,transparent .5px 5px),repeating-linear-gradient(0deg,#000 0 .5px,transparent .5px 5px);background-color:#fff"></div>
+                <div class="pattern-swatch" data-pattern="grid-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#fff 0 .5px,transparent .5px 5px),repeating-linear-gradient(0deg,#fff 0 .5px,transparent .5px 5px);background-color:#333"></div>
             </div>
         </div>
 
@@ -1051,14 +1092,14 @@
                                 大小 
                                 <span id="sizeVal">67</span>
                             </label>
-                            <input type="range" id="sizeSlider" min="10" max="60" value="40" oninput="document.getElementById('sizeVal').textContent=Math.round((this.value-10)/50*100); autoRender();">
+                            <input type="range" id="sizeSlider" min="10" max="60" value="40" oninput="document.getElementById('sizeVal').textContent=Math.round((this.value-10)/50*100); sliderRender();">
                         </div>
                         <div class="slider-item">
                             <label>
                                 数量 
                                 <span id="countVal">67</span>
                             </label>
-                            <input type="range" id="countSlider" min="4" max="25" value="18" oninput="document.getElementById('countVal').textContent=Math.round((this.value-4)/21*100); autoRender();">
+                            <input type="range" id="countSlider" min="4" max="25" value="18" oninput="document.getElementById('countVal').textContent=Math.round((this.value-4)/21*100); sliderRender();">
                         </div>
                         <div class="slider-item" style="grid-column:span 2">
                             <label>
@@ -1066,7 +1107,7 @@
                                 <span id="varVal">50</span>
                                 %
                             </label>
-                            <input type="range" id="varSlider" min="0" max="100" value="50" oninput="document.getElementById('varVal').textContent=this.value; autoRender();">
+                            <input type="range" id="varSlider" min="0" max="100" value="50" oninput="document.getElementById('varVal').textContent=this.value; sliderRender();">
                         </div>
                     </div>
                 </div>
@@ -1078,14 +1119,14 @@
                                 大小 
                                 <span id="sizeValA">0</span>
                             </label>
-                            <input type="range" id="sizeSliderA" min="10" max="60" value="10" oninput="document.getElementById('sizeValA').textContent=Math.round((this.value-10)/50*100); autoRender();">
+                            <input type="range" id="sizeSliderA" min="10" max="60" value="10" oninput="document.getElementById('sizeValA').textContent=Math.round((this.value-10)/50*100); sliderRender();">
                         </div>
                         <div class="slider-item">
                             <label>
                                 数量 
                                 <span id="countValA">100</span>
                             </label>
-                            <input type="range" id="countSliderA" min="4" max="25" value="25" oninput="document.getElementById('countValA').textContent=Math.round((this.value-4)/21*100); autoRender();">
+                            <input type="range" id="countSliderA" min="4" max="25" value="25" oninput="document.getElementById('countValA').textContent=Math.round((this.value-4)/21*100); sliderRender();">
                         </div>
                     </div>
                     <div class="dual-label" id="shapeBLabel" style="margin-top:6px">✦ heart</div>
@@ -1095,14 +1136,14 @@
                                 大小 
                                 <span id="sizeValB">30</span>
                             </label>
-                            <input type="range" id="sizeSliderB" min="10" max="60" value="25" oninput="document.getElementById('sizeValB').textContent=Math.round((this.value-10)/50*100); autoRender();">
+                            <input type="range" id="sizeSliderB" min="10" max="60" value="25" oninput="document.getElementById('sizeValB').textContent=Math.round((this.value-10)/50*100); sliderRender();">
                         </div>
                         <div class="slider-item">
                             <label>
                                 数量 
                                 <span id="countValB">10</span>
                             </label>
-                            <input type="range" id="countSliderB" min="4" max="25" value="6" oninput="document.getElementById('countValB').textContent=Math.round((this.value-4)/21*100); autoRender();">
+                            <input type="range" id="countSliderB" min="4" max="25" value="6" oninput="document.getElementById('countValB').textContent=Math.round((this.value-4)/21*100); sliderRender();">
                         </div>
                     </div>
                 </div>
@@ -1121,41 +1162,6 @@
                     <button class="act-link" id="clearManualBtn" onclick="clearManualShapes()" style="font-size:10px;padding:4px 8px;color:#e06080;display:none">✕ 清除</button>
                 </div>
                 <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;margin-top:4px;opacity:0.7">选一个形状 → 点画布放置</div>
-            </div>
-        </div>
-
-        <!-- 填色设置 -->
-        <div class="card">
-            <div class="card-title">填色</div>
-            <div id="smartColorRow" style="display:none;margin-bottom:8px">
-                <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;font-weight:600;margin-bottom:5px">🎯 从照片提取</div>
-                <div class="color-row" id="extractedColors"></div>
-            </div>
-            <div class="color-row" id="colorRow">
-                <div class="color-swatch active" style="background:#fbffcc" data-color="#fbffcc" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#4A9EFF" data-color="#4A9EFF" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#FF7BAC" data-color="#FF7BAC" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#C9A8FF" data-color="#C9A8FF" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#FFD166" data-color="#FFD166" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#6ECFB2" data-color="#6ECFB2" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#FF9E6C" data-color="#FF9E6C" onclick="setColor(this)"></div>
-                <div class="color-swatch" style="background:#F5F0E8" data-color="#F5F0E8" onclick="setColor(this)"></div>
-                <div class="color-custom" id="customColorWrap" title="custom color">
-                    <input type="color" id="customColor" value="#4A9EFF" oninput="setCustomColor(this.value)">
-                    <div class="color-custom-dot" id="customDot" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
-                </div>
-            </div>
-            <div style="margin-top:10px;font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;margin-bottom:6px">叠加图案</div>
-            <div class="pattern-row" id="patternRow">
-                <div class="pattern-swatch" data-pattern="none" onclick="setPattern(this)" style="background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#ccc;">✕</div>
-                <div class="pattern-swatch" data-pattern="dots-black" onclick="setPattern(this)" style="background:radial-gradient(circle,#000 .5px,transparent .5px) 0 0,radial-gradient(circle,#000 .5px,transparent .5px) 3px 3px;background-size:6px 6px;background-color:#fff"></div>
-                <div class="pattern-swatch" data-pattern="dots-white" onclick="setPattern(this)" style="background:radial-gradient(circle,#fff .5px,transparent .5px) 0 0,radial-gradient(circle,#fff .5px,transparent .5px) 3px 3px;background-size:6px 6px;background-color:#333"></div>
-                <div class="pattern-swatch" data-pattern="stripes-v-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#000 0 .8px,transparent .8px 4px);background-color:#fff"></div>
-                <div class="pattern-swatch" data-pattern="stripes-v-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#fff 0 .8px,transparent .8px 4px);background-color:#333"></div>
-                <div class="pattern-swatch" data-pattern="stripes-h-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(0deg,#000 0 .8px,transparent .8px 4px);background-color:#fff"></div>
-                <div class="pattern-swatch" data-pattern="stripes-h-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(0deg,#fff 0 .8px,transparent .8px 4px);background-color:#333"></div>
-                <div class="pattern-swatch active" data-pattern="grid-black" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#000 0 .5px,transparent .5px 5px),repeating-linear-gradient(0deg,#000 0 .5px,transparent .5px 5px);background-color:#fff"></div>
-                <div class="pattern-swatch" data-pattern="grid-white" onclick="setPattern(this)" style="background:repeating-linear-gradient(90deg,#fff 0 .5px,transparent .5px 5px),repeating-linear-gradient(0deg,#fff 0 .5px,transparent .5px 5px);background-color:#333"></div>
             </div>
         </div>
 
@@ -1255,6 +1261,20 @@
     let _erasedRandomShapes = []; // shapes erased in random mode (stored by canvas coords)
     let isSwapped = false;
     let _lastPlaceTime = 0; // Guard: prevent touchend+click dual trigger on OPPO/Vivo
+    let _sliderTimer = null; // Debounce slider renders on mobile
+    function sliderRender() {
+        if (!userImage)
+            return;
+        if (_sliderTimer)
+            clearTimeout(_sliderTimer);
+        _sliderTimer = setTimeout(() => {
+            try {
+                render();
+            } catch (e) {
+                console.error(e);
+            }
+        }, 100); // Longer debounce for slider performance on mobile
+    }
 
     // Detect if running in a WebView (WeChat, Xiaohongshu, etc.)
     function isInWebView() {
@@ -1487,9 +1507,17 @@
 
     function toggleSwap() {
         isSwapped = !isSwapped;
+        // Update action row button if exists
         const btn = document.getElementById('swapBtn');
-        btn.textContent = isSwapped ? '⇄ 已互换' : '⇄ 互换位置';
-        btn.style.color = isSwapped ? 'var(--pink)' : '#c080b0';
+        if (btn) {
+            btn.textContent = isSwapped ? '⇄ 已互换' : '⇄ 互换位置';
+            btn.style.color = isSwapped ? 'var(--pink)' : '#c080b0';
+        }
+        // Update card toggle button
+        const cardBtn = document.getElementById('swapToggle');
+        if (cardBtn) {
+            cardBtn.classList.toggle('active', isSwapped);
+        }
         if (userImage)
             render();
     }
