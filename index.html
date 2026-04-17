@@ -5,35 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="color-scheme" content="light only">
     <title>snip snip ✂️ by junjun</title>
-    <!-- Async load Google Fonts as enhancement (non-blocking, GFW-safe with @font-face local fallbacks) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap">
-    </noscript>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-536FSRPHHK"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-536FSRPHHK');
+    </script>
+    <!-- Self-hosted fonts (GFW-safe, ~48KB total Latin-only subset) -->
     <style>
-    /* Non-blocking font loading with local fallbacks (GFW-safe) */
+    /* Fredoka — variable font covering wght 400/600/700 */
     @font-face {
         font-family: 'Fredoka';
         font-style: normal;
-        font-weight: 400;
+        font-stretch: 100%;
         font-display: swap;
-        src: local('Fredoka'), local('Arial Rounded MT Bold'), local('Comic Sans MS'), local('sans-serif');
-    }
-
-    @font-face {
-        font-family: 'Fredoka';
-        font-style: normal;
-        font-weight: 600;
-        font-display: swap;
-        src: local('Fredoka'), local('Arial Rounded MT Bold'), local('Comic Sans MS'), local('sans-serif');
-    }
-
-    @font-face {
-        font-family: 'Fredoka';
-        font-style: normal;
-        font-weight: 700;
-        font-display: swap;
-        src: local('Fredoka'), local('Arial Rounded MT Bold'), local('Comic Sans MS'), local('sans-serif');
+        src: url('fonts/fredoka-latin-variable.woff2') format('woff2');
+        unicode-range: U + 0000-00FF, U + 0131, U + 0152-0153, U + 02BB-02BC, U + 02C6-02DA, U#xDC, U + 0304, U + 0308, U + 0329, U + 2000-206F, U + 20AC, U + 2122, U + 2191, U + 2193, U#x2212, U + 2215, U + FEFF, U + FFFD;
     }
 
     @font-face {
@@ -41,7 +32,8 @@
         font-style: normal;
         font-weight: 400;
         font-display: swap;
-        src: local('Space Mono'), local('Courier New'), local('monospace');
+        src: url('fonts/spacemono-regular-latin.woff2') format('woff2');
+        unicode-range: U + 0000-00FF, U + 0131, U + 0152-0153, U + 02BB-02BC, U#x02C6, U + 02DA, U + 02DC, U + 0304, U + 0308, U#x0329, U + 2000-206F, U + 20AC, U + 2122, U#x2191, U + 2193, U#x2212, U + 2215, U + FEFF, U + FFFD;
     }
 
     @font-face {
@@ -49,7 +41,8 @@
         font-style: normal;
         font-weight: 700;
         font-display: swap;
-        src: local('Space Mono'), local('Courier New'), local('monospace');
+        src: url('fonts/spacemono-bold-latin.woff2') format('woff2');
+        unicode-range: U + 0000-00FF, U + 0131, U + 0152-0153, U#x02BB-02BC, U + 02C6-02DA, U + 02DC, U + 0304, U#x0308, U + 0329, U + 2000-206F, U + 20AC, U#x2122, U + 2191, U + 2193, U#x2212, U + 2215, U + FEFF, U + FFFD;
     }
 
     * {
@@ -139,6 +132,8 @@
         background: var(--bg);
         font-family: 'Space Mono', monospace;
         margin: 0;
+        height: 100vh;
+        /* fallback for old browsers/WebView */
         height: 100dvh;
         display: flex;
         flex-direction: column;
@@ -222,7 +217,7 @@
     #result-canvas {
         width: 90vw;
         max-width: 480px;
-        max-height: 55vh;
+        max-height: 40vh;
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(255, 110, 199, 0.15);
         border: 2px solid rgba(255, 189, 232, 0.5);
@@ -379,7 +374,7 @@
     }
 
     .shape-btn {
-        flex: 0 0 calc(25% - 5px);
+        flex: 0 0 calc(20% - 5px);
         padding: 8px 4px;
         border: 2px solid var(--border);
         border-radius: 10px;
@@ -482,21 +477,26 @@
         border-color: var(--pink);
         transform: scale(1.12);
     }/* Sliders */
-
     .slider-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px 14px;
+        gap: 12px 16px;
+        margin-top: 10px;
+    }
+
+    .slider-item {
+        position: relative;
+        padding: 2px 0;
     }
 
     .slider-item label {
         font-family: 'Fredoka', sans-serif;
         font-weight: 600;
-        font-size: 10px;
+        font-size: 11px;
         color: #c080b0;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
 
     .slider-item label span {
@@ -507,18 +507,23 @@
     input[type="range"] {
         -webkit-appearance: none;
         width: 100%;
-        height: 5px;
+        height: 6px;
         background: linear-gradient(90deg, rgba(255, 110, 199, 0.2), rgba(201, 168, 255, 0.2));
         border-radius: 3px;
         outline: none;
-        touch-action: pan-x;
-        /* Improve touch performance on mobile */
+        touch-action: pan-y;
+        /* Allow vertical scroll passthrough; horizontal handled by JS */
+        padding: 10px 0;
+        /* Bigger touch target */
+        margin: -10px 0;
+        /* Compensate padding so visual size unchanged */
+        box-sizing: content-box;
     }
 
     input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 18px;
-        height: 18px;
+        width: 22px;
+        height: 22px;
         border-radius: 50%;
         background: linear-gradient(135deg, var(--pink), var(--lavender));
         cursor: pointer;
@@ -540,6 +545,7 @@
         inset: 0;
         background: rgba(60, 0, 40, 0.55);
         backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
         z-index: 100;
         align-items: center;
         justify-content: center;
@@ -776,36 +782,65 @@
 
     .footer-links {
         display: flex;
-        gap: 12px;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
         padding: 16px 0 8px;
         width: 100%;
         max-width: 440px;
-    }
-
-    .footer-link {
-        font-family: 'Fredoka', sans-serif;
-        font-size: 11px;
-        color: #c080b0;
-        cursor: pointer;
-        border: none;
-        background: none;
-        padding: 4px 8px;
-        border-radius: 8px;
-        transition: all 0.2s;
-    }
-
-    .footer-link:hover {
-        color: var(--pink);
-        background: rgba(255, 110, 199, 0.06);
     }
 
     .footer-label {
         font-family: 'Fredoka', sans-serif;
         font-size: 11px;
         color: #c080b0;
-        padding: 4px 4px 4px 8px;
-        align-self: center;
+        padding: 0 4px;
+        white-space: nowrap;
+    }
+
+    .footer-items {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .footer-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        cursor: pointer;
+        border: none;
+        background: none;
+        padding: 6px 10px;
+        border-radius: 10px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .footer-item:hover {
+        background: rgba(255, 110, 199, 0.06);
+    }
+
+    .footer-item:active {
+        transform: scale(0.95);
+    }
+
+    .footer-item .fi-icon {
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .footer-item .fi-text {
+        font-family: 'Fredoka', sans-serif;
+        font-size: 10px;
+        color: #c080b0;
+        white-space: nowrap;
+        line-height: 1.2;
+    }
+
+    .footer-item:hover .fi-text {
+        color: var(--pink);
     }
 
     .loading {
@@ -824,11 +859,14 @@
     @media (min-width: 768px) {
         body {
             flex-direction: row;
+            height: 100vh;
             height: 100dvh;
         }
 
         .canvas-area {
-            width: 50%;
+            flex: 1;
+            min-width: 0;
+            height: 100vh;
             height: 100dvh;
             justify-content: center;
             align-items: center;
@@ -851,7 +889,9 @@
         }
 
         .panel {
-            width: 50%;
+            flex: 1;
+            min-width: 0;
+            height: 100vh;
             height: 100dvh;
             padding: 16px 20px 40px;
             align-items: stretch;
@@ -917,7 +957,7 @@
     <div class="canvas-area fullscreen" id="canvasArea">
         <div class="title-row">
             <h1>snip snip ✂️</h1>
-            <span class="ver">v 2.2 by junjun</span>
+            <span class="ver">v 2.3 by junjun</span>
         </div>
         <div class="upload-prompt" id="uploadPrompt" onclick="document.getElementById('fileInput').click()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6EC7" stroke-width="1.5">
@@ -933,6 +973,10 @@
         <div class="action-row" id="actionRow" style="display:none">
             <button class="act-main btn-save" onclick="saveImage()">✦ 保存图片</button>
             <button class="act-main btn-change" onclick="document.getElementById('fileInput').click()">📷 换图</button>
+            <button class="act-link" id="lockBtn" onclick="toggleLock()" style="display:flex;align-items:center;gap:3px;font-size:10px;white-space:nowrap">
+                🔓
+                <span id="lockBtnLabel">锁图</span>
+            </button>
             <button class="act-link" onclick="resetTransform()">↺ 重置</button>
         </div>
     </div>
@@ -976,7 +1020,10 @@
                     <label>
                         <span id="splitLabel">色块比例 50%</span>
                     </label>
-                    <input type="range" id="splitSlider" min="0" max="80" value="50" oninput="document.getElementById('splitLabel').textContent='色块比例 '+this.value+'%'; sliderRender();">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <input type="range" id="splitSlider" min="0" max="80" value="50" oninput="var v=parseInt(this.value); document.getElementById('splitLabel').textContent='色块比例 '+v+'%'; document.getElementById('splitInput').value=v; var sBtn=document.getElementById('shadowToggle'); sBtn.style.display=(v===0?'flex':'none'); if(v>0){shadowMode=false;sBtn.classList.remove('active');} sliderRender();" style="flex:1">
+                        <input type="number" id="splitInput" min="0" max="80" value="50" style="width:46px;border:1px solid #e0c0e8;border-radius:8px;padding:4px 6px;font-size:12px;text-align:center;font-family:'Fredoka',sans-serif;color:#7b5c98;background:#fff" onchange="var v=parseInt(this.value); if(isNaN(v))v=50; if(v<0)v=0;if(v>80)v=80;this.value=v; document.getElementById('splitSlider').value=v; document.getElementById('splitLabel').textContent='色块比例 '+v+'%'; var sBtn=document.getElementById('shadowToggle'); sBtn.style.display=(v===0?'flex':'none'); if(v>0){shadowMode=false;sBtn.classList.remove('active');} sliderRender();">
+                    </div>
                 </div>
                 <button class="toggle-btn" id="swapToggle" onclick="toggleSwap()" style="flex:0 0 auto;flex-direction:row;gap:4px;font-size:10px;padding:6px;white-space:nowrap">
                     <span style="font-size:14px">⇄</span>
@@ -987,7 +1034,7 @@
 
         <!-- 填色设置 -->
         <div class="card">
-            <div class="card-title">填色</div>
+            <div class="card-title">色块颜色</div>
             <div id="smartColorRow" style="display:none;margin-bottom:8px">
                 <div class="color-row" id="extractedColors"></div>
             </div>
@@ -1023,7 +1070,7 @@
         <div class="card">
             <div class="card-title">模式</div>
             <div class="toggle-row" style="margin-bottom:10px">
-                <button class="toggle-btn active" id="modeRandom" onclick="setMode('random')" style="padding:10px 8px;font-size:12px;flex-direction:row;gap:5px">
+                <button class="toggle-btn active" id="modeRandom" onclick="if(currentMode==='random'){shuffleShapes();}else{setMode('random');}" style="padding:10px 8px;font-size:12px;flex-direction:row;gap:5px">
                     <span style="font-size:14px">🎲</span>
                     随机散布
                 </button>
@@ -1034,7 +1081,7 @@
             </div>
             <div class="card-title" style="margin-top:4px">
                 形状 
-                <span style="font-weight:400;font-size:9px;color:#c080b0;margin-left:4px" id="shapeHint">可选 1～2 种</span>
+                <span style="font-weight:400;font-size:9px;color:#c080b0;margin-left:4px" id="shapeHint">可选 1～3 种</span>
             </div>
             <div class="shape-row">
                 <button class="shape-btn" data-shape="circle" onclick="setShape(this)">
@@ -1071,12 +1118,24 @@
                     🦋
                     <span>butterfly</span>
                 </button>
+                <button class="shape-btn" data-shape="droplet" onclick="setShape(this)">
+                    💧
+                    <span>droplet</span>
+                </button>
+                <button class="shape-btn" data-shape="square" onclick="setShape(this)">
+                    ▪️
+                    <span>square</span>
+                </button>
             </div>
             <!-- Style toggles (apply to both modes) -->
             <div class="toggle-row" style="margin-top:8px">
                 <button class="toggle-btn" id="outlineToggle" onclick="toggleOutline(this)" style="flex-direction:row;gap:4px;font-size:10px;padding:6px">
                     <span style="font-size:14px">✏️</span>
                     勾线
+                </button>
+                <button class="toggle-btn" id="shadowToggle" onclick="toggleShadow(this)" style="flex-direction:row;gap:4px;font-size:10px;padding:6px;display:none">
+                    <span style="font-size:14px">🌑</span>
+                    阴影
                 </button>
                 <button class="toggle-btn" id="eraserToggle" onclick="toggleEraser(this)" style="flex-direction:row;gap:4px;font-size:10px;padding:6px">
                     <span style="font-size:14px">🧹</span>
@@ -1086,6 +1145,8 @@
             <!-- Random mode controls -->
             <div style="margin-top:10px" id="randomControls">
                 <div id="singleShapeControls" style="display:none">
+                    <!-- Single shape color picker -->
+                    <div id="singleShapeColorRow" class="color-row" style="margin-bottom:8px;gap:5px"></div>
                     <div class="slider-row">
                         <div class="slider-item">
                             <label>
@@ -1111,41 +1172,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="dualShapeControls">
-                    <div class="dual-label" id="shapeALabel">✦ star</div>
-                    <div class="slider-row">
-                        <div class="slider-item">
-                            <label>
-                                大小 
-                                <span id="sizeValA">0</span>
-                            </label>
-                            <input type="range" id="sizeSliderA" min="10" max="60" value="10" oninput="document.getElementById('sizeValA').textContent=Math.round((this.value-10)/50*100); sliderRender();">
-                        </div>
-                        <div class="slider-item">
-                            <label>
-                                数量 
-                                <span id="countValA">100</span>
-                            </label>
-                            <input type="range" id="countSliderA" min="4" max="25" value="25" oninput="document.getElementById('countValA').textContent=Math.round((this.value-4)/21*100); sliderRender();">
-                        </div>
-                    </div>
-                    <div class="dual-label" id="shapeBLabel" style="margin-top:6px">✦ heart</div>
-                    <div class="slider-row">
-                        <div class="slider-item">
-                            <label>
-                                大小 
-                                <span id="sizeValB">30</span>
-                            </label>
-                            <input type="range" id="sizeSliderB" min="10" max="60" value="25" oninput="document.getElementById('sizeValB').textContent=Math.round((this.value-10)/50*100); sliderRender();">
-                        </div>
-                        <div class="slider-item">
-                            <label>
-                                数量 
-                                <span id="countValB">10</span>
-                            </label>
-                            <input type="range" id="countSliderB" min="4" max="25" value="6" oninput="document.getElementById('countValB').textContent=Math.round((this.value-4)/21*100); sliderRender();">
-                        </div>
-                    </div>
+                <div id="multiShapeControls">
+                    <div id="multiShapeSlots"></div>
                 </div>
             </div>
             <!-- Manual mode controls -->
@@ -1161,17 +1189,116 @@
                     <button class="act-link" onclick="undoManualShape()" style="font-size:10px;padding:4px 8px;color:#c080b0">↩ 撤销</button>
                     <button class="act-link" id="clearManualBtn" onclick="clearManualShapes()" style="font-size:10px;padding:4px 8px;color:#e06080;display:none">✕ 清除</button>
                 </div>
-                <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;margin-top:4px;opacity:0.7">选一个形状 → 点画布放置</div>
+                <!-- Manual mode per-placement color picker -->
+                <div style="margin-top:8px">
+                    <div style="font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;margin-bottom:5px">放置颜色</div>
+                    <div class="color-row" id="manualColorRow" style="gap:5px">
+                        <div class="color-swatch active" style="background:#FF7BAC;width:22px;height:22px" data-color="#FF7BAC" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#C9A8FF;width:22px;height:22px" data-color="#C9A8FF" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#FFD166;width:22px;height:22px" data-color="#FFD166" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#4A9EFF;width:22px;height:22px" data-color="#4A9EFF" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#6ECFB2;width:22px;height:22px" data-color="#6ECFB2" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#FF9E6C;width:22px;height:22px" data-color="#FF9E6C" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#fbffcc;width:22px;height:22px" data-color="#fbffcc" onclick="setManualColor(this)"></div>
+                        <div class="color-swatch" style="background:#ffffff;width:22px;height:22px;border:1.5px solid #f0c0e0" data-color="#ffffff" onclick="setManualColor(this)"></div>
+                        <div class="color-custom" style="width:22px;height:22px" title="custom">
+                            <input type="color" id="manualCustomColor" value="#FF7BAC" oninput="setManualCustomColor(this.value)">
+                            <div class="color-custom-dot" id="manualCustomDot" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;margin-top:6px;opacity:0.7">选形状 → 点画布放置 · 拖动文字可移位</div>
+            </div>
+        </div>
+
+        <!-- 文字 -->
+        <div class="card">
+            <div class="card-title" onclick="toggleTextCard()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
+                <span>文字</span>
+                <span id="textCardChevron" style="font-size:11px;color:#c080b0;transition:transform 0.2s;">▼</span>
+            </div>
+            <div id="textCardBody" style="display:none;margin-top:8px">
+                <!-- Input + add button on same row -->
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
+                    <input type="text" id="textInput" placeholder="输入文字..." value="" style="flex:1;min-width:0;padding:8px 10px;border:2px solid var(--border);border-radius:10px;font-family:'Fredoka',sans-serif;font-size:16px;color:var(--text);background:rgba(255,255,255,0.6);outline:none;" oninput="onTextInput()" onclick="this.focus()">
+                    <button class="toggle-btn" onclick="addTextLayer()" style="flex:0 0 auto;flex-direction:row;gap:3px;font-size:10px;padding:5px 10px;white-space:nowrap">
+                        <span style="font-size:13px">＋</span>
+                        添加
+                    </button>
+                </div>
+                <!-- Text layer tabs below input -->
+                <div id="textLayerTabs" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+                    <!-- dynamically populated -->
+                </div>
+                <!-- Size & spacing -->
+                <div class="slider-row" style="margin:12px 0 14px;padding:6px 0;">
+                    <div class="slider-item">
+                        <label>
+                            字号 
+                            <span id="textSizeVal">36</span>
+                        </label>
+                        <input type="range" id="textSizeSlider" min="12" max="120" value="36" oninput="document.getElementById('textSizeVal').textContent=this.value; syncActiveTextStyle(); autoRender();">
+                    </div>
+                    <div class="slider-item">
+                        <label>
+                            字距 
+                            <span id="textSpacingVal">0</span>
+                        </label>
+                        <input type="range" id="textSpacingSlider" min="-5" max="30" value="0" oninput="document.getElementById('textSpacingVal').textContent=this.value; syncActiveTextStyle(); autoRender();">
+                    </div>
+                </div>
+                <!-- Font -->
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+                    <span style="font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;min-width:28px">字体</span>
+                    <select id="textFontSelect" onchange="syncActiveTextStyle(); autoRender();" style="flex:1;padding:6px 8px;border:2px solid var(--border);border-radius:8px;font-family:'Fredoka',sans-serif;font-size:11px;color:var(--text);background:rgba(255,255,255,0.6);outline:none;cursor:pointer;">
+                        <option value="Fredoka" selected>Fredoka</option>
+                        <option value="Space Mono">Space Mono</option>
+                        <option value="serif">Serif</option>
+                        <option value="sans-serif">Sans-serif</option>
+                        <option value="monospace">Monospace</option>
+                    </select>
+                </div>
+                <!-- Color -->
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                    <span style="font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;min-width:28px">颜色</span>
+                    <div class="color-row" id="textColorRow" style="gap:5px">
+                        <div class="color-swatch active" style="background:#ffffff;width:24px;height:24px" data-color="#ffffff" onclick="setTextColor(this)"></div>
+                        <div class="color-swatch" style="background:#000000;width:24px;height:24px" data-color="#000000" onclick="setTextColor(this)"></div>
+                        <div class="color-swatch" style="background:#FF7BAC;width:24px;height:24px" data-color="#FF7BAC" onclick="setTextColor(this)"></div>
+                        <div class="color-swatch" style="background:#FFD166;width:24px;height:24px" data-color="#FFD166" onclick="setTextColor(this)"></div>
+                        <div class="color-swatch" style="background:#C9A8FF;width:24px;height:24px" data-color="#C9A8FF" onclick="setTextColor(this)"></div>
+                        <div class="color-swatch" style="background:#4A9EFF;width:24px;height:24px" data-color="#4A9EFF" onclick="setTextColor(this)"></div>
+                        <div class="color-custom" style="width:24px;height:24px" title="custom">
+                            <input type="color" id="textCustomColor" value="#ffffff" oninput="setTextCustomColor(this.value)">
+                            <div class="color-custom-dot" id="textCustomDot" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;margin-top:6px;opacity:0.7">输入文字实时显示 · 拖动画布上的文字可调整位置</div>
             </div>
         </div>
 
         <!-- Footer links -->
         <div class="footer-links">
             <div class="footer-label">about me</div>
-            <button class="footer-link" onclick="openSocial('threads')">⬡ Threads</button>
-            <button class="footer-link" onclick="openSocial('xhs')">📕 小红书</button>
-            <button class="footer-link" onclick="openDonate('alipay')">💙 请喝奶茶</button>
-            <button class="footer-link" onclick="document.getElementById('changelogOverlay').classList.add('open')">📋 更新日志</button>
+            <div class="footer-items">
+                <button class="footer-item" onclick="openSocial('threads')">
+                    <span class="fi-icon">⬡</span>
+                    <span class="fi-text">Threads</span>
+                </button>
+                <button class="footer-item" onclick="openSocial('xhs')">
+                    <span class="fi-icon">📕</span>
+                    <span class="fi-text">小红书</span>
+                </button>
+                <button class="footer-item" onclick="openDonate('alipay')">
+                    <span class="fi-icon">💙</span>
+                    <span class="fi-text">请喝奶茶</span>
+                </button>
+                <button class="footer-item" onclick="document.getElementById('changelogOverlay').classList.add('open')">
+                    <span class="fi-icon">📋</span>
+                    <span class="fi-text">更新日志</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1216,29 +1343,25 @@
         <div class="changelog-modal">
             <div class="changelog-modal-title">snip snip ✂️ 更新日志</div>
             <div class="changelog-modal-version">
-                <span>v 2.2</span>
+                <span>v 2.3</span>
             </div>
             <div class="cl-section feature">
                 <div class="cl-section-title">
                     🪄 新功能 
                     <span class="cl-tag">NEW</span>
                 </div>
-                <div class="cl-item">新增五瓣花朵、八角星芒、蝴蝶结、菱形星光、蝴蝶 5 种形状</div>
-                <div class="cl-item">形状可以手动添加啦，随机可同时选两个形状</div>
-                <div class="cl-item">新增橡皮擦功能</div>
-                <div class="cl-item">新增勾线模式（只描边不填色）</div>
-                <div class="cl-item">新增色块的叠加图案（波点/条纹/网格）</div>
-                <div class="cl-item">可调节色块比例</div>
-                <div class="cl-item">所有调节实时预览</div>
+                <div class="cl-item">新增雨点、方块形状</div>
+                <div class="cl-item">每个形状可独立选颜色，多彩混排</div>
+                <div class="cl-item">增加文字功能！</div>
+                <div class="cl-item">点击"随机散布"可实现多次随机</div>
+                <div class="cl-item">可以锁定🔒底图</div>
+                <div class="cl-item">色块0%时可给形状加阴影（色块的阴影我还没研究出来😭）</div>
             </div>
             <hr class="cl-divider">
-            <div class="cl-section improve">
-                <div class="cl-section-title">
-                    ✨ 优化 
-                    <span class="cl-tag">IMPROVED</span>
-                </div>
-                <div class="cl-item">响应式布局，PC 和手机都好用</div>
-                <div class="cl-item">画布固定在顶部，调参数时始终可见</div>
+            <div class="cl-section bugfix" style="opacity:0.7">
+                <div class="cl-section-title">🐛 修 bug & UI 改进</div>
+                <div class="cl-item">UI 改进，不太容易误触了</div>
+                <div class="cl-item">修复 HarmonyOS 无法保存的问题</div>
             </div>
             <hr class="cl-divider">
             <button class="qr-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">关闭</button>
@@ -1254,6 +1377,8 @@
     let currentRatio = '1:1';
     let currentPattern = 'grid-black';
     let outlineMode = false;
+    let shadowMode = false;
+    let imgLocked = false;
     let currentMode = 'random'; // 'random' | 'manual'
     let eraserOn = false;
     let manualShapes = []; // {x, y, r, shape} in canvas coords
@@ -1262,6 +1387,123 @@
     let isSwapped = false;
     let _lastPlaceTime = 0; // Guard: prevent touchend+click dual trigger on OPPO/Vivo
     let _sliderTimer = null; // Debounce slider renders on mobile
+
+    // === Slider touch-intent detection ===
+    // Sliders have touch-action:pan-y so vertical scroll passes through natively.
+    // For horizontal slider dragging, we listen for touchstart on sliders and
+    // manually update the slider value based on horizontal finger movement.
+    (function initSliderTouchGuard() {
+        var THRESHOLD = 8;
+
+        function handleSliderTouch(e) {
+            var slider = e.target.closest('input[type="range"]');
+            if (!slider)
+                return;
+
+            var startX = e.touches[0].clientX;
+            var startY = e.touches[0].clientY;
+            var decided = false;
+            var active = false;
+            var rect = slider.getBoundingClientRect();
+            var min = parseFloat(slider.min);
+            var max = parseFloat(slider.max);
+
+            function valFromX(clientX) {
+                var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                return Math.round(min + ratio * (max - min));
+            }
+
+            function onMove(ev) {
+                if (ev.touches.length !== 1)
+                    return;
+                var cx = ev.touches[0].clientX;
+                var cy = ev.touches[0].clientY;
+                if (!decided) {
+                    var dx = Math.abs(cx - startX);
+                    var dy = Math.abs(cy - startY);
+                    if (dx > THRESHOLD || dy > THRESHOLD) {
+                        decided = true;
+                        active = dx >= dy;
+                    }
+                }
+                if (active) {
+                    ev.preventDefault(); // block scroll
+                    slider.value = valFromX(cx);
+                    slider.dispatchEvent(new Event('input', {
+                        bubbles: true
+                    }));
+                }
+            }
+            function onEnd() {
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+                document.removeEventListener('touchcancel', onEnd);
+            }
+            document.addEventListener('touchmove', onMove, {
+                passive: false
+            });
+            document.addEventListener('touchend', onEnd, {
+                once: true
+            });
+            document.addEventListener('touchcancel', onEnd, {
+                once: true
+            });
+        }
+
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.closest('input[type="range"]'))
+                handleSliderTouch(e);
+        }, {
+            passive: true
+        });
+    })();
+
+    // Shape color map: each selected shape maps to its own color
+    let shapeColorMap = {
+        star: '#FF7BAC',
+        heart: '#C9A8FF'
+    };
+    // Manual mode: current placement color (each shape placed can have its own color)
+    let manualColor = '#FF7BAC';
+    // Default per-shape slider params for multi-shape mode
+    let multiShapeParams = {
+        star: {
+            size: 10,
+            count: 25
+        },
+        heart: {
+            size: 25,
+            count: 6
+        }
+    };
+    const defaultShapeSize = 20;
+    const defaultShapeCount = 12;
+
+    const nameMap = {
+        circle: 'bubble',
+        star: 'star',
+        heart: 'heart',
+        flower: 'flower',
+        spark8: 'spark',
+        ribbon: 'ribbon',
+        diamond4: 'diamond',
+        butterfly: 'butterfly',
+        droplet: 'droplet',
+        square: 'square'
+    };
+    const shapeColorDefaults = ['#FF7BAC', '#C9A8FF', '#FFD166'];
+
+    // Text layers — each has independent position + style, live-synced
+    let textLayers = []; // [{id, text, x, y, fontSize, fontFamily, color, letterSpacing}]
+    let activeTextLayerId = null;
+    let _textIdCounter = 0;
+    let _draggingTextId = null; // id of text layer being dragged
+    let _textDragStartX = 0,
+        _textDragStartY = 0; // canvas coords at drag start
+    let _textDragOrigX = 0,
+        _textDragOrigY = 0; // original text position at drag start
+    let _justDraggedText = false; // prevent shape placement after text drag
+    let _textActuallyMoved = false; // tracks if text drag actually moved
     function sliderRender() {
         if (!userImage)
             return;
@@ -1281,7 +1523,12 @@
         // WebView indicators
         const ua = navigator.userAgent.toLowerCase();
         const isAndroidWebView = /webview|(android.*applewebkit\/[0-9]+(?!.*safari))/i.test(ua);
-        const isIOSWebView = /iphone|ipod|ipad/i.test(navigator.userAgent) && !window.navigatorstandalone && 'standalone' in window && !window.navigator.standalone && /safari/i.test(ua) && !window.matchMedia('(display-mode: standalone)').matches;
+        // Check for iOS WebView: no standalone mode + Safari UA
+        const isIOSWebView = (/iphone|ipod|ipad/i.test(ua)) &&
+        ('standalone' in window.navigator) &&
+        (!window.navigator.standalone) &&
+        (/safari/i.test(ua)) &&
+        !window.matchMedia('(display-mode: standalone)').matches;
         // More reliable: check if we can open windows
         const cantOpenWindow = typeof window.open === 'function' && window.open.toString().includes('[native code]') === false;
         return isAndroidWebView || isIOSWebView || (ua.includes('micromessenger') || ua.includes('xhs'));
@@ -1317,6 +1564,14 @@
                 document.getElementById('controlPanel').style.display = '';
                 extractColors(img);
                 manualShapes = [];
+                textLayers = [];
+                activeTextLayerId = null;
+                _textIdCounter = 0;
+                _draggingTextId = null;
+                document.getElementById('textInput').value = '';
+                rebuildTextTabs();
+                rebuildShapeColorMap();
+                rebuildMultiShapeSliders();
                 renderPlain(); // Just show the image, no shapes yet
             };
             img.src = ev.target.result;
@@ -1373,32 +1628,35 @@
             if (currentShapes.length > 1) {
                 currentShapes.splice(idx, 1);
                 btn.classList.remove('active');
+                delete shapeColorMap[shape];
+                delete multiShapeParams[shape];
             }
         } else {
-            if (currentShapes.length >= 2) {
+            if (currentShapes.length >= 3) {
                 const oldShape = currentShapes.shift();
                 document.querySelector(`.shape-btn[data-shape="${oldShape}"]`).classList.remove('active');
+                delete shapeColorMap[oldShape];
+                delete multiShapeParams[oldShape];
             }
             currentShapes.push(shape);
             btn.classList.add('active');
-        }
-        // Toggle single/dual controls
-        const isDual = currentShapes.length === 2;
-        document.getElementById('singleShapeControls').style.display = isDual ? 'none' : '';
-        document.getElementById('dualShapeControls').style.display = isDual ? '' : 'none';
-        if (isDual) {
-            const nameMap = {
-                circle: 'bubble',
-                star: 'star',
-                heart: 'heart',
-                flower: 'flower',
-                spark8: 'spark',
-                ribbon: 'ribbon',
-                diamond4: 'diamond',
-                butterfly: 'butterfly'
+            // Assign default color for new shape
+            var usedColors = Object.values(shapeColorMap);
+            var newColor = shapeColorDefaults.find(function(c) {
+                return usedColors.indexOf(c) < 0;
+            }) || shapeColorDefaults[0];
+            shapeColorMap[shape] = newColor;
+            multiShapeParams[shape] = {
+                size: defaultShapeSize,
+                count: defaultShapeCount
             };
-            document.getElementById('shapeALabel').textContent = '✦ ' + (nameMap[currentShapes[0]] || currentShapes[0]);
-            document.getElementById('shapeBLabel').textContent = '✦ ' + (nameMap[currentShapes[1]] || currentShapes[1]);
+        }
+        // Toggle single/multi controls
+        var isMulti = currentShapes.length >= 2;
+        document.getElementById('singleShapeControls').style.display = isMulti ? 'none' : '';
+        document.getElementById('multiShapeControls').style.display = isMulti ? '' : 'none';
+        if (isMulti) {
+            rebuildMultiShapeSliders();
         }
         // In manual mode, enforce single shape selection
         if (currentMode === 'manual' && currentShapes.length > 1) {
@@ -1408,15 +1666,185 @@
                     document.querySelector('.shape-btn[data-shape="' + s + '"]').classList.remove('active');
             });
             currentShapes.splice(0, currentShapes.length - 1);
-            // Switch to single controls
+            // Clean up maps
+            Object.keys(shapeColorMap).forEach(function(k) {
+                if (k !== keep)
+                    delete shapeColorMap[k];
+            });
+            Object.keys(multiShapeParams).forEach(function(k) {
+                if (k !== keep)
+                    delete multiShapeParams[k];
+            });
             document.getElementById('singleShapeControls').style.display = 'none';
-            document.getElementById('dualShapeControls').style.display = 'none';
+            document.getElementById('multiShapeControls').style.display = 'none';
         }
+        rebuildShapeColorMap();
         autoRender();
     }
 
+    function rebuildMultiShapeSliders() {
+        var container = document.getElementById('multiShapeSlots');
+        container.innerHTML = '';
+        var palette = ['#FF7BAC', '#4A9EFF', '#C9A8FF', '#FFD166', '#6ECFB2', '#FF9E6C', '#fbffcc', '#F5F0E8'];
+        currentShapes.forEach(function(shape, i) {
+            var params = multiShapeParams[shape] || {
+                size: defaultShapeSize,
+                count: defaultShapeCount
+            };
+            var sizeId = 'mSize_' + shape;
+            var countId = 'mCount_' + shape;
+            var sizeValId = 'mSizeVal_' + shape;
+            var countValId = 'mCountVal_' + shape;
+            var sizeVal = Math.round((params.size - 10) / 50 * 100);
+            var countVal = Math.round((params.count - 4) / 21 * 100);
+            var color = shapeColorMap[shape] || shapeColorDefaults[0];
+
+            // Wrapper
+            var slot = document.createElement('div');
+            slot.style.cssText = 'margin-top:' + (i > 0 ? '10' : '0') + 'px;';
+            if (i > 0) {
+                var hr = document.createElement('div');
+                hr.style.cssText = 'height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin-bottom:8px;';
+                slot.appendChild(hr);
+            }
+
+            // Label row
+            var labelDiv = document.createElement('div');
+            labelDiv.className = 'dual-label';
+            labelDiv.style.cssText = 'display:flex;align-items:center;gap:5px;margin-bottom:4px;';
+            labelDiv.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + color + ';flex-shrink:0"></span>✦ ' + (nameMap[shape] || shape);
+            slot.appendChild(labelDiv);
+
+            // Inline color swatches row
+            var colorRow = document.createElement('div');
+            colorRow.style.cssText = 'display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:6px;';
+            palette.forEach(function(clr) {
+                var sw = document.createElement('div');
+                sw.className = 'color-swatch' + (clr === color ? ' active' : '');
+                sw.style.cssText = 'width:20px;height:20px;background:' + clr;
+                sw.dataset.color = clr;
+                sw.onclick = function() {
+                    colorRow.querySelectorAll('.color-swatch').forEach(function(s) {
+                        s.classList.remove('active');
+                    });
+                    sw.classList.add('active');
+                    shapeColorMap[shape] = clr;
+                    // Update label dot color
+                    labelDiv.querySelector('span').style.background = clr;
+                    autoRender();
+                };
+                colorRow.appendChild(sw);
+            });
+            // Custom color picker
+            var cw = document.createElement('div');
+            cw.className = 'color-custom';
+            cw.style.cssText = 'width:20px;height:20px;';
+            cw.title = 'custom';
+            var ci = document.createElement('input');
+            ci.type = 'color';
+            ci.value = color;
+            ci.style.cssText = 'position:absolute;width:200%;height:200%;top:-50%;left:-50%;border:none;cursor:pointer;opacity:0;';
+            var cd = document.createElement('div');
+            cd.className = 'color-custom-dot';
+            cd.style.background = 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)';
+            ci.oninput = function() {
+                shapeColorMap[shape] = ci.value;
+                cd.style.background = ci.value;
+                labelDiv.querySelector('span').style.background = ci.value;
+                colorRow.querySelectorAll('.color-swatch').forEach(function(s) {
+                    s.classList.remove('active');
+                });
+                autoRender();
+            };
+            cw.appendChild(ci);
+            cw.appendChild(cd);
+            colorRow.appendChild(cw);
+            slot.appendChild(colorRow);
+
+            // Sliders
+            var slidersHtml = '<div class="slider-row">' +
+            '<div class="slider-item"><label>大小 <span id="' + sizeValId + '">' + sizeVal + '</span></label>' +
+            '<input type="range" id="' + sizeId + '" min="10" max="60" value="' + params.size + '" ' +
+            'oninput="document.getElementById(\'' + sizeValId + '\').textContent=Math.round((this.value-10)/50*100); multiShapeParams[\'' + shape + '\'].size=parseInt(this.value); sliderRender();"></div>' +
+            '<div class="slider-item"><label>数量 <span id="' + countValId + '">' + countVal + '</span></label>' +
+            '<input type="range" id="' + countId + '" min="4" max="25" value="' + params.count + '" ' +
+            'oninput="document.getElementById(\'' + countValId + '\').textContent=Math.round((this.value-4)/21*100); multiShapeParams[\'' + shape + '\'].count=parseInt(this.value); sliderRender();"></div>' +
+            '</div>';
+            var sliderWrap = document.createElement('div');
+            sliderWrap.innerHTML = slidersHtml;
+            slot.appendChild(sliderWrap.firstChild);
+
+            container.appendChild(slot);
+        });
+    }
+
+    // Build color picker row for single-shape mode
+    function rebuildSingleShapeColorPicker() {
+        const container = document.getElementById('singleShapeColorRow');
+        if (!container)
+            return;
+        container.innerHTML = '';
+        if (currentShapes.length !== 1)
+            return;
+
+        const shape = currentShapes[0];
+        const currentColorVal = shapeColorMap[shape] || shapeColorDefaults[0];
+        const palette = ['#FF7BAC', '#4A9EFF', '#C9A8FF', '#FFD166', '#6ECFB2', '#FF9E6C', '#fbffcc', '#F5F0E8'];
+
+        palette.forEach(function(clr) {
+            var sw = document.createElement('div');
+            sw.className = 'color-swatch' + (clr === currentColorVal ? ' active' : '');
+            sw.style.cssText = 'width:26px;height:26px;background:' + clr;
+            sw.dataset.color = clr;
+            sw.onclick = function() {
+                container.querySelectorAll('.color-swatch').forEach(function(s) {
+                    s.classList.remove('active');
+                });
+                sw.classList.add('active');
+                shapeColorMap[shape] = clr;
+                autoRender();
+            };
+            container.appendChild(sw);
+        });
+
+        // Custom color picker
+        var cw = document.createElement('div');
+        cw.className = 'color-custom';
+        cw.style.cssText = 'width:26px;height:26px';
+        cw.title = 'custom';
+        var ci = document.createElement('input');
+        ci.type = 'color';
+        ci.value = currentColorVal;
+        ci.id = 'singleCustomColor';
+        ci.style.cssText = 'position:absolute;width:200%;height:200%;top:-50%;left:-50%;border:none;cursor:pointer;opacity:0;';
+        var cd = document.createElement('div');
+        cd.className = 'color-custom-dot';
+        cd.id = 'singleCustomDot';
+        cd.style.background = 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)';
+        ci.oninput = function() {
+            shapeColorMap[shape] = ci.value;
+            cd.style.background = ci.value;
+            container.querySelectorAll('.color-swatch').forEach(function(s) {
+                s.classList.remove('active');
+            });
+            autoRender();
+        };
+        cw.appendChild(ci);
+        cw.appendChild(cd);
+        container.appendChild(cw);
+    }
+
+    // No-op kept for backward compat with calls in setShape/setMode
+    function rebuildShapeColorMap() {
+        if (currentShapes.length >= 2) {
+            rebuildMultiShapeSliders();
+        } else if (currentShapes.length === 1) {
+            rebuildSingleShapeColorPicker();
+        }
+    }
+
     function setColor(el) {
-        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('#colorRow .color-swatch, #extractedColors .color-swatch').forEach(s => s.classList.remove('active'));
         el.classList.add('active');
         currentColor = el.dataset.color;
         autoRender();
@@ -1425,8 +1853,20 @@
     function setCustomColor(val) {
         currentColor = val;
         document.getElementById('customDot').style.background = val;
-        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('#colorRow .color-swatch, #extractedColors .color-swatch').forEach(s => s.classList.remove('active'));
         autoRender();
+    }
+
+    function setManualColor(el) {
+        document.querySelectorAll('#manualColorRow .color-swatch').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+        manualColor = el.dataset.color;
+    }
+
+    function setManualCustomColor(val) {
+        manualColor = val;
+        document.getElementById('manualCustomDot').style.background = val;
+        document.querySelectorAll('#manualColorRow .color-swatch').forEach(s => s.classList.remove('active'));
     }
 
     function setPattern(el) {
@@ -1439,13 +1879,40 @@
     function toggleOutline(btn) {
         outlineMode = !outlineMode;
         btn.classList.toggle('active', outlineMode);
-        autoRender();
+        if (outlineMode && shadowMode) {
+            shadowMode = false;
+            document.getElementById('shadowToggle').classList.remove('active');
+        }
+        render();
+    }
+
+    function toggleShadow(btn) {
+        shadowMode = !shadowMode;
+        btn.classList.toggle('active', shadowMode);
+        if (shadowMode && outlineMode) {
+            outlineMode = false;
+            document.getElementById('outlineToggle').classList.remove('active');
+        }
+        render();
+    }
+
+    function toggleLock() {
+        imgLocked = !imgLocked;
+        const btn = document.getElementById('lockBtn');
+        const label = document.getElementById('lockBtnLabel');
+        const canvas = document.getElementById('result-canvas');
+        btn.firstChild.textContent = imgLocked ? '🔒' : '🔓';
+        label.textContent = imgLocked ? '已锁定' : '锁图';
+        btn.style.color = imgLocked ? 'var(--pink)' : '';
+        canvas.style.border = imgLocked ? '2.5px solid var(--pink)' : '2px solid rgba(255,189,232,0.5)';
     }
 
     function setMode(mode) {
         currentMode = mode;
         document.getElementById('modeRandom').classList.toggle('active', mode === 'random');
         document.getElementById('modeManual').classList.toggle('active', mode === 'manual');
+        if (mode === 'random')
+            shuffleShapes();
         const canvas = document.getElementById('result-canvas');
         // Disable eraser in random mode
         const eraserBtn = document.getElementById('eraserToggle');
@@ -1467,7 +1934,7 @@
         document.getElementById('clearManualBtn').style.display = manualShapes.length > 0 ? '' : 'none';
         var hint = document.getElementById('shapeHint');
         if (hint)
-            hint.textContent = mode === 'random' ? '可选 1～2 种' : '选 1 种';
+            hint.textContent = mode === 'random' ? '可选 1～3 种' : '选 1 种';
         if (mode === 'manual' && currentShapes.length > 1) {
             var keep = currentShapes[currentShapes.length - 1];
             currentShapes.forEach(function(s) {
@@ -1475,10 +1942,28 @@
                     document.querySelector('.shape-btn[data-shape="' + s + '"]').classList.remove('active');
             });
             currentShapes.splice(0, currentShapes.length - 1);
+            // Clean up maps
+            Object.keys(shapeColorMap).forEach(function(k) {
+                if (k !== keep)
+                    delete shapeColorMap[k];
+            });
+            Object.keys(multiShapeParams).forEach(function(k) {
+                if (k !== keep)
+                    delete multiShapeParams[k];
+            });
             document.getElementById('singleShapeControls').style.display = 'none';
-            document.getElementById('dualShapeControls').style.display = 'none';
+            document.getElementById('multiShapeControls').style.display = 'none';
         }
+        rebuildShapeColorMap();
         autoRender();
+    }
+
+    function toggleTextCard() {
+        var body = document.getElementById('textCardBody');
+        var chevron = document.getElementById('textCardChevron');
+        var open = body.style.display === 'none';
+        body.style.display = open ? '' : 'none';
+        chevron.style.transform = open ? 'rotate(180deg)' : '';
     }
 
     function toggleEraser(btn) {
@@ -1728,28 +2213,8 @@
         _seed = _baseSeed; // Reset seed for stable random positions
         const canvas = document.getElementById('result-canvas');
         const ctx = canvas.getContext('2d');
-        const isDual = currentShapes.length === 2;
+        const isMulti = currentShapes.length >= 2;
         const opacity = 1;
-
-        // Read params per mode
-        let shapeSizeA,
-            shapeSizeB,
-            countA,
-            countB,
-            varianceA,
-            varianceB;
-        if (isDual) {
-            shapeSizeA = parseInt(document.getElementById('sizeSliderA').value);
-            shapeSizeB = parseInt(document.getElementById('sizeSliderB').value);
-            countA = parseInt(document.getElementById('countSliderA').value);
-            countB = parseInt(document.getElementById('countSliderB').value);
-            varianceA = 0.5;
-            varianceB = 0.5;
-        } else {
-            shapeSizeA = parseInt(document.getElementById('sizeSlider').value);
-            countA = parseInt(document.getElementById('countSlider').value);
-            varianceA = parseInt(document.getElementById('varSlider').value) / 100;
-        }
 
         // Canvas size based on ratio
         const BASE = 1080;
@@ -1821,7 +2286,6 @@
         }
 
         // --- Compute image draw coords: cover fit to one half ---
-        // Both halves use the same size/position so the image looks identical on both sides
         const imgAr = img.width / img.height;
         const halfAr = photoW / photoH;
         let dw,
@@ -1833,10 +2297,8 @@
             dw = photoW;
             dh = dw / imgAr;
         }
-        // Apply user scale
         dw *= imgScale;
         dh *= imgScale;
-        // Center offset within a half-region (relative to half origin)
         const relDx = (photoW - dw) / 2 + imgOffsetX;
         const relDy = (photoH - dh) / 2 + imgOffsetY;
 
@@ -1852,14 +2314,12 @@
         let _solidShapesCanvas = [];
 
         if (splitPct > 0) {
-            // --- Build solid half using regular canvas compositing ---
-            // 1. Photo layer for solid region (same cover fit, centered in solid half)
+            // --- Build solid half ---
             _pcCanvas.width = solidW;
             _pcCanvas.height = solidH;
             _pcCtx.clearRect(0, 0, solidW, solidH);
             _pcCtx.drawImage(img, relDx, relDy, dw, dh);
 
-            // 2. Solid color layer with destination-out holes
             _ocCanvas.width = solidW;
             _ocCanvas.height = solidH;
             _ocCtx.clearRect(0, 0, solidW, solidH);
@@ -1868,9 +2328,7 @@
             _ocCtx.fillStyle = currentColor;
             _ocCtx.fillRect(0, 0, solidW, solidH);
 
-            // Draw pattern overlay on solid color
             if (currentPattern !== 'none') {
-                // Offset by -solidX,-solidY so pattern tiles align with main canvas globally
                 _ocCtx.save();
                 _ocCtx.translate(-solidX, -solidY);
                 drawPattern(_ocCtx, solidX, solidY, solidW, solidH, currentPattern);
@@ -1879,23 +2337,27 @@
 
             let solidShapes = [];
             if (currentMode === 'random') {
-                // Distribute shapes proportional to each region's area fraction
                 const totalArea = OUT_W * OUT_H;
                 const solidArea = solidW * solidH;
                 const solidFrac = totalArea > 0 ? solidArea / totalArea : 0;
-                if (isDual) {
-                    const sCountA = Math.round(countA * solidFrac);
-                    const sCountB = Math.round(countB * solidFrac);
-                    const shapesA = generateShapePositions(solidW, solidH, sCountA, shapeSizeA, varianceA, 0).map(s => ({
-                        ...s,
-                        shape: currentShapes[0]
-                    }));
-                    const shapesB = generateShapePositions(solidW, solidH, sCountB, shapeSizeB, varianceB, 0).map(s => ({
-                        ...s,
-                        shape: currentShapes[1]
-                    }));
-                    solidShapes = shapesA.concat(shapesB);
+                if (isMulti) {
+                    currentShapes.forEach(function(shape) {
+                        var p = multiShapeParams[shape] || {
+                            size: defaultShapeSize,
+                            count: defaultShapeCount
+                        };
+                        var sCount = Math.round(p.count * solidFrac);
+                        var generated = generateShapePositions(solidW, solidH, sCount, p.size, 0.5, 0).map(function(s) {
+                            return Object.assign({}, s, {
+                                shape: shape
+                            });
+                        });
+                        solidShapes = solidShapes.concat(generated);
+                    });
                 } else {
+                    var shapeSizeA = parseInt(document.getElementById('sizeSlider').value);
+                    var countA = parseInt(document.getElementById('countSlider').value);
+                    var varianceA = parseInt(document.getElementById('varSlider').value) / 100;
                     const sCount = Math.round(countA * solidFrac);
                     solidShapes = generateShapePositions(solidW, solidH, sCount, shapeSizeA, varianceA, 0).map(s => ({
                         ...s,
@@ -1903,14 +2365,12 @@
                     }));
                 }
             }
-            // Cache solid shapes in canvas coords for eraser hit-testing
             _solidShapesCanvas = solidShapes.map(s => ({
                 ...s,
                 x: s.x + solidX,
                 y: s.y + solidY
             }));
             _ocCtx.globalCompositeOperation = 'destination-out';
-            // Filter out erased shapes before drawing
             const _activeSolidShapes = solidShapes.filter(s => {
                 const cx = s.x + solidX,
                     cy = s.y + solidY;
@@ -1918,9 +2378,10 @@
             });
             _activeSolidShapes.forEach(s => {
                 _ocCtx.globalAlpha = opacity;
+                _fixedAngle = s.angle != null ? s.angle : null;
                 drawShape(_ocCtx, s.x, s.y, s.r, s.shape);
+                _fixedAngle = null;
             });
-            // Also knockout manual shapes that fall in solid region
             manualShapes.forEach(s => {
                 _ocCtx.globalAlpha = 1;
                 _fixedAngle = s.angle || 0;
@@ -1930,7 +2391,6 @@
             _ocCtx.globalCompositeOperation = 'source-over';
             _ocCtx.globalAlpha = 1;
 
-            // 3. Composite: photo behind, solid-with-holes on top
             _compCanvas.width = solidW;
             _compCanvas.height = solidH;
             _compCtx.clearRect(0, 0, solidW, solidH);
@@ -1938,34 +2398,45 @@
             _compCtx.drawImage(_ocCanvas, 0, 0);
 
             ctx.drawImage(_compCanvas, solidX, solidY);
-        } // end if (splitPct > 0)
 
-        // --- Scatter overlay shapes on photo half (or full canvas when splitPct=0) ---
-        // Build a temp canvas with color+pattern shapes, then composite onto main
-        // (Reuse module-level _phCanvas to avoid Safari memory limit from repeated createElement)
+
+
+
+
+        } // end if (splitPct > 0)
+        // Inner shadow: POST-COMPOSITE global drop-shadow technique
+        // After all layers render, capture the composite & apply drop-shadow filter.
+        // Transparent hole edges get shadow → natural inset feel. Merged automatically.
+        // Moved to END of render function (after all layers drawn).
+
+        // --- Scatter overlay shapes on photo half ---
         _phCanvas.width = photoW;
         _phCanvas.height = photoH;
         _phCtx.clearRect(0, 0, photoW, photoH);
 
         let photoShapes = [];
         if (currentMode === 'random') {
-            // When no solid region, photo fraction = 1 (all shapes on photo)
             const totalArea = OUT_W * OUT_H;
             const photoArea = photoW * photoH;
             const photoFrac = totalArea > 0 ? photoArea / totalArea : 1;
-            if (isDual) {
-                const pCountA = Math.max(1, Math.round(countA * photoFrac));
-                const pCountB = Math.max(1, Math.round(countB * photoFrac));
-                const pA = generateShapePositions(photoW, photoH, pCountA, shapeSizeA, varianceA, 0).map(s => ({
-                    ...s,
-                    shape: currentShapes[0]
-                }));
-                const pB = generateShapePositions(photoW, photoH, pCountB, shapeSizeB, varianceB, 0).map(s => ({
-                    ...s,
-                    shape: currentShapes[1]
-                }));
-                photoShapes = pA.concat(pB);
+            if (isMulti) {
+                currentShapes.forEach(function(shape) {
+                    var p = multiShapeParams[shape] || {
+                        size: defaultShapeSize,
+                        count: defaultShapeCount
+                    };
+                    var pCount = Math.max(1, Math.round(p.count * photoFrac));
+                    var generated = generateShapePositions(photoW, photoH, pCount, p.size, 0.5, 0).map(function(s) {
+                        return Object.assign({}, s, {
+                            shape: shape
+                        });
+                    });
+                    photoShapes = photoShapes.concat(generated);
+                });
             } else {
+                var shapeSizeA = parseInt(document.getElementById('sizeSlider').value);
+                var countA = parseInt(document.getElementById('countSlider').value);
+                var varianceA = parseInt(document.getElementById('varSlider').value) / 100;
                 const pCount = Math.max(1, Math.round(countA * photoFrac));
                 photoShapes = generateShapePositions(photoW, photoH, pCount, shapeSizeA, varianceA, 0).map(s => ({
                     ...s,
@@ -1973,7 +2444,6 @@
                 }));
             }
         }
-        // Cache photo shapes in canvas coords and merge with solid shapes for eraser
         const _photoShapesCanvas = photoShapes.map(s => ({
             ...s,
             x: s.x + photoX,
@@ -1981,19 +2451,18 @@
         }));
         _lastRandomShapes = _solidShapesCanvas.concat(_photoShapesCanvas);
 
-        // 1. Draw solid color shapes (filter erased ones)
-        _phCtx.fillStyle = currentColor;
+        // Draw shapes with per-shape colors
         const _activePhotoShapes = photoShapes.filter(s => {
             const cx = s.x + photoX,
                 cy = s.y + photoY;
             return !_erasedRandomShapes.some(e => Math.hypot(cx - e.x, cy - e.y) < s.r * 0.5);
         });
         _activePhotoShapes.forEach(s => {
+            _phCtx.fillStyle = shapeColorMap[s.shape] || currentColor;
             _phCtx.globalAlpha = 1;
             drawShape(_phCtx, s.x, s.y, s.r, s.shape);
         });
 
-        // 2. Draw pattern on top (only where color was drawn) using source-atop
         if (currentPattern !== 'none') {
             _phCtx.globalCompositeOperation = 'source-atop';
             _phCtx.save();
@@ -2003,7 +2472,6 @@
             _phCtx.globalCompositeOperation = 'source-over';
         }
 
-        // 3. Draw onto main canvas clipped to photo half
         ctx.save();
         ctx.beginPath();
         ctx.rect(photoX, photoY, photoW, photoH);
@@ -2011,14 +2479,13 @@
         ctx.drawImage(_phCanvas, photoX, photoY);
         ctx.restore();
 
-        // --- Draw manual shapes (on full canvas, not clipped to photo region) ---
+        // --- Draw manual shapes ---
         if (manualShapes.length > 0) {
-            // (Reuse module-level _mPhCanvas to avoid Safari memory limit from repeated createElement)
             _mPhCanvas.width = OUT_W;
             _mPhCanvas.height = OUT_H;
             _mPhCtx.clearRect(0, 0, OUT_W, OUT_H);
-            _mPhCtx.fillStyle = currentColor;
             manualShapes.forEach(s => {
+                _mPhCtx.fillStyle = s.color || shapeColorMap[s.shape] || currentColor;
                 _mPhCtx.globalAlpha = 1;
                 _fixedAngle = s.angle || 0;
                 drawShape(_mPhCtx, s.x, s.y, s.r, s.shape);
@@ -2030,7 +2497,6 @@
                 _mPhCtx.globalCompositeOperation = 'source-over';
             }
             if (splitPct > 0) {
-                // When solid region exists, clip to photo region only (solid region uses knockout)
                 ctx.save();
                 ctx.beginPath();
                 ctx.rect(photoX, photoY, photoW, photoH);
@@ -2038,11 +2504,72 @@
                 ctx.drawImage(_mPhCanvas, 0, 0);
                 ctx.restore();
             } else {
-                // No solid region — draw manual shapes across the full canvas
                 ctx.drawImage(_mPhCanvas, 0, 0);
             }
         }
+
+        // --- Draw text layers (on top of everything) ---
+        if (textLayers.length > 0) {
+            drawTextLayers(ctx, textLayers, activeTextLayerId);
+            // Draw alignment guides when dragging a text layer
+            if (_draggingTextId !== null) {
+                var _dragTarget = textLayers.find(function(t) {
+                    return t.id === _draggingTextId;
+                });
+                if (_dragTarget)
+                    drawTextGuides(ctx, _dragTarget, textLayers, OUT_W, OUT_H);
+            }
+        }
+
         fitCanvasCSS(canvas);
+
+        // --- Post-composite inner shadow: drop-shadow on SHAPES LAYER ONLY ---
+        // Build shapes-only composite → apply drop-shadow → draw on top of existing canvas
+        // Hole transparent edges get natural inset feel; overlaps auto-merge
+        // PERFORMANCE: skip shadow during active drag/zoom to avoid lag
+        if (shadowMode && splitPct > 0 && !isDragging) {
+            const shapeLayer = document.createElement('canvas');
+            shapeLayer.width = OUT_W;
+            shapeLayer.height = OUT_H;
+            const slCtx = shapeLayer.getContext('2d');
+
+            // Collect all shape content into one layer
+            slCtx.drawImage(_compCanvas, solidX, solidY); // solid blocks with holes
+            slCtx.save();
+            slCtx.beginPath();
+            slCtx.rect(photoX, photoY, photoW, photoH);
+            slCtx.clip();
+            slCtx.drawImage(_phCanvas, photoX, photoY); // scattered shapes on photo
+            slCtx.drawImage(_mPhCanvas, 0, 0); // manual shapes
+            slCtx.restore();
+
+            // Apply strong drop-shadow
+            const shC = document.createElement('canvas');
+            shC.width = OUT_W;
+            shC.height = OUT_H;
+            const sh = shC.getContext('2d');
+            sh.filter = 'drop-shadow(0px 0px 10px rgba(0,0,0,0.55))';
+            sh.drawImage(shapeLayer, 0, 0);
+
+            // Composite shadowed shapes ON TOP of existing canvas content
+            // Use destination-over to place shapes behind any existing content? No -
+            // we want shadowed shapes visible. Just draw on top.
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.drawImage(shC, 0, 0);
+
+            // Redraw text layers on top so they stay crisp
+            if (textLayers.length > 0) {
+                drawTextLayers(ctx, textLayers, activeTextLayerId);
+                if (_draggingTextId !== null) {
+                    var _dragTarget2 = textLayers.find(function(t) {
+                        return t.id === _draggingTextId;
+                    });
+                    if (_dragTarget2)
+                        drawTextGuides(ctx, _dragTarget2, textLayers, OUT_W, OUT_H);
+                }
+            }
+        }
     }
 
     // Seeded random for stable shape positions between renders
@@ -2055,40 +2582,56 @@
 
     function generateShapePositions(w, h, count, baseSize, variance) {
         if (w <= 0 || h <= 0 || count <= 0)
-            return []; // no space to place shapes
+            return [];
         const shapes = [];
         const minMult = 1.0 - variance * 0.6;
         const maxMult = 1.0 + variance * 0.8;
 
-        // Grid-jittered placement: divide area into cells, place one shape per cell with jitter
-        // This ensures uniform spatial coverage and prevents clustering
+        // Poisson-disk-inspired: grid subdivided into more cells than shapes,
+        // then randomly sample cells so shapes don't fall into a rigid grid.
+        const oversample = 2.2; // more cells than shapes → random selection avoids uniform grid feel
+        const totalCells = Math.round(count * oversample);
         const area = w * h;
-        const cellArea = area / count;
+        const cellArea = area / totalCells;
         const cellSize = Math.sqrt(cellArea);
         const cols = Math.max(1, Math.round(w / cellSize));
-        const rows = Math.max(1, Math.ceil(count / cols));
+        const rows = Math.max(1, Math.ceil(totalCells / cols));
         const cellW = w / cols;
         const cellH = h / rows;
 
-        let placed = 0;
-        for (let row = 0; row < rows && placed < count; row++) {
-            for (let col = 0; col < cols && placed < count; col++) {
-                const r = baseSize * (minMult + sRand() * (maxMult - minMult));
-                // Jitter within cell (60% jitter range keeps shapes from aligning rigidly)
-                const jitterX = (sRand() - 0.5) * cellW * 0.6;
-                const jitterY = (sRand() - 0.5) * cellH * 0.6;
+        // Build all cell centers with large jitter, shuffle, take first `count`
+        const candidates = [];
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                const jitterX = (sRand() - 0.5) * cellW * 1.4; // wider jitter = less grid feel
+                const jitterY = (sRand() - 0.5) * cellH * 1.4;
                 const cx = cellW * (col + 0.5) + jitterX;
                 const cy = cellH * (row + 0.5) + jitterY;
-                // Clamp to keep shapes within bounds
-                const x = Math.max(r, Math.min(w - r, cx));
-                const y = Math.max(r, Math.min(h - r, cy));
-                shapes.push({
-                    x,
-                    y,
-                    r
+                candidates.push({
+                    cx,
+                    cy
                 });
-                placed++;
             }
+        }
+        // Fisher-Yates shuffle with seeded random
+        for (let i = candidates.length - 1; i > 0; i--) {
+            const j = Math.floor(sRand() * (i + 1));
+            const tmp = candidates[i];
+            candidates[i] = candidates[j];
+            candidates[j] = tmp;
+        }
+
+        for (let i = 0; i < count && i < candidates.length; i++) {
+            const r = baseSize * (minMult + sRand() * (maxMult - minMult));
+            const angle = sRand() * Math.PI * 2; // pre-generate angle here, stable across renders
+            const x = Math.max(r, Math.min(w - r, candidates[i].cx));
+            const y = Math.max(r, Math.min(h - r, candidates[i].cy));
+            shapes.push({
+                x,
+                y,
+                r,
+                angle
+            });
         }
 
         return shapes;
@@ -2116,6 +2659,17 @@
             diamond4Path(ctx, x, y, r);
         } else if (shape === 'butterfly') {
             butterflyPath(ctx, x, y, r);
+        } else if (shape === 'droplet') {
+            dropletPath(ctx, x, y, r);
+        } else if (shape === 'square') {
+            squarePath(ctx, x, y, r);
+        }
+        // Outer shadow for normal (solid) shapes only — NOT for cutout mode
+        if (shadowMode) {
+            ctx.shadowColor = 'rgba(0,0,0,0.45)';
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 5;
         }
         if (outlineMode) {
             ctx.lineWidth = Math.max(1, r * 0.03);
@@ -2446,6 +3000,35 @@
         ctx.restore();
     }
 
+    // Droplet (水滴) shape
+    // Droplet (水滴) shape — no rotation
+    function dropletPath(ctx, cx, cy, r) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        // No rotation — always upright
+        ctx.beginPath();
+        // Teardrop: pointed top, round bottom
+        ctx.moveTo(0, -r);
+        ctx.bezierCurveTo(r * 0.3, -r * 0.5, r * 0.8, r * 0.1, r * 0.7, r * 0.45);
+        ctx.bezierCurveTo(r * 0.6, r * 0.85, r * 0.25, r, 0, r);
+        ctx.bezierCurveTo(-r * 0.25, r, -r * 0.6, r * 0.85, -r * 0.7, r * 0.45);
+        ctx.bezierCurveTo(-r * 0.8, r * 0.1, -r * 0.3, -r * 0.5, 0, -r);
+        ctx.closePath();
+        ctx.restore();
+    }
+
+    // Square (方块) shape — no rotation
+    function squarePath(ctx, cx, cy, r) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        // No rotation — always axis-aligned
+        var half = r * 0.82;
+        ctx.beginPath();
+        ctx.rect(-half, -half, half * 2, half * 2);
+        ctx.closePath();
+        ctx.restore();
+    }
+
     function drawPattern(ctx, ox, oy, w, h, pattern) {
         ctx.save();
 
@@ -2511,93 +3094,108 @@
     function saveImage() {
         const canvas = document.getElementById('result-canvas');
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        // Detect HarmonyOS (Huawei's OS)
+        const isHarmonyOS = /HarmonyOS|OpenHarmony/i.test(navigator.userAgent) || (/HUAWEI|Honor/.test(navigator.userAgent) && !/Android/i.test(navigator.userAgent));
 
-        if (isIOS) {
-            // iOS Safari: <a download> doesn't work, must use blob URL + long-press
-            canvas.toBlob(function(blob) {
-                if (!blob) {
-                    alert('保存失败，请尝试截图保存');
-                    return;
-                }
-                if (_saveBlobUrl)
-                    URL.revokeObjectURL(_saveBlobUrl);
-                _saveBlobUrl = URL.createObjectURL(blob);
-
-                const saveImg = document.getElementById('saveImg');
-                saveImg.onload = function() {
-                    document.getElementById('saveImgLink').href = _saveBlobUrl;
-                    document.getElementById('saveOverlay').classList.add('open');
-                    document.getElementById('saveHint').textContent = '长按图片 → 存储到"照片"';
-                    document.getElementById('saveHintSub').textContent = '长按图片，选择「存储到照片图库」';
-                };
-                saveImg.src = _saveBlobUrl;
-            }, 'image/jpeg', 0.95);
-        } else {
-            // Desktop + Android browsers: try blob download first, fall back to overlay for WebViews
-            function doDownload(url, revokeFn) {
-                const link = document.createElement('a');
-                link.download = 'snipsnip-' + Date.now() + '.jpg';
-                link.href = url;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setTimeout(function() {
-                    if (revokeFn)
-                        revokeFn();
-                }, 1000);
-            }
-
-            // If in WebView, show overlay with "open in browser" button
-            if (isInWebView()) {
+        function showOverlaySave() {
+            // Try toDataURL first (works for same-origin / non-tainted canvases)
+            var dataUrl;
+            try {
+                dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            } catch (e) {
+                // Tainted canvas (cross-origin image) — fall back to blob
                 canvas.toBlob(function(blob) {
-                    if (!blob) {
+                    if (blob) {
+                        var blobUrl = URL.createObjectURL(blob);
+                        _saveBlobUrl = blobUrl;
+                        var saveImg = document.getElementById('saveImg');
+                        saveImg.onload = function() {
+                            document.getElementById('saveImgLink').href = blobUrl;
+                            document.getElementById('saveOverlay').classList.add('open');
+                            var openBrowserBtn = document.getElementById('openBrowserBtn');
+                            if (openBrowserBtn)
+                                openBrowserBtn.style.display = 'block';
+                        };
+                        saveImg.src = blobUrl;
+                    } else {
                         alert('保存失败，请尝试截图保存');
-                        return;
                     }
-                    if (_saveBlobUrl)
-                        URL.revokeObjectURL(_saveBlobUrl);
-                    _saveBlobUrl = URL.createObjectURL(blob);
-
-                    const saveImg = document.getElementById('saveImg');
-                    saveImg.onload = function() {
-                        document.getElementById('saveImgLink').href = _saveBlobUrl;
-                        document.getElementById('saveOverlay').classList.add('open');
-                        document.getElementById('saveHint').textContent = '长按图片保存';
-                        document.getElementById('saveHintSub').textContent = '若长按无反应，点击下方按钮在浏览器中打开';
-                        // Show the "open in browser" button for WebView users
-                        const openBrowserBtn = document.getElementById('openBrowserBtn');
-                        if (openBrowserBtn)
-                            openBrowserBtn.style.display = 'block';
-                    };
-                    saveImg.src = _saveBlobUrl;
-                }, 'image/jpeg', 0.95);
+                }, 'image/jpeg', 0.92);
                 return;
             }
-
-            try {
-                canvas.toBlob(function(blob) {
-                    if (!blob) {
-                        // Fix #3 + #7: fallback to toDataURL for WebViews where toBlob may fail
-                        try {
-                            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                            doDownload(dataUrl, null);
-                        } catch (e2) {
-                            alert('保存失败，请尝试截图保存');
-                        }
-                        return;
-                    }
-                    doDownload(URL.createObjectURL(blob), function() {
-                        URL.revokeObjectURL;
-                    });
-                }, 'image/jpeg', 0.95);
-            } catch (e) {
-                // Fix #7: WebView toBlob may throw (e.g. cross-origin security), fall back
-                try {
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                    doDownload(dataUrl, null);
-                } catch (e2) {
-                    alert('保存失败，请尝试截图保存');
+            if (_saveBlobUrl)
+                URL.revokeObjectURL(_saveBlobUrl);
+            _saveBlobUrl = dataUrl;
+            var saveImg = document.getElementById('saveImg');
+            saveImg.onload = function() {
+                document.getElementById('saveImgLink').href = _saveBlobUrl;
+                document.getElementById('saveOverlay').classList.add('open');
+                if (isIOS) {
+                    document.getElementById('saveHint').textContent = '长按图片 → 存储到"照片"';
+                    document.getElementById('saveHintSub').textContent = '长按图片，选择「存储到照片图库」';
+                } else if (isHarmonyOS) {
+                    document.getElementById('saveHint').textContent = '长按图片保存';
+                    document.getElementById('saveHintSub').textContent = '若长按无反应，请截图保存';
+                } else {
+                    document.getElementById('saveHint').textContent = '长按图片保存';
+                    document.getElementById('saveHintSub').textContent = '若长按无反应，请截图保存';
                 }
+                var openBrowserBtn = document.getElementById('openBrowserBtn');
+                if (openBrowserBtn)
+                    openBrowserBtn.style.display = 'block';
+            };
+            saveImg.src = _saveBlobUrl;
+        }
+
+        function doDownload(url, revokeFn) {
+            var link = document.createElement('a');
+            link.download = 'snipsnip-' + Date.now() + '.jpg';
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(function() {
+                if (revokeFn)
+                    revokeFn();
+            }, 1000);
+        }
+
+        // iOS: always use overlay (no download attribute support)
+        if (isIOS) {
+            return showOverlaySave();
+        }
+
+        // HarmonyOS: go directly to overlay — download attribute often broken
+        if (isHarmonyOS) {
+            return showOverlaySave();
+        }
+
+        // WebView: overlay mode
+        if (isInWebView()) {
+            return showOverlaySave();
+        }
+
+        // Normal browser: try blob download first
+        try {
+            canvas.toBlob(function(blob) {
+                if (!blob) {
+                    // Fallback: try toDataURL + PNG
+                    try {
+                        var dataUrl = canvas.toDataURL('image/png');
+                        doDownload(dataUrl, null);
+                    } catch (e2) {
+                        alert('保存失败，请尝试截图保存');
+                    }
+                    return;
+                }
+                doDownload(URL.createObjectURL(blob), function() {});
+            }, 'image/jpeg', 0.92); // slightly lower quality for smaller file size
+        } catch (e) {
+            try {
+                var dataUrl = canvas.toDataURL('image/png');
+                doDownload(dataUrl, null);
+            } catch (e2) {
+                alert('保存失败，请尝试截图保存');
             }
         }
     }
@@ -2632,10 +3230,11 @@
         function scheduleRender() {
             if (renderTimer)
                 clearTimeout(renderTimer);
-            renderTimer = setTimeout(() => {
+            // Use rAF for smooth drag — browser syncs to display refresh rate
+            renderTimer = setTimeout(function() {
                 if (userImage)
                     render();
-            }, 32);
+            }, 0);
         }
 
         function getCanvasScale() {
@@ -2645,7 +3244,29 @@
 
         // Mouse
         document.getElementById('result-canvas').addEventListener('mousedown', e => {
+            // Always check for text hit first (works in all modes)
+            const canvas = document.getElementById('result-canvas');
+            const rect = canvas.getBoundingClientRect();
+            const sx = canvas.width / rect.width;
+            const sy = canvas.height / rect.height;
+            const cx = (e.clientX - rect.left) * sx;
+            const cy = (e.clientY - rect.top) * sy;
+            var hitText = hitTestText(cx, cy);
+            if (hitText) {
+                _draggingTextId = hitText.id;
+                _textDragStartX = cx;
+                _textDragStartY = cy;
+                _textDragOrigX = hitText.x;
+                _textDragOrigY = hitText.y;
+                selectTextLayer(hitText.id);
+                e.preventDefault();
+                return;
+            }
             if (currentMode === 'manual' || eraserOn) {
+                e.preventDefault();
+                return;
+            }
+            if (imgLocked) {
                 e.preventDefault();
                 return;
             }
@@ -2709,19 +3330,43 @@
                     }
                 }
             } else if (currentMode === 'manual') {
+                // Don't place shape if click landed on a text layer
+                if (hitTestText(cx, cy))
+                    return;
                 const size = parseInt(document.getElementById('manualSizeSlider').value);
                 manualShapes.push({
                     x: cx,
                     y: cy,
                     r: size,
                     shape: currentShapes[0],
-                    angle: Math.random() * Math.PI * 2
-                }); // random angle stored
+                    angle: Math.random() * Math.PI * 2,
+                    color: manualColor
+                }); // store color per shape
                 document.getElementById('clearManualBtn').style.display = '';
                 render();
             }
         });
         window.addEventListener('mousemove', e => {
+            // Text drag
+            if (_draggingTextId !== null) {
+                const canvas = document.getElementById('result-canvas');
+                const rect = canvas.getBoundingClientRect();
+                const sx = canvas.width / rect.width;
+                const sy = canvas.height / rect.height;
+                const cx = (e.clientX - rect.left) * sx;
+                const cy = (e.clientY - rect.top) * sy;
+                var t = textLayers.find(function(l) {
+                    return l.id === _draggingTextId;
+                });
+                if (t) {
+                    t.x = _textDragOrigX + (cx - _textDragStartX);
+                    t.y = _textDragOrigY + (cy - _textDragStartY);
+                    _textActuallyMoved = true;
+                    if (userImage)
+                        render();
+                }
+                return;
+            }
             if (!isDragging)
                 return;
             if (!dragStarted) {
@@ -2738,8 +3383,19 @@
             scheduleRender();
         });
         window.addEventListener('mouseup', () => {
+            if (_draggingTextId !== null && _textActuallyMoved) {
+                _justDraggedText = true; // prevent the following click from placing a shape
+                setTimeout(() => {
+                    _justDraggedText = false;
+                }, 50);
+            }
+            _textActuallyMoved = false;
             isDragging = false;
             dragStarted = false;
+            _draggingTextId = null;
+            // Final render with shadow (was skipped during drag for performance)
+            if (userImage)
+                render();
         });
 
         // Refit canvas CSS on window resize
@@ -2752,6 +3408,8 @@
         // Wheel zoom
         document.getElementById('result-canvas').addEventListener('wheel', e => {
             e.preventDefault();
+            if (imgLocked)
+                return;
             imgScale *= e.deltaY < 0 ? 1.05 : 0.95;
             imgScale = Math.max(0.3, Math.min(5, imgScale));
             scheduleRender();
@@ -2761,6 +3419,29 @@
 
         // Touch
         document.getElementById('result-canvas').addEventListener('touchstart', e => {
+            if (e.touches.length === 1) {
+                // Check for text drag first
+                const canvas = document.getElementById('result-canvas');
+                const rect = canvas.getBoundingClientRect();
+                const sx = canvas.width / rect.width;
+                const sy = canvas.height / rect.height;
+                const cx = (e.touches[0].clientX - rect.left) * sx;
+                const cy = (e.touches[0].clientY - rect.top) * sy;
+                var hitText = hitTestText(cx, cy);
+                if (hitText) {
+                    _draggingTextId = hitText.id;
+                    _textDragStartX = cx;
+                    _textDragStartY = cy;
+                    _textDragOrigX = hitText.x;
+                    _textDragOrigY = hitText.y;
+                    selectTextLayer(hitText.id);
+                    dragStarted = false;
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                    e.preventDefault();
+                    return;
+                }
+            }
             if ((currentMode === 'manual' || eraserOn) && e.touches.length === 1) {
                 // Will handle on touchend if no drag
                 startX = e.touches[0].clientX;
@@ -2770,6 +3451,10 @@
                 return;
             }
             if (e.touches.length === 1) {
+                if (imgLocked) {
+                    e.preventDefault();
+                    return;
+                }
                 isDragging = true;
                 dragStarted = false;
                 startX = e.touches[0].clientX;
@@ -2790,7 +3475,32 @@
         });
 
         document.getElementById('result-canvas').addEventListener('touchmove', e => {
+            // Text drag via touch
+            if (_draggingTextId !== null && e.touches.length === 1) {
+                const canvas = document.getElementById('result-canvas');
+                const rect = canvas.getBoundingClientRect();
+                const sx = canvas.width / rect.width;
+                const sy = canvas.height / rect.height;
+                const cx = (e.touches[0].clientX - rect.left) * sx;
+                const cy = (e.touches[0].clientY - rect.top) * sy;
+                var t = textLayers.find(function(l) {
+                    return l.id === _draggingTextId;
+                });
+                if (t) {
+                    t.x = _textDragOrigX + (cx - _textDragStartX);
+                    t.y = _textDragOrigY + (cy - _textDragStartY);
+                    dragStarted = true; // mark as drag so touchend won't place shape
+                    if (userImage)
+                        render();
+                }
+                e.preventDefault();
+                return;
+            }
             if (e.touches.length === 1 && isDragging) {
+                if (imgLocked) {
+                    e.preventDefault();
+                    return;
+                }
                 if (!dragStarted) {
                     if (Math.abs(e.touches[0].clientX - startX) + Math.abs(e.touches[0].clientY - startY) < DRAG_THRESHOLD)
                         return;
@@ -2808,7 +3518,7 @@
                 e.touches[0].clientX - e.touches[1].clientX,
                 e.touches[0].clientY - e.touches[1].clientY
                 );
-                if (lastDist > 0) {
+                if (lastDist > 0 && !imgLocked) {
                     imgScale *= dist / lastDist;
                     imgScale = Math.max(0.3, Math.min(5, imgScale));
                     scheduleRender();
@@ -2821,6 +3531,16 @@
         });
 
         document.getElementById('result-canvas').addEventListener('touchend', e => {
+            // End text drag
+            if (_draggingTextId !== null) {
+                _draggingTextId = null;
+                if (e.touches.length === 0) {
+                    isDragging = false;
+                    dragStarted = false;
+                }
+                lastDist = 0;
+                return;
+            }
             if ((currentMode === 'manual' || eraserOn) && e.touches.length === 0 && !dragStarted && userImage) {
                 if (_ignoreNextClick) {
                     _ignoreNextClick = false;
@@ -2853,7 +3573,6 @@
                             render();
                         }
                     } else {
-                        // Random mode: find closest shape from last render cache and mark as erased
                         let closest = null,
                             closestDist = Infinity;
                         _lastRandomShapes.forEach(sh => {
@@ -2869,26 +3588,401 @@
                         }
                     }
                 } else if (currentMode === 'manual') {
+                    // Don't place shape if tap landed on a text layer
+                    if (hitTestText(cx, cy)) {
+                        isDragging = false;
+                        dragStarted = false;
+                        lastDist = 0;
+                        return;
+                    }
                     const size = parseInt(document.getElementById('manualSizeSlider').value);
                     manualShapes.push({
                         x: cx,
                         y: cy,
                         r: size,
                         shape: currentShapes[0],
-                        angle: Math.random() * Math.PI * 2
-                    }); // random angle stored
+                        angle: Math.random() * Math.PI * 2,
+                        color: manualColor
+                    });
                     document.getElementById('clearManualBtn').style.display = '';
                     render();
-                    _lastPlaceTime = Date.now(); // Mark: prevent click from firing next
+                    _lastPlaceTime = Date.now();
                 }
             }
             if (e.touches.length === 0) {
                 isDragging = false;
                 dragStarted = false;
+                _draggingTextId = null;
             }
             lastDist = 0;
         });
     })();
+    // ---- Text layer functions (live-sync + drag) ----
+
+    function getDefaultTextLayer() {
+        var canvas = document.getElementById('result-canvas');
+        return {
+            id: ++_textIdCounter,
+            text: '',
+            x: canvas ? canvas.width / 2 : 540,
+            y: canvas ? canvas.height / 2 : 540,
+            fontSize: 36,
+            fontFamily: 'Fredoka',
+            color: '#ffffff',
+            letterSpacing: 0
+        };
+    }
+
+    function addTextLayer() {
+        var layer = getDefaultTextLayer();
+        textLayers.push(layer);
+        activeTextLayerId = layer.id;
+        loadActiveTextToUI();
+        rebuildTextTabs();
+        autoRender();
+    }
+
+    function selectTextLayer(id) {
+        activeTextLayerId = id;
+        loadActiveTextToUI();
+        rebuildTextTabs();
+    }
+
+    function deleteTextLayer(id) {
+        textLayers = textLayers.filter(function(t) {
+            return t.id !== id;
+        });
+        if (activeTextLayerId === id) {
+            activeTextLayerId = textLayers.length > 0 ? textLayers[textLayers.length - 1].id : null;
+            loadActiveTextToUI();
+        }
+        rebuildTextTabs();
+        autoRender();
+    }
+
+    function getActiveTextLayer() {
+        return textLayers.find(function(t) {
+                return t.id === activeTextLayerId;
+            }) || null;
+    }
+
+    function loadActiveTextToUI() {
+        var t = getActiveTextLayer();
+        if (!t) {
+            document.getElementById('textInput').value = '';
+            return;
+        }
+        document.getElementById('textInput').value = t.text;
+        document.getElementById('textSizeSlider').value = t.fontSize;
+        document.getElementById('textSizeVal').textContent = t.fontSize;
+        document.getElementById('textSpacingSlider').value = t.letterSpacing;
+        document.getElementById('textSpacingVal').textContent = t.letterSpacing;
+        document.getElementById('textFontSelect').value = t.fontFamily;
+        // Update color swatch active state
+        var found = false;
+        document.querySelectorAll('#textColorRow .color-swatch').forEach(function(s) {
+            s.classList.remove('active');
+            if (s.dataset.color && s.dataset.color.toLowerCase() === t.color.toLowerCase()) {
+                s.classList.add('active');
+                found = true;
+            }
+        });
+        if (!found) {
+            document.getElementById('textCustomColor').value = t.color;
+            document.getElementById('textCustomDot').style.background = t.color;
+        }
+
+    }
+    // Do not blur or lock the input — let user type freely
+
+    function rebuildTextTabs() {
+        var container = document.getElementById('textLayerTabs');
+        container.innerHTML = '';
+        textLayers.forEach(function(t, i) {
+            var tab = document.createElement('div');
+            tab.style.cssText = 'display:inline-flex;align-items:center;gap:3px;padding:4px 8px;border-radius:8px;font-family:Fredoka,sans-serif;font-size:10px;font-weight:600;cursor:pointer;border:2px solid ' + (t.id === activeTextLayerId ? 'var(--lavender)' : 'var(--border)') + ';background:' + (t.id === activeTextLayerId ? 'rgba(201,168,255,0.15)' : 'rgba(255,255,255,0.6)') + ';color:' + (t.id === activeTextLayerId ? 'var(--lavender)' : '#c080b0') + ';';
+            var label = document.createElement('span');
+            label.textContent = t.text ? (t.text.length > 4 ? t.text.substring(0, 4) + '..' : t.text) : '文字' + (i + 1);
+            label.onclick = function() {
+                selectTextLayer(t.id);
+            };
+            tab.appendChild(label);
+            var del = document.createElement('span');
+            del.textContent = '✕';
+            del.style.cssText = 'font-size:9px;opacity:0.6;cursor:pointer;margin-left:2px;';
+            del.onclick = function(e) {
+                e.stopPropagation();
+                deleteTextLayer(t.id);
+            };
+            tab.appendChild(del);
+            container.appendChild(tab);
+        });
+    }
+
+    function onTextInput() {
+        var inp = document.getElementById('textInput');
+        var typedText = inp.value; // capture FIRST before anything else touches the input
+        var t = getActiveTextLayer();
+        if (!t) {
+            // Auto-create a layer when user starts typing — do it manually
+            // so we never call addTextLayer/loadActiveTextToUI which would clobber the input
+            var layer = getDefaultTextLayer();
+            textLayers.push(layer);
+            activeTextLayerId = layer.id;
+            t = layer;
+            // Sync UI controls to new layer defaults without touching the input value
+            document.getElementById('textSizeSlider').value = t.fontSize;
+            document.getElementById('textSizeVal').textContent = t.fontSize;
+            document.getElementById('textSpacingSlider').value = t.letterSpacing;
+            document.getElementById('textSpacingVal').textContent = t.letterSpacing;
+            document.getElementById('textFontSelect').value = t.fontFamily;
+        }
+        t.text = typedText;
+        inp.value = typedText;
+        rebuildTextTabs();
+        autoRender();
+    }
+
+    function syncActiveTextStyle() {
+        var t = getActiveTextLayer();
+        if (!t)
+            return;
+        t.fontSize = parseInt(document.getElementById('textSizeSlider').value);
+        t.fontFamily = document.getElementById('textFontSelect').value;
+        t.letterSpacing = parseInt(document.getElementById('textSpacingSlider').value);
+    }
+
+    function setTextColor(el) {
+        document.querySelectorAll('#textColorRow .color-swatch').forEach(function(s) {
+            s.classList.remove('active');
+        });
+        el.classList.add('active');
+        var t = getActiveTextLayer();
+        if (t)
+            t.color = el.dataset.color;
+        autoRender();
+    }
+
+    function setTextCustomColor(val) {
+        document.getElementById('textCustomDot').style.background = val;
+        document.querySelectorAll('#textColorRow .color-swatch').forEach(function(s) {
+            s.classList.remove('active');
+        });
+        var t = getActiveTextLayer();
+        if (t)
+            t.color = val;
+        autoRender();
+    }
+
+    function clearTextLayers() {
+        textLayers = [];
+        activeTextLayerId = null;
+        _textIdCounter = 0;
+        document.getElementById('textInput').value = '';
+        rebuildTextTabs();
+        autoRender();
+    }
+
+    // Hit-test: find text layer at canvas coords
+    function hitTestText(cx, cy) {
+        var canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        var ctx = canvas.getContext('2d');
+        for (var i = textLayers.length - 1; i >= 0; i--) {
+            var t = textLayers[i];
+            if (!t.text)
+                continue;
+            ctx.font = '700 ' + t.fontSize + 'px ' + t.fontFamily + ', sans-serif';
+            var totalW = 0;
+            var chars = [...t.text];
+            chars.forEach(function(ch) {
+                var cw = ctx.measureText(ch).width;
+                if (cw === 0)
+                    cw = t.fontSize; // emoji fallback
+                totalW += cw + (t.letterSpacing || 0);
+            });
+            totalW -= (t.letterSpacing || 0);
+            var h = t.fontSize * 1.2;
+            if (cx >= t.x - totalW / 2 - 10 && cx <= t.x + totalW / 2 + 10 &&
+            cy >= t.y - h / 2 - 10 && cy <= t.y + h / 2 + 10) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    // ---- Guide lines for text drag alignment ----
+    var _textGuideSnap = 6; // snap threshold in canvas px
+    function drawTextGuides(ctx, dragLayer, allLayers, canvasW, canvasH) {
+        if (!dragLayer || !dragLayer.text)
+            return;
+
+        // Measure the dragged text bounding box
+        ctx.save();
+        ctx.font = '700 ' + dragLayer.fontSize + 'px ' + dragLayer.fontFamily + ', sans-serif';
+        var tw = ctx.measureText(dragLayer.text).width;
+        if (dragLayer.letterSpacing && dragLayer.letterSpacing !== 0) {
+            tw = 0;
+            [...dragLayer.text].forEach(function(ch) {
+                var cw = ctx.measureText(ch).width;
+                if (cw === 0)
+                    cw = dragLayer.fontSize;
+                tw += cw + dragLayer.letterSpacing;
+            });
+            tw -= dragLayer.letterSpacing;
+        }
+        var th = dragLayer.fontSize;
+        ctx.restore();
+
+        var tx = dragLayer.x,
+            ty = dragLayer.y;
+        // Dragged text edges
+        var tLeft = tx - tw / 2,
+            tRight = tx + tw / 2;
+        var tTop = ty - th / 2,
+            tBottom = ty + th / 2;
+
+        // Reference lines: canvas center + canvas edges
+        var guides = {
+            vLines: [0, canvasW / 2, canvasW],
+            // left, centerX, right
+            hLines: [0, canvasH / 2, canvasH] // top, centerY, bottom
+        };
+
+        // Also add other text layers' centers & edges as references
+        allLayers.forEach(function(t) {
+            if (t.id === dragLayer.id || !t.text)
+                return;
+            ctx.save();
+            ctx.font = '700 ' + t.fontSize + 'px ' + t.fontFamily + ', sans-serif';
+            var ow = ctx.measureText(t.text).width;
+            if (t.letterSpacing && t.letterSpacing !== 0) {
+                ow = 0;
+                [...t.text].forEach(function(ch) {
+                    var cw = ctx.measureText(ch).width;
+                    if (cw === 0)
+                        cw = t.fontSize;
+                    ow += cw + t.letterSpacing;
+                });
+                ow -= t.letterSpacing;
+            }
+            var oh = t.fontSize;
+            ctx.restore();
+            guides.vLines.push(t.x, t.x - ow / 2, t.x + ow / 2);
+            guides.hLines.push(t.y, t.y - oh / 2, t.y + oh / 2);
+        });
+
+        var SNAP = _textGuideSnap;
+        var matched = {
+            v: [],
+            h: []
+        };
+
+        // Check vertical guide matches (for x alignment)
+        var dragVPoints = [tLeft, tx, tRight];
+        guides.vLines.forEach(function(gx) {
+            dragVPoints.forEach(function(dx) {
+                if (Math.abs(dx - gx) < SNAP)
+                    matched.v.push(gx);
+            });
+        });
+        // Check horizontal guide matches (for y alignment)
+        var dragHPoints = [tTop, ty, tBottom];
+        guides.hLines.forEach(function(gy) {
+            dragHPoints.forEach(function(dy) {
+                if (Math.abs(dy - gy) < SNAP)
+                    matched.h.push(gy);
+            });
+        });
+
+        // De-dup
+        matched.v = [...new Set(matched.v)];
+        matched.h = [...new Set(matched.h)];
+
+        // Draw guides
+        ctx.save();
+        ctx.setLineDash([12, 6]);
+        ctx.lineWidth = 3;
+        ctx.shadowColor = 'rgba(0,0,0,0.15)';
+        ctx.shadowBlur = 4;
+
+        // Vertical lines
+        matched.v.forEach(function(gx) {
+            ctx.strokeStyle = (Math.abs(gx - canvasW / 2) < 2) ? 'rgba(255,110,199,0.85)' : 'rgba(201,168,255,0.8)';
+            ctx.beginPath();
+            ctx.moveTo(gx, 0);
+            ctx.lineTo(gx, canvasH);
+            ctx.stroke();
+        });
+        // Horizontal lines
+        matched.h.forEach(function(gy) {
+            ctx.strokeStyle = (Math.abs(gy - canvasH / 2) < 2) ? 'rgba(255,110,199,0.85)' : 'rgba(201,168,255,0.8)';
+            ctx.beginPath();
+            ctx.moveTo(0, gy);
+            ctx.lineTo(canvasW, gy);
+            ctx.stroke();
+        });
+
+        ctx.restore();
+
+        // Snap: gently pull the dragged text to the nearest guide
+        matched.v.forEach(function(gx) {
+            if (Math.abs(tx - gx) < SNAP)
+                dragLayer.x = gx;
+            else if (Math.abs(tLeft - gx) < SNAP)
+                dragLayer.x = gx + tw / 2;
+            else if (Math.abs(tRight - gx) < SNAP)
+                dragLayer.x = gx - tw / 2;
+        });
+        matched.h.forEach(function(gy) {
+            if (Math.abs(ty - gy) < SNAP)
+                dragLayer.y = gy;
+            else if (Math.abs(tTop - gy) < SNAP)
+                dragLayer.y = gy + th / 2;
+            else if (Math.abs(tBottom - gy) < SNAP)
+                dragLayer.y = gy - th / 2;
+        });
+    }
+
+    function drawTextLayers(ctx, layers, activeId) {
+        layers.forEach(function(t) {
+            if (!t.text)
+                return;
+            ctx.save();
+            ctx.fillStyle = t.color;
+            ctx.font = '700 ' + t.fontSize + 'px ' + t.fontFamily + ', sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            if (t.letterSpacing && t.letterSpacing !== 0) {
+                var chars = [...t.text];
+                var totalW = 0;
+                chars.forEach(function(ch) {
+                    var cw = ctx.measureText(ch).width;
+                    /* Emoji on iOS: measureText returns 0 when the font has no glyph.
+                               Fallback to fontSize so layout stays consistent and the emoji
+                               still gets drawn by the system fallback renderer. */
+                    if (cw === 0)
+                        cw = t.fontSize;
+                    totalW += cw + t.letterSpacing;
+                });
+                totalW -= t.letterSpacing;
+                var startX = t.x - totalW / 2;
+                chars.forEach(function(ch) {
+                    var cw = ctx.measureText(ch).width;
+                    if (cw === 0)
+                        cw = t.fontSize;
+                    ctx.fillText(ch, startX, t.y);
+                    startX += cw + t.letterSpacing;
+                });
+            } else {
+                ctx.textAlign = 'center';
+                ctx.fillText(t.text, t.x, t.y);
+            }
+            ctx.restore();
+        });
+    }
+
     function openSocial(platform) {
         const info = {
             threads: {
@@ -2924,18 +4018,17 @@
     }
     // Open current page in system browser (for WebView users)
     function openInBrowser() {
-        // Get the blob URL from the save image
-        const blobUrl = document.getElementById('saveImg').src;
-        if (blobUrl && blobUrl.startsWith('blob:')) {
-            // Open blob URL in new window/tab
-            const newWindow = window.open(blobUrl, '_blank');
-            if (!newWindow) {
-                // Fallback: force download via link
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = 'snipsnip-' + Date.now() + '.jpg';
-                link.click();
-            }
+        // Get the image src (could be blob: or dataURL)
+        const imgSrc = document.getElementById('saveImg').src;
+        if (!imgSrc)
+            return;
+        const newWindow = window.open(imgSrc, '_blank');
+        if (!newWindow) {
+            // Popup blocked — force download via link
+            const link = document.createElement('a');
+            link.href = imgSrc;
+            link.download = 'snipsnip-' + Date.now() + '.jpg';
+            link.click();
         }
         closeSaveOverlay();
     }
