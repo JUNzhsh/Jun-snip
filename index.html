@@ -3633,7 +3633,7 @@
         }
 
     }
-    // Do not blur or readonly the input — let user type freely
+    // Do not blur or lock the input — let user type freely
 
     function rebuildTextTabs() {
         var container = document.getElementById('textLayerTabs');
@@ -3664,7 +3664,7 @@
         var typedText = inp.value; // capture FIRST before anything else touches the input
         var t = getActiveTextLayer();
         if (!t) {
-            // Auto-create a layer when user starts typing — but do it manually
+            // Auto-create a layer when user starts typing — do it manually
             // so we never call addTextLayer/loadActiveTextToUI which would clobber the input
             var layer = getDefaultTextLayer();
             textLayers.push(layer);
@@ -3677,7 +3677,6 @@
             document.getElementById('textSpacingVal').textContent = t.letterSpacing;
             document.getElementById('textFontSelect').value = t.fontFamily;
         }
-        // Write the captured text into the layer AND restore it to the input
         t.text = typedText;
         inp.value = typedText;
         rebuildTextTabs();
@@ -3736,7 +3735,7 @@
                 continue;
             ctx.font = '700 ' + t.fontSize + 'px ' + t.fontFamily + ', sans-serif';
             var totalW = 0;
-            var chars = t.text.split('');
+            var chars = [...t.text];
             chars.forEach(function(ch) {
                 totalW += ctx.measureText(ch).width + (t.letterSpacing || 0);
             });
@@ -3762,7 +3761,7 @@
         var tw = ctx.measureText(dragLayer.text).width;
         if (dragLayer.letterSpacing && dragLayer.letterSpacing !== 0) {
             tw = 0;
-            dragLayer.text.split('').forEach(function(ch) {
+            [...dragLayer.text].forEach(function(ch) {
                 tw += ctx.measureText(ch).width + dragLayer.letterSpacing;
             });
             tw -= dragLayer.letterSpacing;
@@ -3794,7 +3793,7 @@
             var ow = ctx.measureText(t.text).width;
             if (t.letterSpacing && t.letterSpacing !== 0) {
                 ow = 0;
-                t.text.split('').forEach(function(ch) {
+                [...t.text].forEach(function(ch) {
                     ow += ctx.measureText(ch).width + t.letterSpacing;
                 });
                 ow -= t.letterSpacing;
@@ -3885,7 +3884,7 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             if (t.letterSpacing && t.letterSpacing !== 0) {
-                var chars = t.text.split('');
+                var chars = [...t.text];
                 var totalW = 0;
                 chars.forEach(function(ch) {
                     totalW += ctx.measureText(ch).width + t.letterSpacing;
