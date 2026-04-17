@@ -527,7 +527,7 @@
 <div class="canvas-area fullscreen" id="canvasArea">
   <div class="title-row">
     <h1>snip snip ✂️</h1>
-    <span class="ver">v 2.4 by junjun</span>
+    <span class="ver">v 2.3 by junjun</span>
   </div>
   <div class="upload-prompt" id="uploadPrompt" onclick="document.getElementById('fileInput').click()">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6EC7" stroke-width="1.5">
@@ -792,18 +792,21 @@
 <div class="changelog-overlay" id="changelogOverlay" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="changelog-modal">
     <div class="changelog-modal-title">snip snip ✂️ 更新日志</div>
-    <div class="changelog-modal-version"><span>v 2.4</span></div>
+    <div class="changelog-modal-version"><span>v 2.3</span></div>
     <div class="cl-section feature">
       <div class="cl-section-title">🪄 新功能 <span class="cl-tag">NEW</span></div>
-      <div class="cl-item">手动放置模式：每个形状可独立选颜色，多彩混排</div>
-      <div class="cl-item">手动模式下文字与形状不再冲突：点文字拖动，点空白处放形状</div>
+      <div class="cl-item">新增雨点、方块形状</div>
+      <div class="cl-item">每个形状可独立选颜色，多彩混排</div>
+      <div class="cl-item">增加文字功能！</div>
+      <div class="cl-item">点击"随机散布"可实现多次随机</div>
+      <div class="cl-item">可以锁定🔒底图</div>
+      <div class="cl-item">色块0%时可给形状加阴影（色块的阴影我还没研究出来😭）</div>
     </div>
     <hr class="cl-divider">
-    <div class="cl-section feature" style="opacity:0.7">
-      <div class="cl-section-title">v 2.3</div>
-      <div class="cl-item">五瓣花朵、八角星芒、蝴蝶结、菱形星光、蝴蝶 5 种形状</div>
-      <div class="cl-item">手动放置形状、橡皮擦、勾线模式</div>
-      <div class="cl-item">叠加图案、色块比例、实时预览</div>
+    <div class="cl-section bugfix" style="opacity:0.7">
+      <div class="cl-section-title">🐛 修 bug & UI 改进</div>
+      <div class="cl-item">UI 改进，不太容易误触了</div>
+      <div class="cl-item">修复 HarmonyOS 无法保存的问题</div>
     </div>
     <hr class="cl-divider">
     <button class="qr-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">关闭</button>
