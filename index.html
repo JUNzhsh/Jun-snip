@@ -1145,6 +1145,8 @@
             <!-- Random mode controls -->
             <div style="margin-top:10px" id="randomControls">
                 <div id="singleShapeControls" style="display:none">
+                    <!-- Single shape color picker -->
+                    <div id="singleShapeColorRow" class="color-row" style="margin-bottom:8px;gap:5px"></div>
                     <div class="slider-row">
                         <div class="slider-item">
                             <label>
@@ -1776,11 +1778,69 @@
         });
     }
 
+    // Build color picker row for single-shape mode
+    function rebuildSingleShapeColorPicker() {
+        const container = document.getElementById('singleShapeColorRow');
+        if (!container)
+            return;
+        container.innerHTML = '';
+        if (currentShapes.length !== 1)
+            return;
+
+        const shape = currentShapes[0];
+        const currentColorVal = shapeColorMap[shape] || shapeColorDefaults[0];
+        const palette = ['#FF7BAC', '#4A9EFF', '#C9A8FF', '#FFD166', '#6ECFB2', '#FF9E6C', '#fbffcc', '#F5F0E8'];
+
+        palette.forEach(function(clr) {
+            var sw = document.createElement('div');
+            sw.className = 'color-swatch' + (clr === currentColorVal ? ' active' : '');
+            sw.style.cssText = 'width:26px;height:26px;background:' + clr;
+            sw.dataset.color = clr;
+            sw.onclick = function() {
+                container.querySelectorAll('.color-swatch').forEach(function(s) {
+                    s.classList.remove('active');
+                });
+                sw.classList.add('active');
+                shapeColorMap[shape] = clr;
+                autoRender();
+            };
+            container.appendChild(sw);
+        });
+
+        // Custom color picker
+        var cw = document.createElement('div');
+        cw.className = 'color-custom';
+        cw.style.cssText = 'width:26px;height:26px';
+        cw.title = 'custom';
+        var ci = document.createElement('input');
+        ci.type = 'color';
+        ci.value = currentColorVal;
+        ci.id = 'singleCustomColor';
+        ci.style.cssText = 'position:absolute;width:200%;height:200%;top:-50%;left:-50%;border:none;cursor:pointer;opacity:0;';
+        var cd = document.createElement('div');
+        cd.className = 'color-custom-dot';
+        cd.id = 'singleCustomDot';
+        cd.style.background = 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)';
+        ci.oninput = function() {
+            shapeColorMap[shape] = ci.value;
+            cd.style.background = ci.value;
+            container.querySelectorAll('.color-swatch').forEach(function(s) {
+                s.classList.remove('active');
+            });
+            autoRender();
+        };
+        cw.appendChild(ci);
+        cw.appendChild(cd);
+        container.appendChild(cw);
+    }
+
     // No-op kept for backward compat with calls in setShape/setMode
     function rebuildShapeColorMap() {
-        // Color picking is now integrated into rebuildMultiShapeSliders
-        if (currentShapes.length >= 2)
+        if (currentShapes.length >= 2) {
             rebuildMultiShapeSliders();
+        } else if (currentShapes.length === 1) {
+            rebuildSingleShapeColorPicker();
+        }
     }
 
     function setColor(el) {
@@ -3842,12 +3902,14 @@
 
         // Draw guides
         ctx.save();
-        ctx.setLineDash([8, 6]);
-        ctx.lineWidth = 1.5;
+        ctx.setLineDash([12, 6]);
+        ctx.lineWidth = 3;
+        ctx.shadowColor = 'rgba(0,0,0,0.15)';
+        ctx.shadowBlur = 4;
 
         // Vertical lines
         matched.v.forEach(function(gx) {
-            ctx.strokeStyle = (Math.abs(gx - canvasW / 2) < 2) ? 'rgba(255,110,199,0.7)' : 'rgba(201,168,255,0.65)';
+            ctx.strokeStyle = (Math.abs(gx - canvasW / 2) < 2) ? 'rgba(255,110,199,0.85)' : 'rgba(201,168,255,0.8)';
             ctx.beginPath();
             ctx.moveTo(gx, 0);
             ctx.lineTo(gx, canvasH);
@@ -3855,7 +3917,7 @@
         });
         // Horizontal lines
         matched.h.forEach(function(gy) {
-            ctx.strokeStyle = (Math.abs(gy - canvasH / 2) < 2) ? 'rgba(255,110,199,0.7)' : 'rgba(201,168,255,0.65)';
+            ctx.strokeStyle = (Math.abs(gy - canvasH / 2) < 2) ? 'rgba(255,110,199,0.85)' : 'rgba(201,168,255,0.8)';
             ctx.beginPath();
             ctx.moveTo(0, gy);
             ctx.lineTo(canvasW, gy);
