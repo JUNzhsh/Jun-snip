@@ -3737,7 +3737,10 @@
             var totalW = 0;
             var chars = [...t.text];
             chars.forEach(function(ch) {
-                totalW += ctx.measureText(ch).width + (t.letterSpacing || 0);
+                var cw = ctx.measureText(ch).width;
+                if (cw === 0)
+                    cw = t.fontSize; // emoji fallback
+                totalW += cw + (t.letterSpacing || 0);
             });
             totalW -= (t.letterSpacing || 0);
             var h = t.fontSize * 1.2;
@@ -3762,7 +3765,10 @@
         if (dragLayer.letterSpacing && dragLayer.letterSpacing !== 0) {
             tw = 0;
             [...dragLayer.text].forEach(function(ch) {
-                tw += ctx.measureText(ch).width + dragLayer.letterSpacing;
+                var cw = ctx.measureText(ch).width;
+                if (cw === 0)
+                    cw = dragLayer.fontSize;
+                tw += cw + dragLayer.letterSpacing;
             });
             tw -= dragLayer.letterSpacing;
         }
@@ -3794,7 +3800,10 @@
             if (t.letterSpacing && t.letterSpacing !== 0) {
                 ow = 0;
                 [...t.text].forEach(function(ch) {
-                    ow += ctx.measureText(ch).width + t.letterSpacing;
+                    var cw = ctx.measureText(ch).width;
+                    if (cw === 0)
+                        cw = t.fontSize;
+                    ow += cw + t.letterSpacing;
                 });
                 ow -= t.letterSpacing;
             }
@@ -3881,22 +3890,31 @@
             ctx.save();
             ctx.fillStyle = t.color;
             ctx.font = '700 ' + t.fontSize + 'px ' + t.fontFamily + ', sans-serif';
-            ctx.textAlign = 'center';
+            ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
             if (t.letterSpacing && t.letterSpacing !== 0) {
                 var chars = [...t.text];
                 var totalW = 0;
                 chars.forEach(function(ch) {
-                    totalW += ctx.measureText(ch).width + t.letterSpacing;
+                    var cw = ctx.measureText(ch).width;
+                    /* Emoji on iOS: measureText returns 0 when the font has no glyph.
+                               Fallback to fontSize so layout stays consistent and the emoji
+                               still gets drawn by the system fallback renderer. */
+                    if (cw === 0)
+                        cw = t.fontSize;
+                    totalW += cw + t.letterSpacing;
                 });
                 totalW -= t.letterSpacing;
                 var startX = t.x - totalW / 2;
                 chars.forEach(function(ch) {
                     var cw = ctx.measureText(ch).width;
-                    ctx.fillText(ch, startX + cw / 2, t.y);
+                    if (cw === 0)
+                        cw = t.fontSize;
+                    ctx.fillText(ch, startX, t.y);
                     startX += cw + t.letterSpacing;
                 });
             } else {
+                ctx.textAlign = 'center';
                 ctx.fillText(t.text, t.x, t.y);
             }
             ctx.restore();
