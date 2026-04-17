@@ -236,7 +236,8 @@
   .panel {
     flex: 1;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    /* -webkit-overflow-scrolling only for iOS (avoids sticky scroll in X5/UC) */
+    overflow-y: auto;
     overscroll-behavior: none; /* Prevent pull-to-refresh on Android Chrome */
     padding: 6px 16px 100px;
     display: flex;
@@ -380,7 +381,7 @@
   /* Save overlay */
   .qr-overlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(60,0,40,0.55); backdrop-filter: blur(6px);
+    background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     z-index: 100; align-items: center; justify-content: center; padding: 20px;
   }
   .qr-overlay.open { display: flex; }
@@ -399,14 +400,14 @@
   }
 
   /* Donate */
-  .donate-overlay { display: none; position: fixed; inset: 0; background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .donate-overlay { display: none; position: fixed; inset: 0; background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
   .donate-overlay.open { display: flex; }
   .donate-modal { background: #fff; border-radius: 20px; padding: 22px 18px 16px; max-width: 300px; width: 88%; text-align: center; box-shadow: 0 12px 40px rgba(255,110,199,0.2); }
   .donate-modal img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
   .donate-modal-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 4px; }
   .donate-modal-sub { font-family: 'Fredoka', sans-serif; font-size: 11px; color: #a060a0; margin-bottom: 10px; }
 
-  .changelog-overlay { display: none; position: fixed; inset: 0; background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .changelog-overlay { display: none; position: fixed; inset: 0; background: rgba(60,0,40,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
   .changelog-overlay.open { display: flex; }
   .changelog-modal { background: #fff; border-radius: 20px; padding: 20px 18px 16px; max-width: 360px; width: 95%; max-height: 80vh; overflow-y: auto; box-shadow: 0 12px 40px rgba(255,110,199,0.2); }
   .changelog-modal-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); text-align: center; margin-bottom: 4px; }
@@ -1463,6 +1464,12 @@ const _phCtx = _phCanvas.getContext('2d');
 const _mPhCanvas = document.createElement('canvas'); // manual shapes canvas (reused, not recreated)
 const _mPhCtx = _mPhCanvas.getContext('2d');
 
+// Shadow layer canvases (reused, NOT recreated each render — prevents iOS Safari OOM)
+const _shadowLayerCanvas = document.createElement('canvas');
+const _shadowCtx = _shadowLayerCanvas.getContext('2d');
+const _shFilterCanvas = document.createElement('canvas');
+const _shFilterCtx = _shFilterCanvas.getContext('2d');
+
 function render() {
   _seed = _baseSeed; // Reset seed for stable random positions
   const canvas = document.getElementById('result-canvas');
@@ -1714,11 +1721,11 @@ function render() {
   // Hole transparent edges get natural inset feel; overlaps auto-merge
   // PERFORMANCE: skip shadow during active drag/zoom to avoid lag
   if (shadowMode && splitPct > 0 && !isDragging) {
-    const shapeLayer = document.createElement('canvas');
-    shapeLayer.width = OUT_W; shapeLayer.height = OUT_H;
-    const slCtx = shapeLayer.getContext('2d');
-
     // Collect all shape content into one layer
+    _shadowLayerCanvas.width = OUT_W; _shadowLayerCanvas.height = OUT_H;
+    const slCtx = _shadowCtx;
+    _shadowLayerCanvas.width = OUT_W; _shadowLayerCanvas.height = OUT_H;
+    slCtx.clearRect(0, 0, OUT_W, OUT_H);
     slCtx.drawImage(_compCanvas, solidX, solidY);   // solid blocks with holes
     slCtx.save();
     slCtx.beginPath();
@@ -1728,19 +1735,17 @@ function render() {
     slCtx.drawImage(_mPhCanvas, 0, 0);                // manual shapes
     slCtx.restore();
 
-    // Apply strong drop-shadow
-    const shC = document.createElement('canvas');
-    shC.width = OUT_W; shC.height = OUT_H;
-    const sh = shC.getContext('2d');
+    // Apply strong drop-shadow using reusable filter canvas
+    _shFilterCanvas.width = OUT_W; _shFilterCanvas.height = OUT_H;
+    const sh = _shFilterCtx;
+    sh.clearRect(0, 0, OUT_W, OUT_H);
     sh.filter = 'drop-shadow(0px 0px 10px rgba(0,0,0,0.55))';
-    sh.drawImage(shapeLayer, 0, 0);
+    sh.drawImage(_shadowLayerCanvas, 0, 0);
 
     // Composite shadowed shapes ON TOP of existing canvas content
-    // Use destination-over to place shapes behind any existing content? No -
-    // we want shadowed shapes visible. Just draw on top.
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalCompositeOperation = 'source-over';
-    ctx.drawImage(shC, 0, 0);
+    ctx.drawImage(_shFilterCanvas, 0, 0);
 
     // Redraw text layers on top so they stay crisp
     if (textLayers.length > 0) {
@@ -2120,7 +2125,7 @@ function saveImage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    setTimeout(function() { if (revokeFn) revokeFn(); }, 1000);
+    setTimeout(function() { if (revokeFn) revokeFn(); }, 5000); // 5s: safe even on slow networks
   }
 
   // iOS: always use overlay (no download attribute support)
