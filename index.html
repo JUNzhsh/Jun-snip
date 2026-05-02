@@ -1219,14 +1219,14 @@ body{background:var(--home-gradient)!important}
 
   <!-- 上传区 SVG -->
   <!-- 上传区 SVG - 引用原始设计文件 -->
-  <div class="upload-svg-container" onclick="document.getElementById('fileInput').click()">
+  <div class="upload-svg-container" onclick="document.getElementById('fileUploadInput').click()">
     <img src="https://assets.snipsnip.top/%E4%B8%8A%E4%BC%A0%E5%8C%BA.svg" alt="上传区" style="width: 100%; height: auto; display: block; pointer-events: none;">
   </div>
 
   <!-- Action Buttons -->
   <div class="home-actions">
-    <button class="btn-home-primary" onclick="document.getElementById('fileInput').click()">&#8593; 上传一张</button>
-    <button class="btn-home-secondary" onclick="document.getElementById('fileInput').click()">📷 拍一张</button>
+    <button class="btn-home-primary" onclick="document.getElementById('fileUploadInput').click()">&#8593; 上传一张</button>
+    <button class="btn-home-secondary" onclick="document.getElementById('cameraInput').click()">📷 拍一张</button>
   </div>
 
   <!-- About me -->
@@ -1261,7 +1261,7 @@ body{background:var(--home-gradient)!important}
 
   <!-- Upload prompt — shown before image loaded -->
   <div id="uploadScreen" style="display:flex;flex-direction:column;align-items:center;width:100%;padding:0 0 8px">
-    <div class="upload-prompt" id="uploadPrompt" onclick="document.getElementById('fileInput').click()" style="width:86%;max-width:280px;height:300px;padding:14px 12px;margin-bottom:14px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="upload-prompt" id="uploadPrompt" onclick="document.getElementById('fileUploadInput').click()" style="width:86%;max-width:280px;height:300px;padding:14px 12px;margin-bottom:14px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center">
       <div style="font-size:22px;margin-bottom:8px;animation:floatY 2s ease-in-out infinite">📸</div>
       <div style="font-family:'Fredoka',sans-serif;font-size:17px;font-weight:600;color:var(--pink);margin-bottom:3px">快上传照片试试 💅</div>
       <div style="font-family:'Fredoka',sans-serif;font-size:11px;color:#c080b0">点击选图 · 马上出片</div>
@@ -1293,9 +1293,12 @@ body{background:var(--home-gradient)!important}
     <button class="banner-close" onclick="cancelEyedropper()" aria-label="关闭吸管模式">×</button>
   </div>
 
-  <input type="file" id="fileInput" accept="image/*" style="display:none">
+  <!-- 文件选择：纯上传（不含拍摄），解决安卓浏览器默认跳转相机的问题 -->
+  <input type="file" id="fileUploadInput" accept="image/*" style="display:none">
+  <!-- 相机拍摄：强制激活相机 -->
+  <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
   <div class="action-row" id="actionRow" style="display:none">
-    <button class="qa-btn" onclick="document.getElementById('fileInput').click()"><span class="qa-icon">🔄</span>换图</button>
+    <button class="qa-btn" onclick="document.getElementById('fileUploadInput').click()"><span class="qa-icon">🔄</span>换图</button>
     <button class="qa-btn" id="lockBtn" onclick="toggleLock()"><span class="qa-icon">🔓</span><span id="lockBtnLabel">锁定</span></button>
     <button class="qa-btn" onclick="resetTransform()"><span class="qa-icon">↺</span>重置</button>
   </div>
@@ -1877,9 +1880,12 @@ let solidImgOffsetY = 0;
 let solidImgScale = 1.0;
 let _draggingSolid = false;
 
-// Upload
-const fileInput = document.getElementById('fileInput');
-fileInput.addEventListener('change', e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
+// Upload — 纯文件选择（不含拍摄）
+const fileUploadInput = document.getElementById('fileUploadInput');
+fileUploadInput.addEventListener('change', e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
+// Upload — 相机拍摄
+const cameraInput = document.getElementById('cameraInput');
+cameraInput.addEventListener('change', e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
 
 function loadImage(file) {
   const reader = new FileReader();
