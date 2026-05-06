@@ -247,13 +247,13 @@
     background: rgba(255,255,255,0.82);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 2px solid var(--border);
+    border: 1px solid rgba(255,189,232,0.55);
     border-radius: 16px;
     margin: 4px 0;
     padding: 14px 16px;
     width: 100%;
     max-width: 440px;
-    box-shadow: 0 2px 12px rgba(255,110,199,0.08);
+    box-shadow: 0 0 12px rgba(255,110,199,0.10), 0 2px 8px rgba(255,110,199,0.06);
   }
   .card-title {
     font-family: 'Fredoka', sans-serif;
@@ -293,6 +293,27 @@
     background: rgba(255,110,199,0.10);
   }
   .toggle-btn .icon { font-size: 16px; line-height: 1; }
+
+  /* 比例图标 — CSS 统一线宽空心矩形，宽高精确对应比例 */
+  .ratio-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 26px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+  .ratio-icon::after {
+    content: '';
+    display: block;
+    width: var(--rw, 18px);
+    height: var(--rh, 18px);
+    border: 1.8px solid currentColor;
+    border-radius: 2px;
+    box-sizing: border-box;
+  }
 
   /* Shape buttons */
   .shape-row { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -560,7 +581,7 @@
     transition: all 0.15s ease;
     box-shadow: 0 2px 8px rgba(255,110,199,0.06);
   }
-  .emoji-shape-btn span.shape-label { font-size: 18px; line-height: 1; }
+  .emoji-shape-btn span.shape-label { font-size: 18px; line-height: 1; color: var(--text); -webkit-text-fill-color: var(--text); font-variant-emoji: text; }
   .emoji-shape-btn span.shape-name {
     font-family: 'Fredoka', sans-serif;
     font-size: 8px;
@@ -1294,7 +1315,7 @@ body{background:var(--home-gradient)!important}
   </div>
 
   <!-- 文件选择：纯上传（不含拍摄），解决安卓浏览器默认跳转相机的问题 -->
-  <input type="file" id="fileUploadInput" accept="image/*" style="display:none">
+  <input type="file" id="fileUploadInput" accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/svg+xml" style="display:none">
   <!-- 相机拍摄：强制激活相机 -->
   <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
   <div class="action-row" id="actionRow" style="display:none">
@@ -1356,10 +1377,10 @@ body{background:var(--home-gradient)!important}
   <div class="card">
     <div class="card-title">画布设置</div>
     <div class="toggle-row" id="sizeRow">
-      <button class="toggle-btn active" data-ratio="1:1" onclick="setRatio(this)"><span class="icon">⬜</span><span>1:1</span></button>
-      <button class="toggle-btn" data-ratio="3:4" onclick="setRatio(this)"><span class="icon">▯</span><span>3:4</span></button>
-      <button class="toggle-btn" data-ratio="4:3" onclick="setRatio(this)"><span class="icon">▭</span><span>4:3</span></button>
-      <button class="toggle-btn" data-ratio="9:16" onclick="setRatio(this)"><span class="icon">▯</span><span>9:16</span></button>
+      <button class="toggle-btn active" data-ratio="1:1" onclick="setRatio(this)"><span class="ratio-icon" style="--rw:18px;--rh:18px"></span><span>1:1</span></button>
+      <button class="toggle-btn" data-ratio="3:4" onclick="setRatio(this)"><span class="ratio-icon" style="--rw:15px;--rh:20px"></span><span>3:4</span></button>
+      <button class="toggle-btn" data-ratio="4:3" onclick="setRatio(this)"><span class="ratio-icon" style="--rw:20px;--rh:15px"></span><span>4:3</span></button>
+      <button class="toggle-btn" data-ratio="9:16" onclick="setRatio(this)"><span class="ratio-icon" style="--rw:12px;--rh:21px"></span><span>9:16</span></button>
     </div>
     <div class="toggle-row" id="layoutRow" style="margin-top:8px">
       <button class="toggle-btn active" data-layout="left-right" onclick="setLayout(this)"><span class="icon">◧</span><span>左右</span></button>
@@ -1408,7 +1429,7 @@ body{background:var(--home-gradient)!important}
         <span style="font-family:'Fredoka',sans-serif;font-size:9px;color:#c080b0;opacity:0.7">画布上独立拖动构图</span>
       </div>
       <button id="solidImgRemoveBtn" onclick="removeSolidImage()" style="display:none;font-family:'Fredoka',sans-serif;font-size:10px;font-weight:600;padding:6px 14px;border-radius:10px;border:1.5px solid #ffb0d0;background:rgba(255,110,199,0.08);color:#e05080;cursor:pointer">✕ 移除第二张照片</button>
-      <input type="file" id="solidFileInput" accept="image/*" style="display:none" onchange="if(this.files[0])loadSolidImage(this.files[0])">
+      <input type="file" id="solidFileInput" accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/svg+xml" style="display:none" onchange="if(this.files[0])loadSolidImage(this.files[0])">
     </div>
     <div id="patternSection" style="margin-top:10px">
       <div style="font-family:'Fredoka',sans-serif;font-size:10px;color:#c080b0;font-weight:600;margin-bottom:6px">叠加图案</div>
@@ -2624,7 +2645,8 @@ function _onScCountChange(shape, slider) {
   cfg.count = newCount;
   _setActiveShape(shape);
   _regenerateShapePositions(shape);
-  autoRender();
+  // 强制确保画布刷新（无论 _regenerateShapePositions 是否提前返回）
+  if (userImage) render();
 }
 
 /** 大小滑块变化 → 所有该类形状同步缩放 */
@@ -2805,8 +2827,13 @@ function _regenerateShapePositions(shape) {
   // 计算每个区域应该分配多少个
   var solidCount = Math.round(targetCount * solidFrac);
   var photoCount = targetCount - solidCount;
+
+  // 容错：如果某一边宽度/高度<=1px，把该边数量归零并全部分配到另一边
+  if (solidW <= 1 || solidH <= 1) { photoCount = targetCount; solidCount = 0; }
+  if (photoW <= 1 || photoH <= 1) { solidCount = targetCount; photoCount = 0; }
+
   // 色块区随机位置
-  if (solidCount > 0 && sp > 0) {
+  if (solidCount > 0 && sp > 0 && solidW > 1 && solidH > 1) {
     // 给每种形状传独立 seed（_seedOffset），让多形状散布看起来完全独立而不只是种子序列阶段差异
     var solidGen = generateShapePositions(solidW, solidH, solidCount, cfg.size, 0.1, cfg._seedOffset || 0);
     solidGen.forEach(function(s) {
@@ -2822,7 +2849,7 @@ function _regenerateShapePositions(shape) {
     });
   }
   // 底图区随机位置
-  if (photoCount > 0 && (1-sp) > 0) {
+  if (photoCount > 0 && (1-sp) > 0 && photoW > 1 && photoH > 1) {
     // photo 区用 seedOffset+1 让同形状的两半不重合(否则色块/底图镜像位置相同看起来很整齐)
     var photoSeed = cfg._seedOffset ? (cfg._seedOffset + 1) : 0;
     var photoGen = generateShapePositions(photoW, photoH, photoCount, cfg.size, 0.1, photoSeed);
@@ -2867,7 +2894,7 @@ function _scPlaceAt(cx, cy) {
   render();
 }
 
-/** 在所有形状中查找最近的形状（用于擦除） */
+/** 在所有形状中查找最近的形状（用于擦除和点击检测） */
 function _findNearestShape(cx, cy) {
   var allPos = [];
   Object.keys(_shapeConfigs).forEach(function(shape) {
@@ -2879,7 +2906,8 @@ function _findNearestShape(cx, cy) {
   var closest = null, closestDist = Infinity;
   allPos.forEach(function(s) {
     var d = Math.hypot(cx - s.x, cy - s.y);
-    if (d < s.r * 1.5 && d < closestDist) { closest = s; closestDist = d; }
+    // 缩小命中范围：从 s.r*1.5 改为 s.r*1.1，减少误触，让更多空白区域可放置
+    if (d < s.r * 1.1 && d < closestDist) { closest = s; closestDist = d; }
   });
   return closest;
 }
@@ -3987,8 +4015,10 @@ function generateShapePositions(w, h, count, baseSize, variance, seedOverride) {
   for (let i = 0; i < count && i < candidates.length; i++) {
     const r = baseSize * (minMult + sRand() * (maxMult - minMult));
     const angle = sRand() * Math.PI * 2; // pre-generate angle here, stable across renders
-    const x = Math.max(r, Math.min(w - r, candidates[i].cx));
-    const y = Math.max(r, Math.min(h - r, candidates[i].cy));
+    // 边缘安全：确保形状不超出区域，同时保留足够边距让边缘也能放形状
+    const margin = Math.max(r * 0.5, 2);  // 至少2px边距
+    const x = Math.max(margin, Math.min(w - margin, candidates[i].cx));
+    const y = Math.max(margin, Math.min(h - margin, candidates[i].cy));
     shapes.push({ x, y, r, angle });
   }
 
@@ -4483,16 +4513,18 @@ window._isDraggingPreview = false;
       _pushUndo();
       _eraseShapeById(clickedShape.id);
       render();
-    } else if (clickedShape && _activeTabIsShapes) {
-      // 点击了形状 → 如果有配置卡，激活对应的卡
-      if (clickedShape.shape && _shapeConfigs[clickedShape.shape]) {
-        _setActiveShape(clickedShape.shape);
-      }
-      // 不进入编辑态，只激活配置卡
-    } else if (_activeTabIsShapes && _activeShapeType && !_shapeEraserOn) {
+    } else if (clickedShape && !_shapeEraserOn) {
+      // 点击了已有形状 → 不切换激活卡、不放置新形状（避免误操作切换类型）
+      // 用户应通过下方配置卡来切换类型
+    } else if (_activeTabIsShapes && !_shapeEraserOn) {
       // 空白区域 → 为激活类型补位放置（擦除模式下不添加）
       if (hitTestText(cx, cy)) return;
       if (Object.keys(_shapeConfigs).length > 0) {
+        // 自动激活：如果当前无激活类型，选最后一个配置的类型
+        if (!_activeShapeType) {
+          var keys = Object.keys(_shapeConfigs);
+          _setActiveShape(keys[keys.length - 1]);
+        }
         _scPlaceAt(cx, cy);
       }
     }
@@ -4712,15 +4744,16 @@ window._isDraggingPreview = false;
         _pushUndo();
         _eraseShapeById(clickedShape.id);
         render();
-      } else if (clickedShape && _activeTabIsShapes) {
-        // 点击形状 → 激活对应配置卡
-        if (clickedShape.shape && _shapeConfigs[clickedShape.shape]) {
-          _setActiveShape(clickedShape.shape);
-          _rebuildConfigCards();  // 刷新激活态UI
-        }
-      } else if (_activeTabIsShapes && Object.keys(_shapeConfigs).length > 0 && !_shapeEraserOn) {
+      } else if (clickedShape && !_shapeEraserOn) {
+        // 点击了已有形状 → 不切换激活卡、不放置新形状（避免误操作切换类型）
+      } else if (_activeTabIsShapes && !_shapeEraserOn) {
         // 空白区域 → 补位（擦除模式下不添加）
         if (hitTestText(cx, cy)) { window._isDraggingPreview = false; dragStarted = false; lastDist = 0; return; }
+        // 自动激活：如果当前无激活类型，选最后一个配置的类型
+        if (!_activeShapeType) {
+          var tkeys = Object.keys(_shapeConfigs);
+          _setActiveShape(tkeys[tkeys.length - 1]);
+        }
         _scPlaceAt(cx, cy);
         _lastPlaceTime = Date.now();
       }
