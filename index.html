@@ -1159,6 +1159,24 @@ body{background:var(--home-gradient)!important}
 .home-logo{text-align:center;margin-bottom:24px;animation:fadeUp .6s ease-out both}
 .home-logo h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:32px;background:linear-gradient(90deg,#FF6EC7,#C9A8FF,#7DD6FF,#FF6EC7);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 2.8s linear infinite;line-height:1.2}
 .home-logo .tagline{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:400;color:var(--lavender);letter-spacing:1px;margin-top:4px}
+/* === App (Biju) promo — flat, centered, deep purple === */
+.biju-promo{width:100%;max-width:420px;margin:0 auto;text-align:center;position:relative;z-index:2;animation:fadeUp .6s ease-out both}
+.biju-icon-link{display:inline-block;line-height:0;transition:transform .25s}
+.biju-icon-link:hover{transform:translateY(-3px)}
+.biju-icon-link:active{transform:scale(.96)}
+.biju-icon{width:96px;height:96px;border-radius:22px;box-shadow:0 8px 24px rgba(58,26,74,.18);display:block}
+.biju-intro{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);margin-top:18px}
+.biju-intro .lead{font-size:17px;font-weight:700;color:var(--text);line-height:1.4}
+.biju-intro .origin{font-size:13.5px;font-weight:400;color:var(--text);line-height:1.6;margin-top:10px}
+.biju-intro .poem{font-size:14px;font-weight:400;color:var(--text);line-height:1.85;margin-top:12px}
+.appstore-badge{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;padding:11px 22px;border-radius:13px;background:var(--text);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;font-weight:600;font-size:14px;text-decoration:none;transition:transform .2s}
+.appstore-badge:hover{transform:translateY(-2px)}
+.appstore-badge:active{transform:scale(.97)}
+.appstore-badge svg{width:18px;height:18px;fill:#fff}
+.appstore-badge small{display:block;font-size:9px;font-weight:400;letter-spacing:.5px;opacity:.85;text-align:left;line-height:1.1}
+.appstore-badge .badge-big{font-size:15px;font-weight:700;text-align:left;line-height:1.1}
+.android-soon{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;font-size:12px;font-weight:400;color:var(--text);opacity:.6;margin-top:9px}
+.web-divider{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;font-weight:600;color:var(--text);margin:72px 0 0}
 /* 上传区 SVG 容器 - 旋转 + 阴影 + 呼吸动画 */
 .upload-svg-container {
   position: relative;
@@ -1193,8 +1211,8 @@ body{background:var(--home-gradient)!important}
     transform: rotate(-5deg) translateY(-8px) scale(1.02);
   }
 }
-.home-actions{display:flex;gap:12px;margin-top:28px;animation:fadeUp .7s ease-out .3s both;z-index:1}
-.btn-home-primary{padding:13px 28px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--pink),#ff8ad4);color:#fff;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(255,110,199,.35);transition:all .2s;white-space:nowrap}
+.home-actions{display:flex;gap:12px;margin-top:12px;animation:fadeUp .7s ease-out .3s both;z-index:1}
+.btn-home-primary{padding:13px 28px;border:none;border-radius:14px;background:var(--pink);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(255,110,199,.35);transition:all .2s;white-space:nowrap}
 .btn-home-primary:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(255,110,199,.45)}
 .btn-home-secondary{padding:13px 24px;border:2px solid var(--border);border-radius:14px;background:rgba(255,255,255,.7);backdrop-filter:blur(8px);color:var(--text);font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-home-secondary:hover{border-color:var(--pink);background:rgba(255,255,255,.95)}
@@ -1232,22 +1250,29 @@ body{background:var(--home-gradient)!important}
     <span style="top:65%;right:6%;animation-delay:1.8s;font-size:13px;color:#FF6EC7">&#9829;</span>
   </div>
 
-  <!-- Logo -->
-  <div class="home-logo">
-    <h1>snipsnip</h1>
-    <p class="tagline">a tiny collage diary &#10022;</p>
+  <!-- App (Biju) promo -->
+  <div class="biju-promo">
+    <a class="biju-icon-link" href="https://apps.apple.com/app/biju/id6773650246" target="_blank" rel="noopener" onclick="if(window.gtag)gtag('event','click_appstore_biju')">
+      <img class="biju-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2e/ab/49/2eab49b4-3e09-2aba-8062-bcc1073b3548/AppIcon-0-0-1x_U007ephone-0-1-P3-85-220.png/256x256bb.jpg" alt="Biju">
+    </a>
+    <div class="biju-intro">
+      <p class="lead">snipsnip 现已升级为 Biju app</p>
+      <p class="origin">Biju，取自法语 bijou —— 珠宝、珍藏的小物。</p>
+      <p class="poem">把这里当作你创作的小桌<br>一把剪刀、一只珠宝盒<br>把你不经意的瞬间，装点成珍宝。</p>
+    </div>
+    <a class="appstore-badge" href="https://apps.apple.com/app/biju/id6773650246" target="_blank" rel="noopener" onclick="if(window.gtag)gtag('event','click_appstore_biju')">
+      <svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+      <span><small>Available on the</small><span class="badge-big">App Store</span></span>
+    </a>
+    <p class="android-soon">安卓 coming soon</p>
   </div>
 
-  <!-- 上传区 SVG -->
-  <!-- 上传区 SVG - 引用原始设计文件 -->
-  <div class="upload-svg-container" onclick="document.getElementById('fileUploadInput').click()">
-    <img src="https://assets.snipsnip.top/%E4%B8%8A%E4%BC%A0%E5%8C%BA.svg" alt="上传区" style="width: 100%; height: auto; display: block; pointer-events: none;">
-  </div>
+  <!-- 继续使用网页版 -->
+  <div class="web-divider" id="webVersionAnchor">继续使用网页版 &#11015;&#65039;</div>
 
   <!-- Action Buttons -->
   <div class="home-actions">
-    <button class="btn-home-primary" onclick="document.getElementById('fileUploadInput').click()">&#8593; 上传一张</button>
-    <button class="btn-home-secondary" onclick="document.getElementById('cameraInput').click()">📷 拍一张</button>
+    <button class="btn-home-primary" onclick="document.getElementById('fileUploadInput').click()">&#8593; 上传图片</button>
   </div>
 
   <!-- About me -->
@@ -5124,6 +5149,10 @@ function drawTextLayers(ctx, layers, activeId) {
   }
 }
 
+function scrollToWeb() {
+  var anchor = document.getElementById('webVersionAnchor');
+  if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 function openSocial(platform) {
   const info = {
     threads: {
@@ -5136,9 +5165,9 @@ function openSocial(platform) {
     },
     xhs: {
       title: '小红书',
-      handle: 'Jun Jun',
-      desc: '小红书号：9520012377',
-      url: 'https://xhslink.com/m/2J2p2GZenfu',
+      handle: 'Biju',
+      desc: '小红书号：49396310255',
+      url: 'https://xhslink.com/m/5f6TmDma1Qw',
       btnText: '前往小红书主页 →',
       color: '#FF2442'
     }
